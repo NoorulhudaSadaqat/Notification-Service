@@ -1,0 +1,9 @@
+{
+  "database": {
+    "username": "POSTGRES_USERNAME",
+    "password": "POSTGRES_PASSWORD"
+  },
+  "server": {
+    "jwtPrivateKey": "JWT_PRIVATE_KEY"
+  }
+}

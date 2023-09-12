@@ -1,0 +1,14 @@
+.registrationMsg {
+  font-size: x-small;
+  margin-top: 0.5rem;
+}
+
+.seperation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.resgistration {
+  color: #ff0a0a;
+}

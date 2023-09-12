@@ -1,0 +1,21 @@
+.cardContainer {
+  display: flex;
+}
+
+.scrollControl {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+
+  &::-webkit-scrollbar {
+    height: 0.5em;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 8px;
+  }
+}

@@ -1,0 +1,70 @@
+.btnDistance {
+  margin-top: 2rem;
+}
+.fillOnHover {
+  background-color: white;
+  outline: #007fff;
+  border: 1px solid #007fff;
+  height: 2.75rem;
+  width: 20vw;
+  transition: all 0.5s; /* Add a transition duration */
+  cursor: pointer; /* Add a pointer cursor for interactivity */
+  text-align: center; /* Center text horizontally */
+  display: flex; /* Make it a flex container for vertical alignment */
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+  font-weight: bold; /* Add font-weight for better readability */
+  color: #007fff; /* Set text color */
+  text-decoration: none; /* Remove underline for anchor elements */
+}
+
+/* Define the styles for the hover state */
+.fillOnHover:hover {
+  background-color: #007fff; /* Change background color on hover */
+  color: white; /* Change text color on hover */
+  border-radius: 7%/45%;
+  font-size: 1.05rem;
+  outline: none;
+  border: none;
+}
+
+.outlineOnHover {
+  background-color: #007fff;
+  outline: #007fff;
+  border: 1px solid #007fff;
+  height: 2.75rem;
+  width: 20vw;
+  transition: all 0.5s; /* Add a transition duration */
+  cursor: pointer; /* Add a pointer cursor for interactivity */
+  text-align: center; /* Center text horizontally */
+  display: flex; /* Make it a flex container for vertical alignment */
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+  font-weight: bold; /* Add font-weight for better readability */
+  color: white; /* Set text color */
+  text-decoration: none; /* Remove underline for anchor elements */
+}
+
+/* Define the styles for the hover state */
+.outlineOnHover:hover {
+  background-color: transparent; /* Change background color on hover */
+  color: #007fff; /* Change text color on hover */
+  border-radius: 7%/45%;
+  font-size: 1.05rem;
+  outline: #007fff;
+  border: 1px solid #007fff;
+}
+
+.disabled {
+  color: #1d20c59a;
+  background-color: transparent;
+  outline: grey;
+  border: grey;
+}
+
+.disabled:hover {
+  background-color: transparent;
+  outline: rgba(0, 0, 0, 0.267);
+  border: 1px solid rgba(0, 0, 0, 0.267);
+  color: #ff0a0a9a;
+}

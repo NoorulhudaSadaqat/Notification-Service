@@ -1,0 +1,12 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "mongoUri": "mongodb://localhost:27017/microservicedb"
+  },
+  "server": {
+    "port": 4000,
+    "logLevel": "debug",
+    "db": "postgres"
+  }
+}
