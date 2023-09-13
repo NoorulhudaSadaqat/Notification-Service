@@ -3,32 +3,51 @@ import { Box } from '@mui/material';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './applications.module.css';
 import { useState } from 'react';
-import { data } from '../../utils/dataUtils';
+import { Application } from '../../types/application';
+import Loader from '../commons/loader/loader';
 interface Props {
-  Propdata: data[];
+  data: Application[] | undefined;
+  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>;
+  applicationID: string | undefined;
+  setApplicationID: React.Dispatch<React.SetStateAction<string | undefined>>;
+  isLoading: boolean;
 }
-const Applications = ({ Propdata }: Props) => {
-  const [data, setData] = useState<data[]>(Propdata);
+const Applications = ({
+  data,
+  setData,
+  isLoading,
+
+  setApplicationID,
+}: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
-
   const [searchText, setSearchText] = useState('');
 
-  const renderComponent = () => (
-    <div className={styles.scrollControl}>
-      <div className={styles.cardContainer}>
-        <InfoCard
-          data={data}
-          setData={setData}
-          code={'App#123'}
-          setEditedCardName={setEditedCardName}
-          setEditedCardDescription={setEditedCardDescription}
-          setIsModalOpen={setIsModalOpen}
-        />
+  const renderComponent = () => {
+    if (isLoading) {
+      return (
+        <Box>
+          <Loader />
+        </Box>
+      );
+    }
+
+    return (
+      <div className={styles.scrollControl}>
+        <div className={styles.cardContainer}>
+          <InfoCard
+            setApplicationID={setApplicationID}
+            data={data}
+            setData={setData}
+            setEditedCardName={setEditedCardName}
+            setEditedCardDescription={setEditedCardDescription}
+            setIsModalOpen={setIsModalOpen}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
   return (
     <>
       <Box>
