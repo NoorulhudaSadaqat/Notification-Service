@@ -2,7 +2,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditRoundedIcon from '@mui/icons-material/Edit';
 import { Box, Switch } from '@mui/material';
 interface Props {
-  isActive: boolean;
+  isActive: boolean | undefined;
   onEdit: () => void;
   onDelete: () => void;
   onToggleActive: (e: boolean) => void;

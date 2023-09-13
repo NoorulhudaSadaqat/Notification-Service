@@ -9,8 +9,9 @@ import {
 import { Application } from '../../../types/application';
 interface Props {
   data: Application[] | undefined;
-  code: string;
-  setData: React.Dispatch<React.SetStateAction<data[]>>;
+  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>;
+
+  setApplicationID: React.Dispatch<React.SetStateAction<string | undefined>>;
   setEditedCardName: React.Dispatch<React.SetStateAction<string>>;
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,7 +20,7 @@ interface Props {
 export default function InfoCard({
   data,
   setData,
-  code,
+  setApplicationID,
   setEditedCardName,
   setEditedCardDescription,
   setIsModalOpen,
@@ -28,7 +29,13 @@ export default function InfoCard({
     <>
       {data?.map((e) => (
         <Card
+          onClick={() => {
+            setApplicationID(e._id);
+            console.log(e._id);
+          }}
+          key={e._id}
           sx={{
+            curor: 'pointer',
             minWidth: 275,
             margin: '1.25rem',
             display: 'flex',
@@ -42,7 +49,7 @@ export default function InfoCard({
               sx={{ textAlign: 'left', fontSize: '0.75rem' }}
               gutterBottom
             >
-              {code}
+              {e.code}
             </Typography>
             <div className={styles.colorBand}></div>
             <Typography

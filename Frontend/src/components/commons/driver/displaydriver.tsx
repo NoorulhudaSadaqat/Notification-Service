@@ -1,12 +1,13 @@
-import { data, handleSearch, handleCloseModal } from '../../../utils/dataUtils';
+import { handleSearch, handleCloseModal } from '../../../utils/dataUtils';
 import React from 'react';
 import styles from './displaydriver.module.css';
 import ToolBar from '../toolbar/toolbar';
 import EditModal from '../modal/modal';
+import { Application } from '../../../types/application';
 
 interface Props {
-  data: data[];
-  setData: React.Dispatch<React.SetStateAction<data[]>>;
+  data: Application[] | undefined;
+  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>;
   toolBarTitle: string;
   modalTitle: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
