@@ -17,9 +17,8 @@ const NotificationTypeSchema = new mongoose.Schema({
     required: [true, "Template Body is Required"],
   },
   eventId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Event",
-    required: true,
+    type: String,
+    required: [true, "eventId is Required"],
   },
   isActive: {
     type: Boolean,

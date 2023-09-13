@@ -5,19 +5,16 @@ const MessageSchema = new mongoose.Schema({
     required: [true, "Message is Required"],
   },
   applicationId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Application",
-    required: true,
+    type: String,
+    required: [true, "applicationId is Required"],
   },
   eventId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Event",
-    required: true,
+    type: String,
+    required: [true, "eventId is Required"],
   },
-  notifcationTypeId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "NotificationType",
-    required: true,
+  notificationTypeId: {
+    type: String,
+    required: [true, "notificationTypeId is Required"],
   },
   isActive: {
     type: Boolean,

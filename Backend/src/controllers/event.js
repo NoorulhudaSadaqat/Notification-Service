@@ -26,7 +26,9 @@ const getAllEvent = async (req, res) => {
     .skip(offset)
     .limit(pageSize)
     .sort("name");
-  return res.send(events);
+
+  const totalCount = await Event.countDocuments(queryParams);
+  return res.send({ events, totalCount });
 };
 
 const getAllNotificationType = async (req, res) => {
@@ -66,7 +68,8 @@ const getAllNotificationType = async (req, res) => {
   })
     .skip(offset)
     .limit(pageSize);
-  return res.send(notificationTypes);
+  const totalCount = await NotificationType.countDocuments(queryParams);
+  return res.send({ notificationTypes, totalCount });
 };
 
 const getAllMessage = async (req, res) => {
@@ -107,7 +110,8 @@ const getAllMessage = async (req, res) => {
   })
     .skip(offset)
     .limit(pageSize);
-  return res.send(messages);
+  const totalCount = await Message.countDocuments(queryParams);
+  return res.send({ messages, totalCount });
 };
 const createEvent = async (req, res) => {
   const reqBody = {

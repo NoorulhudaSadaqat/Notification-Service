@@ -22,7 +22,8 @@ const getAllMessage = async (req, res) => {
     return res.send(messages);
   }
   const messages = await Message.find(queryParams).skip(offset).limit(pageSize);
-  return res.send(messages);
+  const totalCount = await Event.countDocuments(queryParams);
+  return res.send({ messages, totalCount });
 };
 const createMessage = async (req, res) => {
   if (config.get("server.db") === "postgres") {

@@ -65,11 +65,12 @@ const getAllEvent = async (req, res) => {
       .json({ error: "The application with the given ID was not found." });
   const events = await Event.find({
     applicationId: applicationId,
-    queryParams,
+    ...queryParams,
   })
     .skip(offset)
     .limit(pageSize);
-  return res.send(events);
+  const totalCount = await Event.countDocuments(queryParams);
+  return res.send({ events, totalCount });
 };
 
 const getAllMessage = async (req, res) => {
@@ -110,7 +111,8 @@ const getAllMessage = async (req, res) => {
   })
     .skip(offset)
     .limit(pageSize);
-  return res.send(messages);
+  const totalCount = await Event.countDocuments(queryParams);
+  return res.send({ messages, totalCount });
 };
 const createApplication = async (req, res) => {
   const reqBody = {

@@ -9,9 +9,8 @@ const EventSchema = new mongoose.Schema({
     required: [true, "Description is Required"],
   },
   applicationId: {
-    type: mongoose.Schema.ObjectId,
-    ref: "Application",
-    required: true,
+    type: String,
+    required: [true, "applicationId is Required"],
   },
   isActive: {
     type: Boolean,
