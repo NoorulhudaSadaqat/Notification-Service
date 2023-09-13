@@ -68,7 +68,10 @@ const getAllNotificationType = async (req, res) => {
   })
     .skip(offset)
     .limit(pageSize);
-  const totalCount = await NotificationType.countDocuments(queryParams);
+  const totalCount = await NotificationType.countDocuments({
+    eventId: eventId,
+    ...queryParams,
+  });
   return res.send({ notificationTypes, totalCount });
 };
 

@@ -107,11 +107,14 @@ const getAllMessage = async (req, res) => {
       .json({ error: "The application with the given ID was not found." });
   const messages = await Message.find({
     applicationId: applicationId,
-    queryParams,
+    ...queryParams,
   })
     .skip(offset)
     .limit(pageSize);
-  const totalCount = await Event.countDocuments(queryParams);
+  const totalCount = await Event.countDocuments({
+    applicationId: applicationId,
+    ...queryParams,
+  });
   return res.send({ messages, totalCount });
 };
 const createApplication = async (req, res) => {
