@@ -1,7 +1,7 @@
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
-import { useHistory } from "react-router-dom";
-import { Button, TextField, Container, Grid, Typography } from "@mui/material";
+import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
+import { Button, TextField, Container, Grid, Typography } from '@mui/material';
 
 interface FormValues {
   name: string;
@@ -14,16 +14,13 @@ const EditScreen = () => {
   const { control, handleSubmit, setValue, watch } = useForm<FormValues>();
 
   const onSubmit = (data: FormValues) => {
-    // Perform any action you need with the form data
     console.log(data);
-
-    // Assuming you want to go back to the previous page after submission
     history.goBack();
   };
 
-  const name = watch("name", "");
-  const subject = watch("subject", "");
-  const body = watch("body", "");
+  const name = watch('name', '');
+  const subject = watch('subject', '');
+  const body = watch('body', '');
 
   return (
     <Container>
@@ -31,56 +28,56 @@ const EditScreen = () => {
         <Grid item xs={6}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
-              name="name"
+              name='name'
               control={control}
-              defaultValue=""
+              defaultValue=''
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Name"
-                  variant="outlined"
+                  label='Name'
+                  variant='outlined'
                   fullWidth
                 />
               )}
             />
             <Controller
-              name="subject"
+              name='subject'
               control={control}
-              defaultValue=""
+              defaultValue=''
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Subject"
-                  variant="outlined"
+                  label='Subject'
+                  variant='outlined'
                   fullWidth
                 />
               )}
             />
             <Controller
-              name="body"
+              name='body'
               control={control}
-              defaultValue=""
+              defaultValue=''
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Body"
-                  variant="outlined"
+                  label='Body'
+                  variant='outlined'
                   fullWidth
                   multiline
                   rows={4}
                 />
               )}
             />
-            <Button type="submit" variant="contained" color="primary">
+            <Button type='submit' variant='contained' color='primary'>
               Submit
             </Button>
           </form>
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="h5">Preview:</Typography>
-          <Typography variant="body1">Name: {name}</Typography>
-          <Typography variant="body1">Subject: {subject}</Typography>
-          <Typography variant="body1">Body: {body}</Typography>
+          <Typography variant='h5'>Preview:</Typography>
+          <Typography variant='body1'>Name: {name}</Typography>
+          <Typography variant='body1'>Subject: {subject}</Typography>
+          <Typography variant='body1'>Body: {body}</Typography>
         </Grid>
       </Grid>
     </Container>

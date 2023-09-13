@@ -1,149 +1,63 @@
-import { useState } from 'react';
-import { Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Alert, Box } from '@mui/material';
 import GridComponent from '../commons/grid/grid';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './Events.module.css';
-const Events = () => {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 2,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 3,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 4,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 5,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 6,
-      name: 'event-nfae-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 7,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 8,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 9,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 10,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 12,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 13,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 14,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 15,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 16,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 17,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 18,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 19,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 20,
-      name: 'event-name-1',
-      description: 'description',
-      isActive: true,
-    },
-    {
-      id: 11,
-      name: 'event-came-1',
-      description: 'description',
-      isActive: true,
-    },
-  ]);
+import { Event } from '../../types/event';
+import Loader from '../commons/loader/loader';
+import { useGetEvents } from '../../services/applicationService';
+
+interface Props {
+  applicationId: string | undefined;
+  setEventId: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
+
+const Events = ({ applicationId, setEventId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
+  const { isLoading, isError, data, error } = useGetEvents(applicationId);
+  const events = data?.events;
 
-  const renderComponent = () => (
-    <Box>
-      <GridComponent
-        data={data}
-        setData={setData}
-        editedCardName={editedCardName}
-        editedCardDescription={editedCardDescription}
-        setEditedCardName={setEditedCardName}
-        setEditedCardDescription={setEditedCardDescription}
-        setIsModalOpen={setIsModalOpen}
-      />
-    </Box>
-  );
+  const eventIdSetter = (id: string | undefined) => {
+    setEventId(id);
+    console.log(id);
+  };
+
+  const renderComponent = () => {
+    if (isLoading) {
+      return (
+        <Box>
+          <Loader />
+        </Box>
+      );
+    }
+    if (events?.length === 0) {
+      return (
+        <Box sx={{ marginTop: '10px' }}>
+          <Alert
+            severity='warning'
+            sx={{ display: 'flex', alignItems: 'center' }}
+          >
+            No events found! To add events press the Add Icon.
+          </Alert>
+        </Box>
+      );
+    }
+
+    return (
+      <Box>
+        <GridComponent
+          data={events}
+          setId={eventIdSetter}
+          setEditedCardName={setEditedCardName}
+          setEditedCardDescription={setEditedCardDescription}
+          setIsModalOpen={setIsModalOpen}
+        />
+      </Box>
+    );
+  };
 
   return (
     <>
@@ -154,8 +68,7 @@ const Events = () => {
           setIsModalOpen={setIsModalOpen}
           searchText={searchText}
           setSearchText={setSearchText}
-          data={data}
-          setData={setData}
+          data={events}
           editedCardName={editedCardName}
           editedCardDescription={editedCardDescription}
           setEditedCardName={setEditedCardName}

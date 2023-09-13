@@ -4,4 +4,9 @@ export interface Notification {
   eventId: string;
   templateSubject: string;
   templateBody: string;
+  isActive?: boolean;
+  createdBy?: string;
+  modifiedBy?: string;
+  createdDate?: string;
+  modifiedDate?: string;
 }

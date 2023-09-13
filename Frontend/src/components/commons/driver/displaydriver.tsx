@@ -4,10 +4,10 @@ import styles from './displaydriver.module.css';
 import ToolBar from '../toolbar/toolbar';
 import EditModal from '../modal/modal';
 import { Application } from '../../../types/application';
+import { Event } from '../../../types/event';
 
 interface Props {
-  data: Application[] | undefined;
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>;
+  data: (Application | Event)[] | undefined;
   toolBarTitle: string;
   modalTitle: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
@@ -27,7 +27,6 @@ const DisplayDriver = ({
   searchText,
   setSearchText,
   data,
-  setData,
   editedCardName,
   setEditedCardName,
   editedCardDescription,
@@ -42,7 +41,7 @@ const DisplayDriver = ({
       <ToolBar
         AddModalId={AddModalId}
         text={toolBarTitle}
-        onSearch={() => handleSearch(searchText, data, setData)}
+        onSearch={() => handleSearch(searchText, data)}
         setSearchText={setSearchText}
         searchText={searchText}
       />

@@ -14,23 +14,16 @@ export const handleEdit = (
 
 export const handleDelete = (
   id: number | string | undefined,
-  data: Application[],
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>
+  data: (Application | Event)[] | undefined
 ) => {
   console.log(`Delete action for card with ID ${id}`);
-  const filteredData = data.filter((ele: Application) => ele.id !== id);
-  setData(filteredData);
 };
 
 export const handleToggleActive = (
   id: number | string | undefined,
-  data: Application[],
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>
+  data: (Application | Event)[] | undefined
 ) => {
-  const updatedData = data.map((ele: Application) =>
-    ele.id === id ? { ...ele, isActive: !ele.isActive } : ele
-  );
-  setData(updatedData);
+  console.log('Handling Toggle Activation');
 };
 
 export const handleCloseModal = (
@@ -45,12 +38,7 @@ export const handleCloseModal = (
 
 export const handleSearch = (
   searchText: string,
-  data: Application[] | undefined,
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>
+  data: (Application | Event)[] | undefined
 ) => {
   console.log('search Test', searchText);
-  const filteredData = data?.filter((ele) =>
-    ele.name.toLowerCase().includes(searchText.toLowerCase())
-  );
-  setData(filteredData);
 };

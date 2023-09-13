@@ -131,3 +131,615 @@
   traceId: '-1',
   timestamp: '2023-09-11T01:47:45.306Z'
 }
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T06:24:29.148Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T06:24:30.318Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T06:24:32.331Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T06:24:34.276Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T06:24:35.416Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T06:24:37.435Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T06:24:41.469Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:01:49.425Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:02:15.843Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:02:18.093Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:02:19.201Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:03:55.193Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:03:56.313Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:04:34.665Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:04:35.871Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:04:37.886Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:05:38.069Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:05:39.294Z'
+}
+{
+  level: 'error',
+  message: "Class constructor ObjectId cannot be invoked without 'new' Error received with request body {} and req params {}",
+  traceId: '-1',
+  timestamp: '2023-09-13T07:23:10.620Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:29:10.698Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:29:12.710Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:29:16.734Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:30:14.835Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:30:15.879Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:30:17.905Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:30:21.948Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:48:01.920Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:48:03.067Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:48:05.091Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:48:09.123Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:49:25.937Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:49:26.974Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:49:29.009Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:49:33.038Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:49:35.681Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:49:37.017Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:49:39.040Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:50:30.118Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:50:31.270Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:50:35.010Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:50:36.136Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:50:38.155Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:50:42.189Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:07.747Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:08.857Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:10.872Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:14.898Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:36.715Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:37.796Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:41.282Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:42.406Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:44.434Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:52:48.458Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:53:00.326Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:53:01.584Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:53:03.602Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:53:07.639Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:54:56.388Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:54:57.721Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T07:54:59.743Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "events" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T08:13:18.329Z'
+}
+{
+  level: 'error',
+  message: 'Operation `applications.find()` buffering timed out after 10000ms Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-13T10:27:38.407Z'
+}
+{
+  error: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+      at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)
+      at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)
+      at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16) {
+    reason: TopologyDescription {
+      type: 'Unknown',
+      servers: Map(1) {
+        'localhost:27017' => ServerDescription {
+          address: 'localhost:27017',
+          type: 'Unknown',
+          hosts: [],
+          passives: [],
+          arbiters: [],
+          tags: {},
+          minWireVersion: 0,
+          maxWireVersion: 0,
+          roundTripTime: -1,
+          lastUpdateTime: 109992,
+          lastWriteDate: 0,
+          error: MongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017
+              at connectionFailureError (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/node_modules/mongodb/lib/cmap/connect.js:367:20)
+              at Socket.<anonymous> (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/node_modules/mongodb/lib/cmap/connect.js:290:22)
+              at Object.onceWrapper (node:events:629:26)
+              at Socket.emit (node:events:514:28)
+              at emitErrorNT (node:internal/streams/destroy:151:8)
+              at emitErrorCloseNT (node:internal/streams/destroy:116:3)
+              at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+            cause: Error: connect ECONNREFUSED 127.0.0.1:27017
+                at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1495:16) {
+              errno: -111,
+              code: 'ECONNREFUSED',
+              syscall: 'connect',
+              address: '127.0.0.1',
+              port: 27017
+            },
+            [Symbol(errorLabels)]: Set(1) { 'ResetPool' }
+          },
+          topologyVersion: null,
+          setName: null,
+          setVersion: null,
+          electionId: null,
+          logicalSessionTimeoutMinutes: null,
+          primary: null,
+          me: null,
+          '$clusterTime': null
+        }
+      },
+      stale: false,
+      compatible: true,
+      heartbeatFrequencyMS: 10000,
+      localThresholdMS: 15,
+      setName: null,
+      maxElectionId: null,
+      maxSetVersion: null,
+      commonWireVersion: 0,
+      logicalSessionTimeoutMinutes: null
+    },
+    code: undefined
+  },
+  level: 'error',
+  message: 'uncaughtException: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    'MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    '    at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)\n' +
+    '    at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)\n' +
+    '    at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16)',
+  stack: 'MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    '    at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)\n' +
+    '    at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)\n' +
+    '    at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16)',
+  exception: true,
+  date: 'Wed Sep 13 2023 15:27:40 GMT+0500 (Pakistan Standard Time)',
+  process: {
+    pid: 5278,
+    uid: 1000,
+    gid: 1000,
+    cwd: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend',
+    execPath: '/home/gosaas/.nvm/versions/node/v18.17.1/bin/node',
+    version: 'v18.17.1',
+    argv: [
+      '/home/gosaas/.nvm/versions/node/v18.17.1/bin/node',
+      '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/index.js'
+    ],
+    memoryUsage: {
+      rss: 131981312,
+      heapTotal: 49651712,
+      heapUsed: 46505408,
+      external: 20388146,
+      arrayBuffers: 18303427
+    }
+  },
+  os: { loadavg: [ 4.04, 1.74, 0.65 ], uptime: 110.37 },
+  trace: [
+    {
+      column: 11,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js',
+      function: '_handleConnectionErrors',
+      line: 788,
+      method: null,
+      native: false
+    },
+    {
+      column: 11,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js',
+      function: 'NativeConnection.openUri',
+      line: 763,
+      method: 'openUri',
+      native: false
+    },
+    {
+      column: 16,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js',
+      function: 'async connectDB',
+      line: 5,
+      method: null,
+      native: false
+    }
+  ],
+  timestamp: '2023-09-13T10:27:40.698Z'
+}
+{
+  error: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+      at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)
+      at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)
+      at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16) {
+    reason: TopologyDescription {
+      type: 'Unknown',
+      servers: Map(1) {
+        'localhost:27017' => ServerDescription {
+          address: 'localhost:27017',
+          type: 'Unknown',
+          hosts: [],
+          passives: [],
+          arbiters: [],
+          tags: {},
+          minWireVersion: 0,
+          maxWireVersion: 0,
+          roundTripTime: -1,
+          lastUpdateTime: 2583971,
+          lastWriteDate: 0,
+          error: MongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017
+              at connectionFailureError (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/node_modules/mongodb/lib/cmap/connect.js:367:20)
+              at Socket.<anonymous> (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/node_modules/mongodb/lib/cmap/connect.js:290:22)
+              at Object.onceWrapper (node:events:629:26)
+              at Socket.emit (node:events:514:28)
+              at emitErrorNT (node:internal/streams/destroy:151:8)
+              at emitErrorCloseNT (node:internal/streams/destroy:116:3)
+              at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+            cause: Error: connect ECONNREFUSED 127.0.0.1:27017
+                at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1495:16) {
+              errno: -111,
+              code: 'ECONNREFUSED',
+              syscall: 'connect',
+              address: '127.0.0.1',
+              port: 27017
+            },
+            [Symbol(errorLabels)]: Set(1) { 'ResetPool' }
+          },
+          topologyVersion: null,
+          setName: null,
+          setVersion: null,
+          electionId: null,
+          logicalSessionTimeoutMinutes: null,
+          primary: null,
+          me: null,
+          '$clusterTime': null
+        }
+      },
+      stale: false,
+      compatible: true,
+      heartbeatFrequencyMS: 10000,
+      localThresholdMS: 15,
+      setName: null,
+      maxElectionId: null,
+      maxSetVersion: null,
+      commonWireVersion: 0,
+      logicalSessionTimeoutMinutes: null
+    },
+    code: undefined
+  },
+  level: 'error',
+  message: 'uncaughtException: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    'MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    '    at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)\n' +
+    '    at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)\n' +
+    '    at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16)',
+  stack: 'MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    '    at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)\n' +
+    '    at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)\n' +
+    '    at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16)',
+  exception: true,
+  date: 'Wed Sep 13 2023 16:58:36 GMT+0500 (Pakistan Standard Time)',
+  process: {
+    pid: 15255,
+    uid: 1000,
+    gid: 1000,
+    cwd: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend',
+    execPath: '/home/gosaas/.nvm/versions/node/v18.17.1/bin/node',
+    version: 'v18.17.1',
+    argv: [
+      '/home/gosaas/.nvm/versions/node/v18.17.1/bin/node',
+      '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/index.js'
+    ],
+    memoryUsage: {
+      rss: 134746112,
+      heapTotal: 50700288,
+      heapUsed: 46229440,
+      external: 20388117,
+      arrayBuffers: 18303398
+    }
+  },
+  os: { loadavg: [ 4.18, 1.89, 0.76 ], uptime: 2584.35 },
+  trace: [
+    {
+      column: 11,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js',
+      function: '_handleConnectionErrors',
+      line: 788,
+      method: null,
+      native: false
+    },
+    {
+      column: 11,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js',
+      function: 'NativeConnection.openUri',
+      line: 763,
+      method: 'openUri',
+      native: false
+    },
+    {
+      column: 16,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js',
+      function: 'async connectDB',
+      line: 5,
+      method: null,
+      native: false
+    }
+  ],
+  timestamp: '2023-09-13T11:58:36.045Z'
+}
