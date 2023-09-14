@@ -8,12 +8,14 @@ import Loader from '../commons/loader/loader';
 import { useGetEvents } from '../../services/applicationService';
 import InfoModal from '../commons/infoModal/infoModal';
 import { filters } from '../../utils/dataUtils';
+import { useQueryClient } from '@tanstack/react-query';
 interface Props {
   applicationId: string | undefined;
   setEventId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 const Events = ({ applicationId, setEventId }: Props) => {
+  const [params, setParams] = useState<object>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [searchError, setSearchError] = useState('');
@@ -21,8 +23,22 @@ const Events = ({ applicationId, setEventId }: Props) => {
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<Event>();
-  const { isLoading, isError, data, error } = useGetEvents(applicationId);
+  const { isLoading, isError, data, error } = useGetEvents(
+    applicationId,
+    params
+  );
   const events = data?.events;
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    console.log(params);
+    queryClient.invalidateQueries([
+      'events',
+      applicationId,
+      'applications',
+      {},
+    ]);
+  }, [params]);
 
   const eventIdSetter = (id: string | undefined) => {
     setEventId(id);
@@ -83,6 +99,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
       </Box>
       <div className={styles.heightControl}>
         <DisplayDriver
+          setParams={setParams}
           setSearchError={setSearchError}
           searchError={searchError}
           filters={filters}

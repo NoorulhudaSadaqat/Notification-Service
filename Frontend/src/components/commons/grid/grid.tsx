@@ -57,7 +57,7 @@ const GridComponent: React.FC<Props> = ({
 
   return (
     <div className={styles.heightControl}>
-      <TableContainer>
+      <TableContainer sx={{ minHeight: '20vh' }}>
         <Table>
           <TableHead sx={{ position: 'sticky', top: 0 }}>
             <TableRow>

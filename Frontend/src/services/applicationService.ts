@@ -17,7 +17,7 @@ export const useGetApplications = (data: object | undefined) =>
     queryKey: ['applications', data],
     queryFn: async () => {
       const response = await apiClient('/applications', 'get', data);
-      return response.data;
+      return response.data.applications;
     },
     staleTime: 1 * 60 * 1000,
     keepPreviousData: true,
@@ -35,15 +35,19 @@ export const useGetApplication = (applicationId: number | undefined) =>
     staleTime: 1 * 60 * 1000,
   });
 
-export const useGetEvents = (applicationId: string | undefined) =>
+export const useGetEvents = (
+  applicationId: string | undefined,
+  data: object | undefined
+) =>
   useQuery<Event[], Error>({
-    queryKey: ['events', applicationId, 'applications'],
+    queryKey: ['events', applicationId, 'applications', data],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const applicationId = queryKey[1];
       const response = await apiClient(
         `/applications/${applicationId}/events`,
-        'get'
+        'get',
+        data
       );
       return response.data;
     },

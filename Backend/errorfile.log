@@ -743,3 +743,27 @@
   ],
   timestamp: '2023-09-13T11:58:36.045Z'
 }
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "[object Object]" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-14T12:51:16.268Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "[object Object]" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-14T12:51:17.297Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "[object Object]" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-14T12:51:19.330Z'
+}
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "[object Object]" (type string) at path "_id" for model "Application" Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-14T12:51:23.370Z'
+}

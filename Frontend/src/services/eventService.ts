@@ -36,15 +36,19 @@ export const useGetEvent = (eventId: number | undefined) =>
     staleTime: 1 * 60 * 1000,
   });
 
-export const useGetNotifications = (eventId: string | undefined) =>
+export const useGetNotifications = (
+  eventId: string | undefined,
+  data: object | undefined
+) =>
   useQuery<Event[], Error>({
-    queryKey: ['events', eventId],
+    queryKey: ['events', eventId, data],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const eventId = queryKey[1];
       const response = await apiClient(
         `/events/${eventId}/notification-types`,
-        'get'
+        'get',
+        data
       );
       return response.data;
     },

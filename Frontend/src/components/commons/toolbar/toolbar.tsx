@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -50,6 +50,11 @@ const ToolBar = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
+  useEffect(() => {
+    if (!filterButtonPressed) {
+      setParams({});
+    }
+  }, [filterButtonPressed]);
 
   const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -76,15 +81,7 @@ const ToolBar = ({
     event: React.MouseEvent<HTMLElement>,
     newFilterCalls: string[]
   ) => {
-    setSelectedFilters(newFilterCalls);
-
-    const updatedFilterObject = {};
-    newFilterCalls.forEach((filter) => {
-      updatedFilterObject[filter] = true;
-    });
-
-    setParams(updatedFilterObject);
-    console.log(filterCalls);
+    setParams({ sortBy: newFilterCalls[0] });
   };
 
   function titleModal() {

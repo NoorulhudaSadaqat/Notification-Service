@@ -2,18 +2,19 @@ import InfoCard from '../commons/card/card';
 import { Alert, Box } from '@mui/material';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './applications.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from '../commons/loader/loader';
 import { useGetApplications } from '../../services/applicationService';
 import InfoModal from '../commons/infoModal/infoModal';
 import { Application } from '../../types/application';
 import { filters } from '../../utils/dataUtils';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 export const Applications = ({ setApplicationId }: Props) => {
-  const [params, setParams] = useState<object>();
+  const [params, setParams] = useState<object>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application>();
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -21,13 +22,38 @@ export const Applications = ({ setApplicationId }: Props) => {
   const [editedCardDescription, setEditedCardDescription] = useState('');
   const [searchText, setSearchText] = useState('');
   const [searchError, setSearchError] = useState('');
-  const { isLoading, isError, data, error } = useGetApplications({});
-  const applications = data?.applications;
+  const {
+    isLoading,
+    isError,
+    data: applications,
+    error,
+  } = useGetApplications(params);
+
   const openInfoModal = (ele) => {
     setInfoModalOpen(true);
     setSelectedApplication(ele);
   };
+  const queryClient = useQueryClient();
+
+  // Use a useEffect hook to invalidate the query when params change
+  useEffect(() => {
+    // Invalidate the query with the key 'applications'
+    console.log(params);
+    queryClient.invalidateQueries(['applications', {}]);
+  }, [params]); // Listen for changes in the params object
+
   const renderComponent = () => {
+    if (isError) {
+      return (
+        <>
+          <Alert severity='error'>
+            <strong>
+              Error! {error.name}, {error.message}
+            </strong>
+          </Alert>
+        </>
+      );
+    }
     if (isLoading) {
       return (
         <Box>
