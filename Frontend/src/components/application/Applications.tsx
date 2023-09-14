@@ -5,11 +5,14 @@ import styles from './applications.module.css';
 import { useState } from 'react';
 import Loader from '../commons/loader/loader';
 import { useGetApplications } from '../../services/applicationService';
-import { Props } from './applications';
 import InfoModal from '../commons/infoModal/infoModal';
 import { Application } from '../../types/application';
+import { filters } from '../../utils/dataUtils';
 
-export const Applications = ({ setApplicationID }: Props) => {
+interface Props {
+  setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
+}
+export const Applications = ({ setApplicationId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application>();
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -50,7 +53,7 @@ export const Applications = ({ setApplicationID }: Props) => {
         <div className={styles.cardContainer}>
           <InfoCard
             openInfoModal={openInfoModal}
-            setApplicationID={setApplicationID}
+            setApplicationId={setApplicationId}
             data={applications}
             setEditedCardName={setEditedCardName}
             setEditedCardDescription={setEditedCardDescription}
@@ -60,6 +63,7 @@ export const Applications = ({ setApplicationID }: Props) => {
       </div>
     );
   };
+
   return (
     <>
       <Box>
@@ -73,6 +77,7 @@ export const Applications = ({ setApplicationID }: Props) => {
         )}
 
         <DisplayDriver
+          filters={filters}
           AddModalId={1}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}

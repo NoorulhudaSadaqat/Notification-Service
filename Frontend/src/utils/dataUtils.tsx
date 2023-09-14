@@ -49,3 +49,5 @@ export const handleSearch = (
     setSearchError('');
   }
 };
+
+export const filters = ['Active', 'Created At', 'Modified At'];

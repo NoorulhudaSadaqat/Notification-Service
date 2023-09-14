@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
@@ -8,8 +8,16 @@ import SortIcon from '@mui/icons-material/Sort';
 import AddIcon from '@mui/icons-material/Add';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Box, Typography } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Radio,
+  FormControlLabel,
+  ToggleButtonGroup,
+  ToggleButton,
+} from '@mui/material';
 import EditModal from '../modal/modal';
+import { Check, CreateRounded, EditNote, FilterAlt } from '@mui/icons-material';
 
 const inputStyles = {
   backgroundColor: 'white', // Background color for the search input
@@ -21,12 +29,14 @@ const inputStyles = {
 interface Props {
   AddModalId: number;
   onSearch: () => void;
+  filters: string[];
   text: string;
   searchText: string;
   setSearchText: (text: string) => void;
 }
 
 const ToolBar = ({
+  filters,
   onSearch,
   searchText,
   setSearchText,
@@ -36,7 +46,15 @@ const ToolBar = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [sortBy, setSortBy] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [filterButtonPressed, setFilterButtonPressed] = useState(true);
+  const [isActiveFilter, setIsActiveFilter] = useState(false);
+  const [createdAtFilter, setCreatedAtFilter] = useState(false);
+  const [modifiedAtFilter, setModifiedAtFilter] = useState(false);
+  const [filterCalls, setFilterCalls] = useState({
+    isActive: false,
+    createdAt: false,
+    modifiedAt: false,
+  });
   const handleInputChange = (e) => {
     setSearchText(e.target.value);
   };
@@ -56,20 +74,30 @@ const ToolBar = ({
   const handleOpenModal = (id) => {
     setIsModalOpen(true);
   };
+
+  const handleFilter = () => {
+    setFilterButtonPressed(!filterButtonPressed);
+  };
+
   function titleModal() {
-    if (AddModalId === 1) {
-      return 'Add New Application';
-    } else if (AddModalId === 2) {
-      return 'Add New Event';
-    } else if (AddModalId === 3) {
-      return 'Add New Notification';
-    } else {
-      return 'Undefined';
-    }
+    const titleMap = {
+      1: 'Add New Application',
+      2: 'Add New Event',
+      3: 'Add New Notification',
+    };
+
+    return titleMap[AddModalId] || 'Undefined';
   }
 
   return (
-    <AppBar position='static' sx={{ backgroundColor: 'white' }}>
+    <AppBar
+      position='static'
+      sx={{
+        backgroundColor: 'white',
+        height: filterButtonPressed ? '4rem' : '8rem',
+        transition: 'height 0.25s ease',
+      }}
+    >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Typography sx={{ color: 'black' }}>{text}</Typography>
 
@@ -99,24 +127,71 @@ const ToolBar = ({
             open={Boolean(anchorEl)}
             onClose={handleSortClose}
           >
-            <MenuItem onClick={() => handleSortOptionClick('option1')}>
-              Sort Option 1
-            </MenuItem>
-            <MenuItem onClick={() => handleSortOptionClick('option2')}>
-              Sort Option 2
-            </MenuItem>
+            {filters.map((filter) => (
+              <MenuItem
+                key={filter}
+                onClick={() => handleSortOptionClick(filter)}
+              >
+                {filter}
+              </MenuItem>
+            ))}
           </Menu>
+          <IconButton onClick={() => handleFilter()}>
+            <FilterAlt />
+          </IconButton>
           <IconButton onClick={() => handleOpenModal(AddModalId)}>
             <AddIcon />
           </IconButton>
         </Box>
       </Toolbar>
-      <EditModal
-        modalTitle={titleModal()}
-        id={1}
-        open={isModalOpen}
-        handleClose={() => setIsModalOpen(false)}
-      />
+      {!filterButtonPressed && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginInline: '1rem',
+            marginBlock: '0.5rem',
+          }}
+        >
+          <ToggleButtonGroup
+            size='small'
+            value={Object.keys(filterCalls).filter((key) => filterCalls[key])}
+            onChange={(event, newFilter) => {
+              console.log(newFilter);
+              console.log(filterCalls);
+              const obj = { ...filterCalls };
+              console.log(obj);
+              for (let i = 0; i < newFilter.length; i++) {
+                console.log(newFilter[i]);
+                filterCalls[newFilter[i]] = !filterCalls[newFilter[i]];
+              }
+              console.log(filterCalls);
+            }}
+            aria-label='filters'
+          >
+            <ToggleButton value='isActive' aria-label='isActive'>
+              <>
+                <Check />
+                <Typography sx={{ color: 'black' }}>Active</Typography>
+              </>
+            </ToggleButton>
+            <ToggleButton value='createdAt' aria-label='createdAt'>
+              <>
+                <Typography sx={{ color: 'black' }}>Created At</Typography>
+                <CreateRounded />
+              </>
+            </ToggleButton>
+            <ToggleButton value='modifiedAt' aria-label='modifiedAt'>
+              <>
+                <Typography sx={{ color: 'black' }}>Modified At</Typography>
+                <EditNote />
+              </>
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+      )}
     </AppBar>
   );
 };

@@ -23,9 +23,11 @@ interface Props {
   isModalOpen: boolean;
   searchError: string;
   AddModalId: number;
+  filters: string[];
 }
 const DisplayDriver = ({
   searchError,
+  filters,
   setSearchError,
   isModalOpen,
   setIsModalOpen,
@@ -44,6 +46,7 @@ const DisplayDriver = ({
   return (
     <>
       <ToolBar
+        filters={filters}
         AddModalId={AddModalId}
         text={toolBarTitle}
         onSearch={() => handleSearch(setSearchError, searchText, data)}

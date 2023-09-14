@@ -9,10 +9,11 @@ import {
   handleToggleActive,
 } from '../../../utils/dataUtils';
 import { Application } from '../../../types/application';
+import { useState } from 'react';
 interface Props {
   data: Application[] | undefined;
   openInfoModal: (element: Application) => void;
-  setApplicationID: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
   setEditedCardName: React.Dispatch<React.SetStateAction<string>>;
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,7 +22,7 @@ interface Props {
 export default function InfoCard({
   data,
   openInfoModal,
-  setApplicationID,
+  setApplicationId,
   setEditedCardName,
   setEditedCardDescription,
   setIsModalOpen,
@@ -31,9 +32,7 @@ export default function InfoCard({
       {data?.map((e) => (
         <Card
           onClick={() => {
-            setApplicationID(e._id);
-
-            console.log(e._id);
+            setApplicationId(e._id);
           }}
           key={e._id}
           sx={{
@@ -47,7 +46,7 @@ export default function InfoCard({
             boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.197)',
           }}
         >
-          <CardContent sx={{ minHeight: 250 }}>
+          <CardContent sx={{ minHeight: 150 }}>
             <Box
               sx={{
                 display: 'flex',
@@ -85,7 +84,23 @@ export default function InfoCard({
               variant='body2'
               color='text.secondary'
             >
-              {e.description}
+              {e.description.length > 100 ? (
+                <>
+                  {e.description.substring(0, 100)}
+                  <span
+                    style={{
+                      color: 'blue',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => openInfoModal(e)}
+                  >
+                    ...
+                  </span>
+                </>
+              ) : (
+                e.description
+              )}
             </Typography>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>

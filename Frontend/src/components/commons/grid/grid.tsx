@@ -20,7 +20,6 @@ import { Event } from '../../../types/event';
 import PaginationControls from '../paginationControl/paginationControl';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Notification } from '../../../types/notification';
-import { EnumValues } from 'zod';
 
 interface Props {
   data: (Event | Notification)[] | undefined;

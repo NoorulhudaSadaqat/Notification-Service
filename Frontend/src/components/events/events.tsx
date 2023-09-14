@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Box } from '@mui/material';
 import GridComponent from '../commons/grid/grid';
 import DisplayDriver from '../commons/driver/displaydriver';
@@ -7,7 +7,7 @@ import { Event } from '../../types/event';
 import Loader from '../commons/loader/loader';
 import { useGetEvents } from '../../services/applicationService';
 import InfoModal from '../commons/infoModal/infoModal';
-
+import { filters } from '../../utils/dataUtils';
 interface Props {
   applicationId: string | undefined;
   setEventId: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -16,7 +16,7 @@ interface Props {
 const Events = ({ applicationId, setEventId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
-
+  const [searchError, setSearchError] = useState('');
   const [searchText, setSearchText] = useState('');
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
@@ -83,6 +83,9 @@ const Events = ({ applicationId, setEventId }: Props) => {
       </Box>
       <div className={styles.heightControl}>
         <DisplayDriver
+          setSearchError={setSearchError}
+          searchError={searchError}
+          filters={filters}
           AddModalId={2}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}

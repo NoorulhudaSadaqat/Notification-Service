@@ -1,24 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Alert, Box } from '@mui/material';
 import GridComponent from '../commons/grid/grid';
 import DisplayDriver from '../commons/driver/displaydriver';
 import { useGetNotifications } from '../../services/eventService';
 import Loader from '../commons/loader/loader';
 import InfoModal from '../commons/infoModal/infoModal';
+import { filters } from '../../utils/dataUtils';
 
 interface Props {
   eventId: string | undefined;
   setNotificationId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  applicationId: string | undefined; // Add applicationId as a prop
 }
-const Notifications = ({ eventId, setNotificationId }: Props) => {
+
+const Notifications = ({
+  eventId,
+  setNotificationId,
+  applicationId,
+}: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] =
     useState<Notification>();
-
+  const [searchError, setSearchError] = useState('');
   const [searchText, setSearchText] = useState('');
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
+  const [renderNotifications, setRenderNotifications] = useState(true);
   const { isLoading, data, isError, error } = useGetNotifications(eventId);
   const notifications = data?.notificationTypes;
 
@@ -31,6 +39,7 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
     setInfoModalOpen(true);
     setSelectedNotification(ele);
   };
+
   const renderComponent = () => {
     if (isLoading) {
       return (
@@ -67,33 +76,40 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
 
   return (
     <>
-      <Box>
-        {infoModalOpen && (
-          <InfoModal
-            type={'Notification'}
-            infoModalOpen={infoModalOpen}
-            setInfoModalOpen={setInfoModalOpen}
-            data={selectedNotification} // Pass the selected element's data to InfoModal
-          />
-        )}
-      </Box>
-      <Box sx={{ marginBlockStart: '2rem' }}>
-        <DisplayDriver
-          AddModalId={3}
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          searchText={searchText}
-          setSearchText={setSearchText}
-          data={notifications}
-          editedCardName={editedCardName}
-          editedCardDescription={editedCardDescription}
-          setEditedCardName={setEditedCardName}
-          setEditedCardDescription={setEditedCardDescription}
-          renderComponent={renderComponent}
-          modalTitle={'Edit Notification'}
-          toolBarTitle={'Notifications'}
-        />
-      </Box>
+      {renderNotifications && (
+        <>
+          <Box>
+            {infoModalOpen && (
+              <InfoModal
+                type={'Notification'}
+                infoModalOpen={infoModalOpen}
+                setInfoModalOpen={setInfoModalOpen}
+                data={selectedNotification} // Pass the selected element's data to InfoModal
+              />
+            )}
+          </Box>
+          <Box sx={{ marginBlockStart: '2rem' }}>
+            <DisplayDriver
+              filters={filters}
+              searchError={searchError}
+              setSearchError={setSearchError}
+              AddModalId={3}
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+              searchText={searchText}
+              setSearchText={setSearchText}
+              data={notifications}
+              editedCardName={editedCardName}
+              editedCardDescription={editedCardDescription}
+              setEditedCardName={setEditedCardName}
+              setEditedCardDescription={setEditedCardDescription}
+              renderComponent={renderComponent}
+              modalTitle={'Edit Notification'}
+              toolBarTitle={'Notifications'}
+            />
+          </Box>
+        </>
+      )}
     </>
   );
 };
