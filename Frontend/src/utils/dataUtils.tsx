@@ -1,3 +1,4 @@
+import { Alert } from '@mui/material';
 import { Application } from '../types/application';
 
 export const handleEdit = (
@@ -37,8 +38,14 @@ export const handleCloseModal = (
 };
 
 export const handleSearch = (
+  setSearchError: React.Dispatch<React.SetStateAction<string>>,
   searchText: string,
   data: (Application | Event)[] | undefined
 ) => {
-  console.log('search Test', searchText);
+  if (searchText.length < 3) {
+    console.log('Search should be more than 3 characters');
+    setSearchError('Search should be more than atleast 3 characters');
+  } else {
+    setSearchError('');
+  }
 };

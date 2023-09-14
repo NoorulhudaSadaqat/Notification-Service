@@ -4,6 +4,7 @@ import GridComponent from '../commons/grid/grid';
 import DisplayDriver from '../commons/driver/displaydriver';
 import { useGetNotifications } from '../../services/eventService';
 import Loader from '../commons/loader/loader';
+import InfoModal from '../commons/infoModal/infoModal';
 
 interface Props {
   eventId: string | undefined;
@@ -11,6 +12,10 @@ interface Props {
 }
 const Notifications = ({ eventId, setNotificationId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [selectedNotification, setSelectedNotification] =
+    useState<Notification>();
+
   const [searchText, setSearchText] = useState('');
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
@@ -22,6 +27,10 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
     console.log(id);
   };
 
+  const openInfoModal = (ele) => {
+    setInfoModalOpen(true);
+    setSelectedNotification(ele);
+  };
   const renderComponent = () => {
     if (isLoading) {
       return (
@@ -45,6 +54,7 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
     return (
       <Box>
         <GridComponent
+          openInfoModal={openInfoModal}
           data={notifications}
           setId={notificationIdSetter}
           setEditedCardName={setEditedCardName}
@@ -57,6 +67,16 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
 
   return (
     <>
+      <Box>
+        {infoModalOpen && (
+          <InfoModal
+            type={'Notification'}
+            infoModalOpen={infoModalOpen}
+            setInfoModalOpen={setInfoModalOpen}
+            data={selectedNotification} // Pass the selected element's data to InfoModal
+          />
+        )}
+      </Box>
       <Box sx={{ marginBlockStart: '2rem' }}>
         <DisplayDriver
           AddModalId={3}

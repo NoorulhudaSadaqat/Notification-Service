@@ -7,7 +7,7 @@ import styles from './infoModal.module.css';
 import { CloseOutlined } from '@mui/icons-material';
 interface Props {
   setInfoModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  data: Application | Event | Notification | undefined;
+  data: (Application | Event | Notification) | undefined;
   infoModalOpen: boolean;
   type: string;
 }
@@ -50,19 +50,25 @@ const InfoModal = ({ infoModalOpen, setInfoModalOpen, data, type }: Props) => {
               >
                 {type}
               </Typography>
-              <Typography
-                id='modal-modal-title'
-                variant='h6'
-                component='h2'
-                sx={{
-                  fontSize: '1.25rem', // Customize font size for code
-                }}
-              >
-                code: {data?.code}
-              </Typography>
+              {data?.code && (
+                <Typography
+                  id='modal-modal-title'
+                  variant='h6'
+                  component='h2'
+                  sx={{
+                    fontSize: '1.25rem', // Customize font size for code
+                  }}
+                >
+                  code: {data?.code}
+                </Typography>
+              )}
             </Box>
 
-            <IconButton aria-label='close' sx={{ cursor: 'pointer' }}>
+            <IconButton
+              aria-label='close'
+              sx={{ cursor: 'pointer' }}
+              onClick={() => setInfoModalOpen(false)}
+            >
               <CloseOutlined sx={{ cursor: 'pointer' }} />
             </IconButton>
           </Box>

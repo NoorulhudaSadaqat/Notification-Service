@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './grid.module.css';
 import {
+  IconButton,
   Link,
   Table,
   TableBody,
@@ -17,7 +18,9 @@ import {
 } from '../../../utils/dataUtils';
 import { Event } from '../../../types/event';
 import PaginationControls from '../paginationControl/paginationControl';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Notification } from '../../../types/notification';
+import { EnumValues } from 'zod';
 
 interface Props {
   data: (Event | Notification)[] | undefined;
@@ -25,6 +28,7 @@ interface Props {
   setEditedCardName: React.Dispatch<React.SetStateAction<string>>;
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openInfoModal: (e: Event) => void;
 }
 
 const itemsPerPage = 5;
@@ -35,6 +39,7 @@ const GridComponent: React.FC<Props> = ({
   setEditedCardName,
   setEditedCardDescription,
   setIsModalOpen,
+  openInfoModal,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -57,6 +62,8 @@ const GridComponent: React.FC<Props> = ({
         <Table>
           <TableHead sx={{ position: 'sticky', top: 0 }}>
             <TableRow>
+              <TableCell sx={{ fontWeight: 'bold' }}></TableCell>
+
               <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
               <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
               <TableCell></TableCell>
@@ -65,6 +72,15 @@ const GridComponent: React.FC<Props> = ({
           <TableBody>
             {paginatedData?.map((ele) => (
               <TableRow key={ele._id}>
+                <TableCell>
+                  <IconButton
+                    aria-label='info'
+                    sx={{ fontSize: '18px' }}
+                    onClick={() => openInfoModal(ele)}
+                  >
+                    <InfoOutlinedIcon sx={{ fontSize: '18px' }} />
+                  </IconButton>
+                </TableCell>
                 <TableCell>
                   <Link
                     sx={{ cursor: 'pointer', color: 'black' }}

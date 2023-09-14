@@ -16,6 +16,7 @@ export const Applications = ({ setApplicationID }: Props) => {
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
   const [searchText, setSearchText] = useState('');
+  const [searchError, setSearchError] = useState('');
   const { isLoading, isError, data, error } = useGetApplications({});
   const applications = data?.applications;
   const openInfoModal = (ele) => {
@@ -85,6 +86,8 @@ export const Applications = ({ setApplicationID }: Props) => {
           renderComponent={renderComponent}
           modalTitle={'Edit Application'}
           toolBarTitle={'Applications'}
+          setSearchError={setSearchError}
+          searchError={searchError}
         />
       </Box>
     </>
