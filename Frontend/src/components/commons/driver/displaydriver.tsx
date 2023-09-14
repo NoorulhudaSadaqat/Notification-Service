@@ -23,9 +23,11 @@ interface Props {
   isModalOpen: boolean;
   searchError: string;
   AddModalId: number;
+  setParams: React.Dispatch<React.SetStateAction<object>>;
   filters: string[];
 }
 const DisplayDriver = ({
+  setParams,
   searchError,
   filters,
   setSearchError,
@@ -46,6 +48,7 @@ const DisplayDriver = ({
   return (
     <>
       <ToolBar
+        setParams={setParams}
         filters={filters}
         AddModalId={AddModalId}
         text={toolBarTitle}

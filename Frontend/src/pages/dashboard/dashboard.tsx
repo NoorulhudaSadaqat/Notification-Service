@@ -7,7 +7,6 @@ import Events from '../../components/events/events';
 import Notifications from '../../components/notifications/notifications';
 
 const Dashboard = () => {
-  const [params, setParams] = useState({});
   const [applicationId, setApplicationId] = useState<string | undefined>('');
   const [eventId, setEventId] = useState<string | undefined>('');
   const [notificationId, setNotificationId] = useState<string | undefined>('');

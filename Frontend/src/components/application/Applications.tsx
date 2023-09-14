@@ -13,6 +13,7 @@ interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 export const Applications = ({ setApplicationId }: Props) => {
+  const [params, setParams] = useState<object>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application>();
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -77,6 +78,7 @@ export const Applications = ({ setApplicationId }: Props) => {
         )}
 
         <DisplayDriver
+          setParams={setParams}
           filters={filters}
           AddModalId={1}
           isModalOpen={isModalOpen}

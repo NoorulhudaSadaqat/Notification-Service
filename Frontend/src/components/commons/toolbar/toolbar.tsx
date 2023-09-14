@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
-import Toolbar from '@mui/material/Toolbar';
-import AppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
-import SortIcon from '@mui/icons-material/Sort';
-import AddIcon from '@mui/icons-material/Add';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import {
+  AppBar,
   Box,
+  IconButton,
+  InputBase,
+  Menu,
+  MenuItem,
+  Toolbar,
   Typography,
-  Radio,
-  FormControlLabel,
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
-import EditModal from '../modal/modal';
+import SearchIcon from '@mui/icons-material/Search';
+import SortIcon from '@mui/icons-material/Sort';
+import AddIcon from '@mui/icons-material/Add';
 import { Check, CreateRounded, EditNote, FilterAlt } from '@mui/icons-material';
 
 const inputStyles = {
@@ -27,15 +24,17 @@ const inputStyles = {
 };
 
 interface Props {
-  AddModalId: number;
-  onSearch: () => void;
   filters: string[];
-  text: string;
+  onSearch: () => void;
   searchText: string;
   setSearchText: (text: string) => void;
+  text: string;
+  AddModalId: number;
+  setParams: React.Dispatch<React.SetStateAction<object>>;
 }
 
 const ToolBar = ({
+  setParams,
   filters,
   onSearch,
   searchText,
@@ -47,19 +46,12 @@ const ToolBar = ({
   const [sortBy, setSortBy] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
-  const [isActiveFilter, setIsActiveFilter] = useState(false);
-  const [createdAtFilter, setCreatedAtFilter] = useState(false);
-  const [modifiedAtFilter, setModifiedAtFilter] = useState(false);
-  const [filterCalls, setFilterCalls] = useState({
-    isActive: false,
-    createdAt: false,
-    modifiedAt: false,
-  });
-  const handleInputChange = (e) => {
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
-  const handleSortClick = (event) => {
+  const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -67,11 +59,12 @@ const ToolBar = ({
     setAnchorEl(null);
   };
 
-  const handleSortOptionClick = (option) => {
+  const handleSortOptionClick = (option: string) => {
     setSortBy(option);
     setAnchorEl(null);
   };
-  const handleOpenModal = (id) => {
+
+  const handleOpenModal = (id: number) => {
     setIsModalOpen(true);
   };
 
@@ -79,8 +72,23 @@ const ToolBar = ({
     setFilterButtonPressed(!filterButtonPressed);
   };
 
+  const handleFilterCalls = (
+    event: React.MouseEvent<HTMLElement>,
+    newFilterCalls: string[]
+  ) => {
+    setSelectedFilters(newFilterCalls);
+
+    const updatedFilterObject = {};
+    newFilterCalls.forEach((filter) => {
+      updatedFilterObject[filter] = true;
+    });
+
+    setParams(updatedFilterObject);
+    console.log(filterCalls);
+  };
+
   function titleModal() {
-    const titleMap = {
+    const titleMap: Record<number, string> = {
       1: 'Add New Application',
       2: 'Add New Event',
       3: 'Add New Notification',
@@ -136,7 +144,7 @@ const ToolBar = ({
               </MenuItem>
             ))}
           </Menu>
-          <IconButton onClick={() => handleFilter()}>
+          <IconButton onClick={handleFilter}>
             <FilterAlt />
           </IconButton>
           <IconButton onClick={() => handleOpenModal(AddModalId)}>
@@ -156,20 +164,9 @@ const ToolBar = ({
           }}
         >
           <ToggleButtonGroup
-            size='small'
-            value={Object.keys(filterCalls).filter((key) => filterCalls[key])}
-            onChange={(event, newFilter) => {
-              console.log(newFilter);
-              console.log(filterCalls);
-              const obj = { ...filterCalls };
-              console.log(obj);
-              for (let i = 0; i < newFilter.length; i++) {
-                console.log(newFilter[i]);
-                filterCalls[newFilter[i]] = !filterCalls[newFilter[i]];
-              }
-              console.log(filterCalls);
-            }}
-            aria-label='filters'
+            value={selectedFilters}
+            onChange={handleFilterCalls}
+            aria-label='text formatting'
           >
             <ToggleButton value='isActive' aria-label='isActive'>
               <>
