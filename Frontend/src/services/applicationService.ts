@@ -2,10 +2,15 @@ import {
   useQuery,
   QueryFunctionContext,
   useMutation,
-  QueryClient,
-} from '@tanstack/react-query';
-import { Application } from '../types/application';
-import apiClient from './axios';
+
+  useQueryClient,
+} from "@tanstack/react-query";
+import { Application } from "../types/application";
+import apiClient from "./axios";
+
+interface ContextType {
+  previousApplications: Application[];
+}
 
 export const useGetApplications = (data: object | undefined) =>
   useQuery<Application[], Error>({
@@ -46,14 +51,49 @@ export const useGetEvents = (applicationId: string | undefined) =>
   });
 
 export const useAddApplication = () => {
-  const queryClient = new QueryClient();
-
-  return useMutation({
-    mutationFn: async () => {
-      const response = await apiClient(`/applications`, 'post');
+  const queryClient = useQueryClient();
+  return useMutation<Application, Error, Application, ContextType>({
+    mutationFn: async (application: Application) => {
+      const response = await apiClient(`/applications`, "post", application);
       return response.data;
     },
     onSuccess: (savedApplication) => {
+      const previousApplications = queryClient.getQueryData<Application[]>([
+        "applications",
+      ]);
+      queryClient.setQueryData<Application[] | undefined>(
+        ["applications"],
+        (applications) => {
+          if (applications) {
+            return [savedApplication, ...applications];
+          }
+          return [savedApplication];
+        }
+      );
+      return { previousApplications };
+    },
+    onError: (error, variables, context) => {
+      if (!context) return;
+      queryClient.setQueryData<Application[]>(
+        ["applications"],
+        context?.previousApplications
+      );
+    },
+  });
+};
+
+export const useUpateApplication = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Application, Error, Application, ContextType>({
+    mutationFn: async (application: Application) => {
+      const response = await apiClient(`/applications`, "patch", application);
+
+      return response.data;
+    },
+    onSuccess: (savedApplication) => {
+      const previousApplications = queryClient.getQueryData<Application[]>([
+        "applications",
+      ]);
       queryClient.setQueryData<Application[] | undefined>(
         ['applications'],
         (applications) => {
@@ -62,6 +102,14 @@ export const useAddApplication = () => {
           }
           return [savedApplication];
         }
+      );
+      return { previousApplications };
+    },
+    onError: (error, variables, context) => {
+      if (!context) return;
+      queryClient.setQueryData<Application[]>(
+        ["applications"],
+        context?.previousApplications
       );
     },
   });
