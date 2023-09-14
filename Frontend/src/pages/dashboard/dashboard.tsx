@@ -1,28 +1,21 @@
-import { Box, CssBaseline } from '@mui/material';
-import Applications from '../../components/application/applications';
+import { Alert, Box, CssBaseline } from '@mui/material';
+import { useState, useEffect, useRef } from 'react';
 import TopBar from '../../components/commons/topbar/topbar';
 import styles from './dashboard.module.css';
+import { Applications } from '../../components/application/Applications';
 import Events from '../../components/events/events';
 import Notifications from '../../components/notifications/notifications';
-import { useEffect, useState } from 'react';
-import { Application } from '../../types/application';
-import { useGetApplications } from '../../services/applicationService';
 
 const Dashboard = () => {
-  //todo: create states for app and event id
-  //set function propogates down
-  //onClick calls set function
-  const [params, setParams] = useState({});
-  const [applicationID, setApplicationID] = useState<string | undefined>('');
-  const [applications, setApplications] = useState<Application[] | undefined>();
-  const { isLoading, isError, data, error } = useGetApplications(params);
+  const [applicationId, setApplicationId] = useState<string | undefined>('');
+  const [eventId, setEventId] = useState<string | undefined>('');
+  const [notificationId, setNotificationId] = useState<string | undefined>('');
+
+  // Use useEffect to listen for changes in applicationId
   useEffect(() => {
-    if (data && !isLoading && !isError) {
-      const applicationFetched = data.applications;
-      setApplications(applicationFetched);
-      console.log('Fetched Applications:', applicationFetched);
-    }
-  }, [data]);
+    // When applicationId changes, unset the eventId
+    setEventId(undefined);
+  }, [applicationId]);
 
   return (
     <>
@@ -34,16 +27,29 @@ const Dashboard = () => {
           display='flex'
           minHeight='100vh'
           flexDirection='column'
+          marginBottom='10rem'
         >
-          <Applications
-            data={applications}
-            setData={setApplications}
-            isLoading={isLoading}
-            applicationID={applicationID}
-            setApplicationID={setApplicationID}
-          />
-          {/* <Events />
-          <Notifications /> */}
+          <Applications setApplicationId={setApplicationId} />
+          {!applicationId && (
+            <Alert severity='warning'>
+              Please select an application to see events.
+            </Alert>
+          )}
+          {applicationId && (
+            <Events applicationId={applicationId} setEventId={setEventId} />
+          )}
+          {applicationId && !eventId && (
+            <Alert severity='warning'>
+              Please select an event to see notifications.
+            </Alert>
+          )}
+          {eventId && (
+            <Notifications
+              eventId={eventId}
+              setNotificationId={setNotificationId}
+              applicationId={applicationId}
+            />
+          )}
         </Box>
       </div>
     </>

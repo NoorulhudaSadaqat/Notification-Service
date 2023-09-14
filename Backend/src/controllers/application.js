@@ -1,9 +1,10 @@
-const Application = require("../models/application");
-const Event = require("../models/event");
-const { StatusCodes } = require("http-status-codes");
-const knex = require("../knex");
-const config = require("config");
-const Message = require("../models/message");
+const Application = require('../models/application');
+const Event = require('../models/event');
+const { StatusCodes } = require('http-status-codes');
+const knex = require('../knex');
+const config = require('config');
+const Message = require('../models/message');
+const { Mongoose, default: mongoose } = require('mongoose');
 
 const getAllApplication = async (req, res) => {
   const page = req.query.page || 1;
@@ -15,18 +16,18 @@ const getAllApplication = async (req, res) => {
     if (!(req.query[key] == page || req.query[key] == pageSize))
       queryParams[key.toString()] = req.query[key];
   }
-  if (config.get("server.db") === "postgres") {
-    const applications = await knex("application")
+  if (config.get('server.db') === 'postgres') {
+    const applications = await knex('application')
       .where(queryParams)
       .limit(pageSize)
       .offset(offset)
-      .orderBy("name");
+      .orderBy('name');
     return res.send(applications);
   }
   const applications = await Application.find(queryParams)
     .skip(offset)
     .limit(pageSize)
-    .sort("name");
+    .sort('name');
   const totalCount = await Application.countDocuments(queryParams);
   return res.send({ applications, totalCount });
 };
@@ -37,22 +38,34 @@ const getAllEvent = async (req, res) => {
   const offset = (page - 1) * pageSize;
   const applicationId = req.params.id;
   const queryParams = {};
+
+  console.log(
+    'page ',
+    page,
+    'pagesize ',
+    pageSize,
+    'offset ',
+    offset,
+    'application Id ',
+    applicationId
+  );
+
   for (const key in req.query) {
     if (!(req.query[key] == page || req.query[key] == pageSize))
       queryParams[key.toString()] = req.query[key];
   }
-  if (config.get("server.db") === "postgres") {
-    const application = await knex("application")
-      .where("id", applicationId)
+  if (config.get('server.db') === 'postgres') {
+    const application = await knex('application')
+      .where('id', applicationId)
       .first();
 
     if (!application) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "The application with the given ID was not found." });
+        .json({ error: 'The application with the given ID was not found.' });
     }
-    const events = await knex("event")
-      .where("applicationId", applicationId)
+    const events = await knex('event')
+      .where('applicationId', applicationId)
       .where(queryParams)
       .limit(pageSize)
       .offset(offset);
@@ -62,7 +75,10 @@ const getAllEvent = async (req, res) => {
   if (!application)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "The application with the given ID was not found." });
+      .json({ error: 'The application with the given ID was not found.' });
+
+  console.log('application : ', application);
+
   const events = await Event.find({
     applicationId: applicationId,
     ...queryParams,
@@ -83,18 +99,18 @@ const getAllMessage = async (req, res) => {
     if (!(req.query[key] == page || req.query[key] == pageSize))
       queryParams[key.toString()] = req.query[key];
   }
-  if (config.get("server.db") === "postgres") {
-    const application = await knex("application")
-      .where("id", applicationId)
+  if (config.get('server.db') === 'postgres') {
+    const application = await knex('application')
+      .where('id', applicationId)
       .first();
 
     if (!application) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "The application with the given ID was not found." });
+        .json({ error: 'The application with the given ID was not found.' });
     }
-    const messages = await knex("message")
-      .where("applicationId", applicationId)
+    const messages = await knex('message')
+      .where('applicationId', applicationId)
       .where(queryParams)
       .limit(pageSize)
       .offset(offset);
@@ -104,7 +120,7 @@ const getAllMessage = async (req, res) => {
   if (!application)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "The application with the given ID was not found." });
+      .json({ error: 'The application with the given ID was not found.' });
   const messages = await Message.find({
     applicationId: applicationId,
     ...queryParams,
@@ -126,28 +142,28 @@ const createApplication = async (req, res) => {
     modifiedBy: req.user.id || req.user._id,
     modifiedDate: new Date(),
   };
-  if (config.get("server.db") === "postgres") {
-    const existingApplication = await knex("application")
-      .where("name", req.body.name)
+  if (config.get('server.db') === 'postgres') {
+    const existingApplication = await knex('application')
+      .where('name', req.body.name)
       .first();
     if (existingApplication) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "Application already registered." });
+        .json({ error: 'Application already registered.' });
     }
-    const createdApplication = await knex("application")
+    const createdApplication = await knex('application')
       .insert(reqBody)
-      .returning("*");
+      .returning('*');
     return res.send(createdApplication);
   }
   const existingApplication = await Application.findOne({
     name: req.body.name,
   });
-  "application :", existingApplication;
+  'application :', existingApplication;
   if (existingApplication) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Application already registered." });
+      .json({ error: 'Application already registered.' });
   }
   let application = new Application(reqBody);
   application = await application.save();
@@ -161,15 +177,15 @@ const updateApplication = async (req, res) => {
     modifiedBy: req.user.id || req.user._id,
     modifiedDate: new Date(),
   };
-  if (config.get("server.db") === "postgres") {
-    const application = await knex("application")
-      .where("id", applicationId)
-      .update(reqBody, ["*"]);
+  if (config.get('server.db') === 'postgres') {
+    const application = await knex('application')
+      .where('id', applicationId)
+      .update(reqBody, ['*']);
 
     if (!application.length) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "The application with the given ID was not found." });
+        .json({ error: 'The application with the given ID was not found.' });
     }
 
     return res.send(application[0]);
@@ -182,32 +198,32 @@ const updateApplication = async (req, res) => {
   if (!application)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "The application with the given ID was not found." });
+      .json({ error: 'The application with the given ID was not found.' });
 
   return res.send(application);
 };
 
 const deleteApplication = async (req, res) => {
   const applicationId = req.params.id;
-  if (config.get("server.db") === "postgres") {
-    const application = await knex("application")
-      .where("id", applicationId)
+  if (config.get('server.db') === 'postgres') {
+    const application = await knex('application')
+      .where('id', applicationId)
       .update(
         {
           isActive: false,
           modifiedDate: new Date(),
           modifiedBy: req.user.id || req.user._id,
         },
-        ["*"]
+        ['*']
       );
     if (!application.length) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "The application with the given ID was not found." });
+        .json({ error: 'The application with the given ID was not found.' });
     }
     return res
       .status(StatusCodes.OK)
-      .json({ message: "The application with given Id is deleted" });
+      .json({ message: 'The application with given Id is deleted' });
   }
 
   const application = await Application.findByIdAndUpdate(
@@ -223,24 +239,24 @@ const deleteApplication = async (req, res) => {
   if (!application)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "The application with the given ID was not found." });
+      .json({ error: 'The application with the given ID was not found.' });
 
   return res
     .status(StatusCodes.OK)
-    .json({ message: "The application with the given ID is deleted" });
+    .json({ message: 'The application with the given ID is deleted' });
 };
 
 const getApplication = async (req, res) => {
   const applicationId = req.params.id;
-  if (config.get("server.db") === "postgres") {
-    const application = await knex("application")
-      .where("id", applicationId)
+  if (config.get('server.db') === 'postgres') {
+    const application = await knex('application')
+      .where('id', applicationId)
       .first();
 
     if (!application) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "The application with the given ID was not found." });
+        .json({ error: 'The application with the given ID was not found.' });
     }
 
     return res.send(application);
@@ -252,7 +268,7 @@ const getApplication = async (req, res) => {
   if (!application)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "The application with the given ID was not found." });
+      .json({ error: 'The application with the given ID was not found.' });
 
   return res.send(application);
 };

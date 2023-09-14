@@ -4,10 +4,11 @@ import styles from './displaydriver.module.css';
 import ToolBar from '../toolbar/toolbar';
 import EditModal from '../modal/modal';
 import { Application } from '../../../types/application';
+import { Event } from '../../../types/event';
+import { Alert } from '@mui/material';
 
 interface Props {
-  data: Application[] | undefined;
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>;
+  data: (Application | Event)[] | undefined;
   toolBarTitle: string;
   modalTitle: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
@@ -17,17 +18,24 @@ interface Props {
   setEditedCardName: React.Dispatch<React.SetStateAction<string>>;
   editedCardName: string | null;
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
+  setSearchError: React.Dispatch<React.SetStateAction<string>>;
   editedCardDescription: string | null;
   isModalOpen: boolean;
+  searchError: string;
   AddModalId: number;
+  setParams: React.Dispatch<React.SetStateAction<object>>;
+  filters: string[];
 }
 const DisplayDriver = ({
+  setParams,
+  searchError,
+  filters,
+  setSearchError,
   isModalOpen,
   setIsModalOpen,
   searchText,
   setSearchText,
   data,
-  setData,
   editedCardName,
   setEditedCardName,
   editedCardDescription,
@@ -40,12 +48,15 @@ const DisplayDriver = ({
   return (
     <>
       <ToolBar
+        setParams={setParams}
+        filters={filters}
         AddModalId={AddModalId}
         text={toolBarTitle}
-        onSearch={() => handleSearch(searchText, data, setData)}
+        onSearch={() => handleSearch(setSearchError, searchText, data)}
         setSearchText={setSearchText}
         searchText={searchText}
       />
+      {searchError && <Alert severity='error'>{searchError}</Alert>}
       {renderComponent()}
       <EditModal
         modalTitle={modalTitle}

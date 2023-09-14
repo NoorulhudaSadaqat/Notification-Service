@@ -1,3 +1,4 @@
+import { Alert } from '@mui/material';
 import { Application } from '../types/application';
 
 export const handleEdit = (
@@ -14,23 +15,16 @@ export const handleEdit = (
 
 export const handleDelete = (
   id: number | string | undefined,
-  data: Application[],
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>
+  data: (Application | Event)[] | undefined
 ) => {
   console.log(`Delete action for card with ID ${id}`);
-  const filteredData = data.filter((ele: Application) => ele.id !== id);
-  setData(filteredData);
 };
 
 export const handleToggleActive = (
   id: number | string | undefined,
-  data: Application[],
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>
+  data: (Application | Event)[] | undefined
 ) => {
-  const updatedData = data.map((ele: Application) =>
-    ele.id === id ? { ...ele, isActive: !ele.isActive } : ele
-  );
-  setData(updatedData);
+  console.log('Handling Toggle Activation');
 };
 
 export const handleCloseModal = (
@@ -44,13 +38,16 @@ export const handleCloseModal = (
 };
 
 export const handleSearch = (
+  setSearchError: React.Dispatch<React.SetStateAction<string>>,
   searchText: string,
-  data: Application[] | undefined,
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>
+  data: (Application | Event)[] | undefined
 ) => {
-  console.log('search Test', searchText);
-  const filteredData = data?.filter((ele) =>
-    ele.name.toLowerCase().includes(searchText.toLowerCase())
-  );
-  setData(filteredData);
+  if (searchText.length < 3) {
+    console.log('Search should be more than 3 characters');
+    setSearchError('Search should be more than atleast 3 characters');
+  } else {
+    setSearchError('');
+  }
 };
+
+export const filters = ['Active', 'Created At', 'Modified At'];

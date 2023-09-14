@@ -1,17 +1,19 @@
-import { Typography, CardContent, Card, CardActions } from '@mui/material';
+import { Typography, CardContent, Card, CardActions, Box } from '@mui/material';
 import styles from './card.module.css';
 import HandlerButtons from '../handlers/handler';
+import IconButton from '@mui/material/IconButton';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
   handleEdit,
   handleDelete,
   handleToggleActive,
 } from '../../../utils/dataUtils';
 import { Application } from '../../../types/application';
+import { useState } from 'react';
 interface Props {
   data: Application[] | undefined;
-  setData: React.Dispatch<React.SetStateAction<Application[] | undefined>>;
-
-  setApplicationID: React.Dispatch<React.SetStateAction<string | undefined>>;
+  openInfoModal: (element: Application) => void;
+  setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
   setEditedCardName: React.Dispatch<React.SetStateAction<string>>;
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,8 +21,8 @@ interface Props {
 
 export default function InfoCard({
   data,
-  setData,
-  setApplicationID,
+  openInfoModal,
+  setApplicationId,
   setEditedCardName,
   setEditedCardDescription,
   setIsModalOpen,
@@ -30,13 +32,13 @@ export default function InfoCard({
       {data?.map((e) => (
         <Card
           onClick={() => {
-            setApplicationID(e._id);
-            console.log(e._id);
+            setApplicationId(e._id);
           }}
           key={e._id}
           sx={{
             curor: 'pointer',
             minWidth: 275,
+
             margin: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
@@ -44,13 +46,25 @@ export default function InfoCard({
             boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.197)',
           }}
         >
-          <CardContent>
-            <Typography
-              sx={{ textAlign: 'left', fontSize: '0.75rem' }}
-              gutterBottom
+          <CardContent sx={{ minHeight: 150 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
             >
-              {e.code}
-            </Typography>
+              <Typography sx={{ textAlign: 'left', fontSize: '0.75rem' }}>
+                {e.code}
+              </Typography>
+              <IconButton
+                aria-label='info'
+                sx={{ fontSize: '18px' }}
+                onClick={() => openInfoModal(e)}
+              >
+                <InfoOutlinedIcon sx={{ fontSize: '18px' }} />
+              </IconButton>
+            </Box>
             <div className={styles.colorBand}></div>
             <Typography
               sx={{ fontWeight: 'bold', textAlign: 'left' }}
@@ -60,12 +74,33 @@ export default function InfoCard({
             >
               {e.name}
             </Typography>
+
             <Typography
-              sx={{ textAlign: 'left' }}
+              sx={{
+                textAlign: 'left',
+                whiteSpace: 'pre-line', // or wordWrap: 'break-word'
+                wordWrap: 'break-word',
+              }}
               variant='body2'
               color='text.secondary'
             >
-              {e.description}
+              {e.description.length > 100 ? (
+                <>
+                  {e.description.substring(0, 100)}
+                  <span
+                    style={{
+                      color: 'blue',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => openInfoModal(e)}
+                  >
+                    ...
+                  </span>
+                </>
+              ) : (
+                e.description
+              )}
             </Typography>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -80,8 +115,8 @@ export default function InfoCard({
                   setIsModalOpen
                 )
               }
-              onDelete={() => handleDelete(e.id, data, setData)}
-              onToggleActive={() => handleToggleActive(e.id, data, setData)}
+              onDelete={() => handleDelete(e._id, data)}
+              onToggleActive={() => handleToggleActive(e._id, data)}
             />
           </CardActions>
         </Card>

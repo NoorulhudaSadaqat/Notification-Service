@@ -2,6 +2,7 @@ import {
   useQuery,
   QueryFunctionContext,
   useMutation,
+
   useQueryClient,
 } from "@tanstack/react-query";
 import { Application } from "../types/application";
@@ -13,9 +14,9 @@ interface ContextType {
 
 export const useGetApplications = (data: object | undefined) =>
   useQuery<Application[], Error>({
-    queryKey: ["applications", data],
+    queryKey: ['applications', data],
     queryFn: async () => {
-      const response = await apiClient("/applications", "get", data);
+      const response = await apiClient('/applications', 'get', data);
       return response.data;
     },
     staleTime: 1 * 60 * 1000,
@@ -24,25 +25,25 @@ export const useGetApplications = (data: object | undefined) =>
 
 export const useGetApplication = (applicationId: number | undefined) =>
   useQuery<Application[], Error>({
-    queryKey: ["applications", applicationId],
+    queryKey: ['applications', applicationId],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const applicationId = queryKey[1];
-      const response = await apiClient(`/applications/${applicationId}`, "get");
+      const response = await apiClient(`/applications/${applicationId}`, 'get');
       return response.data;
     },
     staleTime: 1 * 60 * 1000,
   });
 
-export const useGetEvents = (applicationId: number | undefined) =>
-  useQuery<Application[], Error>({
-    queryKey: ["events", applicationId, "applications"],
+export const useGetEvents = (applicationId: string | undefined) =>
+  useQuery<Event[], Error>({
+    queryKey: ['events', applicationId, 'applications'],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const applicationId = queryKey[1];
       const response = await apiClient(
         `/applications/${applicationId}/events`,
-        "get"
+        'get'
       );
       return response.data;
     },
@@ -86,6 +87,7 @@ export const useUpateApplication = () => {
   return useMutation<Application, Error, Application, ContextType>({
     mutationFn: async (application: Application) => {
       const response = await apiClient(`/applications`, "patch", application);
+
       return response.data;
     },
     onSuccess: (savedApplication) => {
@@ -93,7 +95,7 @@ export const useUpateApplication = () => {
         "applications",
       ]);
       queryClient.setQueryData<Application[] | undefined>(
-        ["applications"],
+        ['applications'],
         (applications) => {
           if (applications) {
             return [savedApplication, ...applications];
