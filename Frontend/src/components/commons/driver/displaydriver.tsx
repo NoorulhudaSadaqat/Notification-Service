@@ -1,13 +1,15 @@
 import { handleSearch, handleCloseModal } from '../../../utils/dataUtils';
-import React from 'react';
+import React, { ContextType } from 'react';
 import styles from './displaydriver.module.css';
 import ToolBar from '../toolbar/toolbar';
 import EditModal from '../modal/modal';
 import { Application } from '../../../types/application';
 import { Event } from '../../../types/event';
 import { Alert } from '@mui/material';
+import { UseMutationResult } from '@tanstack/react-query';
 
 interface Props {
+  params: object;
   data: (Application | Event)[] | undefined;
   toolBarTitle: string;
   modalTitle: string;
@@ -22,11 +24,16 @@ interface Props {
   editedCardDescription: string | null;
   isModalOpen: boolean;
   searchError: string;
-  AddModalId: number;
+
   setParams: React.Dispatch<React.SetStateAction<object>>;
   filters: string[];
+  addModalTitle: string;
+  handleAdd: (element: Application | Event | Notification) => void;
 }
 const DisplayDriver = ({
+  handleAdd,
+  addModalTitle,
+  params,
   setParams,
   searchError,
   filters,
@@ -43,14 +50,15 @@ const DisplayDriver = ({
   renderComponent,
   modalTitle,
   toolBarTitle,
-  AddModalId,
 }: Props) => {
   return (
     <>
       <ToolBar
+        handleAdd={handleAdd}
+        modalTitle={addModalTitle}
+        params={params}
         setParams={setParams}
         filters={filters}
-        AddModalId={AddModalId}
         text={toolBarTitle}
         onSearch={() => handleSearch(setSearchError, searchText, data)}
         setSearchText={setSearchText}
@@ -59,6 +67,7 @@ const DisplayDriver = ({
       {searchError && <Alert severity='error'>{searchError}</Alert>}
       {renderComponent()}
       <EditModal
+        handleSubmitElement={() => {}}
         modalTitle={modalTitle}
         nameOriginal={editedCardName}
         descriptionOriginal={editedCardDescription}

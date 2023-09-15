@@ -28,6 +28,7 @@ interface Props {
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   openInfoModal: (e: Event) => void;
+  handleUpdate: (e: Event | Notification) => void;
 }
 
 const itemsPerPage = 5;
@@ -88,7 +89,25 @@ const GridComponent: React.FC<Props> = ({
                     {ele.name}
                   </Link>
                 </TableCell>
-                <TableCell>{ele.description}</TableCell>
+                <TableCell>
+                  {ele.description.length > 50 ? (
+                    <>
+                      {ele.description.substring(0, 50)}
+                      <span
+                        style={{
+                          color: 'blue',
+                          textDecoration: 'underline',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => openInfoModal(ele)}
+                      >
+                        ...
+                      </span>
+                    </>
+                  ) : (
+                    ele.description
+                  )}
+                </TableCell>
                 <TableCell>
                   <HandlerButtons
                     isActive={ele.isActive}
@@ -101,8 +120,10 @@ const GridComponent: React.FC<Props> = ({
                         setIsModalOpen
                       )
                     }
-                    onDelete={() => handleDelete(ele._id, data)}
-                    onToggleActive={() => handleToggleActive(ele._id, data)}
+                    onDelete={() => handleUpdate({ ...ele, isDeleted: true })}
+                    onToggleActive={() =>
+                      handleUpdate({ ...ele, isActive: !ele.isActive })
+                    }
                   />
                 </TableCell>
               </TableRow>

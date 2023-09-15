@@ -7,5 +7,7 @@ export interface Event {
   createdBy?: string;
   modifiedBy?: string;
   createdDate?: string;
+  isDeleted?: boolean;
+
   modifiedDate?: string;
 }

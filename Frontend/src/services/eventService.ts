@@ -1,17 +1,21 @@
-
+<<<<<<< Updated upstream
+import { useQuery, QueryFunctionContext } from '@tanstack/react-query';
+import { Event } from '../types/event';
+import apiClient from './axios';
+=======
 import {
   useQuery,
   QueryFunctionContext,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { Event } from "../types/event";
-import apiClient from "./axios";
-
+} from '@tanstack/react-query';
+import { Event } from '../types/event';
+import apiClient from './axios';
 
 interface ContextType {
   previousEvents: Event[];
 }
+>>>>>>> Stashed changes
 
 export const useGetEvents = (data: object | undefined) =>
   useQuery<Event[], Error>({
@@ -40,8 +44,13 @@ export const useGetNotifications = (
   eventId: string | undefined,
   data: object | undefined
 ) =>
+<<<<<<< Updated upstream
   useQuery<Event[], Error>({
     queryKey: ['events', eventId, data],
+=======
+  useQuery<Notification[], Error>({
+    queryKey: ['events', eventId, 'notification-types', data],
+>>>>>>> Stashed changes
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const eventId = queryKey[1];
@@ -54,17 +63,19 @@ export const useGetNotifications = (
     },
     staleTime: 1 * 60 * 1000,
   });
+<<<<<<< Updated upstream
+=======
 
 export const useAddEvents = () => {
   const queryClient = useQueryClient();
   return useMutation<Event, Error, Event, ContextType>({
     mutationFn: async (event: Event) => {
-      const response = await apiClient(`/events`, "post", event);
+      const response = await apiClient(`/events`, 'post', event);
       return response.data;
     },
     onSuccess: (savedEvents) => {
-      const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
-      queryClient.setQueryData<Event[] | undefined>(["events"], (events) => {
+      const previousEvents = queryClient.getQueryData<Event[]>(['events']);
+      queryClient.setQueryData<Event[] | undefined>(['events'], (events) => {
         if (events) {
           return [savedEvents, ...events];
         }
@@ -75,7 +86,7 @@ export const useAddEvents = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
-        ["applications"],
+        ['applications'],
         context?.previousEvents
       );
     },
@@ -86,12 +97,12 @@ export const useUpdateEvents = () => {
   const queryClient = useQueryClient();
   return useMutation<Event, Error, Event, ContextType>({
     mutationFn: async (event: Event) => {
-      const response = await apiClient(`/events`, "patch", event);
+      const response = await apiClient(`/events`, 'patch', event);
       return response.data;
     },
     onSuccess: (savedEvents) => {
-      const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
-      queryClient.setQueryData<Event[] | undefined>(["events"], (events) => {
+      const previousEvents = queryClient.getQueryData<Event[]>(['events']);
+      queryClient.setQueryData<Event[] | undefined>(['events'], (events) => {
         if (events) {
           return [savedEvents, ...events];
         }
@@ -102,9 +113,10 @@ export const useUpdateEvents = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
-        ["applications"],
+        ['applications'],
         context?.previousEvents
       );
     },
   });
 };
+>>>>>>> Stashed changes

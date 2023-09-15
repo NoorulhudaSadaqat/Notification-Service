@@ -11,9 +11,7 @@ const Dashboard = () => {
   const [eventId, setEventId] = useState<string | undefined>('');
   const [notificationId, setNotificationId] = useState<string | undefined>('');
 
-  // Use useEffect to listen for changes in applicationId
   useEffect(() => {
-    // When applicationId changes, unset the eventId
     setEventId(undefined);
   }, [applicationId]);
 

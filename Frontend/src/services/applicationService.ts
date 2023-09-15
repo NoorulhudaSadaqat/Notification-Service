@@ -2,15 +2,21 @@ import {
   useQuery,
   QueryFunctionContext,
   useMutation,
-
+<<<<<<< Updated upstream
+  QueryClient,
+} from '@tanstack/react-query';
+import { Application } from '../types/application';
+import apiClient from './axios';
+=======
   useQueryClient,
-} from "@tanstack/react-query";
-import { Application } from "../types/application";
-import apiClient from "./axios";
+} from '@tanstack/react-query';
+import { Application } from '../types/application';
+import apiClient from './axios';
 
 interface ContextType {
   previousApplications: Application[];
 }
+>>>>>>> Stashed changes
 
 export const useGetApplications = (data: object | undefined) =>
   useQuery<Application[], Error>({
@@ -55,48 +61,18 @@ export const useGetEvents = (
   });
 
 export const useAddApplication = () => {
+<<<<<<< Updated upstream
+  const queryClient = new QueryClient();
+=======
   const queryClient = useQueryClient();
   return useMutation<Application, Error, Application, ContextType>({
     mutationFn: async (application: Application) => {
-      const response = await apiClient(`/applications`, "post", application);
+      const response = await apiClient(`/applications`, 'post', application);
       return response.data;
     },
     onSuccess: (savedApplication) => {
       const previousApplications = queryClient.getQueryData<Application[]>([
-        "applications",
-      ]);
-      queryClient.setQueryData<Application[] | undefined>(
-        ["applications"],
-        (applications) => {
-          if (applications) {
-            return [savedApplication, ...applications];
-          }
-          return [savedApplication];
-        }
-      );
-      return { previousApplications };
-    },
-    onError: (error, variables, context) => {
-      if (!context) return;
-      queryClient.setQueryData<Application[]>(
-        ["applications"],
-        context?.previousApplications
-      );
-    },
-  });
-};
-
-export const useUpateApplication = () => {
-  const queryClient = useQueryClient();
-  return useMutation<Application, Error, Application, ContextType>({
-    mutationFn: async (application: Application) => {
-      const response = await apiClient(`/applications`, "patch", application);
-
-      return response.data;
-    },
-    onSuccess: (savedApplication) => {
-      const previousApplications = queryClient.getQueryData<Application[]>([
-        "applications",
+        'applications',
       ]);
       queryClient.setQueryData<Application[] | undefined>(
         ['applications'],
@@ -112,9 +88,52 @@ export const useUpateApplication = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Application[]>(
-        ["applications"],
+        ['applications'],
         context?.previousApplications
       );
+    },
+  });
+};
+
+export const useUpateApplication = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Application, Error, Application, ContextType>({
+    mutationFn: async (application: Application) => {
+      const response = await apiClient(`/applications`, 'patch', application);
+>>>>>>> Stashed changes
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await apiClient(`/applications`, 'post');
+      return response.data;
+    },
+    onSuccess: (savedApplication) => {
+<<<<<<< Updated upstream
+=======
+      const previousApplications = queryClient.getQueryData<Application[]>([
+        'applications',
+      ]);
+>>>>>>> Stashed changes
+      queryClient.setQueryData<Application[] | undefined>(
+        ['applications'],
+        (applications) => {
+          if (applications) {
+            return [savedApplication, ...applications];
+          }
+          return [savedApplication];
+        }
+      );
+<<<<<<< Updated upstream
+=======
+      return { previousApplications };
+    },
+    onError: (error, variables, context) => {
+      if (!context) return;
+      queryClient.setQueryData<Application[]>(
+        ['applications'],
+        context?.previousApplications
+      );
+>>>>>>> Stashed changes
     },
   });
 };

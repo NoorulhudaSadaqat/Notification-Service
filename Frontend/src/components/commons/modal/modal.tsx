@@ -7,6 +7,7 @@ import Modal from '@mui/material/Modal';
 import { z, string } from 'zod';
 import FormInputText from '../formtextinput/formInputText';
 import styles from './modal.module.css';
+import { Application } from '../../../types/application';
 const style = {
   position: 'absolute' as const,
   top: '50%',
@@ -40,9 +41,11 @@ interface Props {
   modalTitle: string;
   open: boolean;
   handleClose: () => void;
+  handleSubmitElement: (element: Application | Event | Notification) => void;
 }
 
 export default function EditModal({
+  handleSubmitElement,
   modalTitle,
   nameOriginal,
   descriptionOriginal,
@@ -55,6 +58,9 @@ export default function EditModal({
   const onSubmit = async (data: IFormInput) => {
     try {
       await validationSchema.parseAsync(data);
+      console.log('Adding Application....', data);
+
+      handleSubmitElement(data);
     } catch (error) {
       if (error instanceof z.ZodError) {
         error.errors.forEach((validationError) => {

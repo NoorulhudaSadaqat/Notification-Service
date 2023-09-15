@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import React, { useEffect, useState } from 'react';
+=======
+import React, { ContextType, useState } from 'react';
+>>>>>>> Stashed changes
 import {
   AppBar,
   Box,
@@ -14,8 +18,17 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
 import AddIcon from '@mui/icons-material/Add';
-import { Check, CreateRounded, EditNote, FilterAlt } from '@mui/icons-material';
-
+import {
+  Check,
+  Close,
+  CreateRounded,
+  EditNote,
+  FilterAlt,
+  FilterAltOutlined,
+} from '@mui/icons-material';
+import EditModal from '../modal/modal';
+import { Application } from '../../../types/application';
+import { Event } from '../../../types/event';
 const inputStyles = {
   backgroundColor: 'white', // Background color for the search input
   '&:hover': {
@@ -24,29 +37,33 @@ const inputStyles = {
 };
 
 interface Props {
+  modalTitle: string;
+  params: object;
   filters: string[];
   onSearch: () => void;
   searchText: string;
   setSearchText: (text: string) => void;
   text: string;
-  AddModalId: number;
   setParams: React.Dispatch<React.SetStateAction<object>>;
+  handleAdd: (element: Application | Event | Notification) => void;
 }
 
 const ToolBar = ({
+  handleAdd,
+  modalTitle,
+  params,
   setParams,
   filters,
   onSearch,
   searchText,
   setSearchText,
   text,
-  AddModalId,
 }: Props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [sortBy, setSortBy] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string>();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
@@ -69,7 +86,7 @@ const ToolBar = ({
     setAnchorEl(null);
   };
 
-  const handleOpenModal = (id: number) => {
+  const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
@@ -79,20 +96,19 @@ const ToolBar = ({
 
   const handleFilterCalls = (
     event: React.MouseEvent<HTMLElement>,
-    newFilterCalls: string[]
+    newFilterCall: string
   ) => {
+<<<<<<< Updated upstream
     setParams({ sortBy: newFilterCalls[0] });
+=======
+    if (!newFilterCall && !params.sortBy) {
+      console.log('here');
+      delete params.sortBy;
+      setParams({ ...params });
+    }
+    setParams({ ...params, sortBy: newFilterCall });
+>>>>>>> Stashed changes
   };
-
-  function titleModal() {
-    const titleMap: Record<number, string> = {
-      1: 'Add New Application',
-      2: 'Add New Event',
-      3: 'Add New Notification',
-    };
-
-    return titleMap[AddModalId] || 'Undefined';
-  }
 
   return (
     <AppBar
@@ -142,9 +158,9 @@ const ToolBar = ({
             ))}
           </Menu>
           <IconButton onClick={handleFilter}>
-            <FilterAlt />
+            {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
           </IconButton>
-          <IconButton onClick={() => handleOpenModal(AddModalId)}>
+          <IconButton onClick={() => handleOpenModal()}>
             <AddIcon />
           </IconButton>
         </Box>
@@ -163,6 +179,7 @@ const ToolBar = ({
           <ToggleButtonGroup
             value={selectedFilters}
             onChange={handleFilterCalls}
+            exclusive
             aria-label='text formatting'
           >
             <ToggleButton value='isActive' aria-label='isActive'>
@@ -183,8 +200,24 @@ const ToolBar = ({
                 <EditNote />
               </>
             </ToggleButton>
+            <ToggleButton value='' aria-label='close'>
+              <>
+                <Close />
+                <Typography sx={{ color: 'black' }}>Cancel</Typography>
+              </>
+            </ToggleButton>
           </ToggleButtonGroup>
         </Box>
+      )}
+      {isModalOpen && (
+        <EditModal
+          handleSubmitElement={handleAdd}
+          modalTitle={modalTitle}
+          nameOriginal={''}
+          descriptionOriginal={''}
+          open={isModalOpen}
+          handleClose={() => setIsModalOpen(false)}
+        />
       )}
     </AppBar>
   );
