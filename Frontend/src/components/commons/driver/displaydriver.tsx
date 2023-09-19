@@ -9,8 +9,8 @@ import { Alert } from '@mui/material';
 
 interface Props {
   params: object;
-  data: (Application | Event)[] | undefined;
   toolBarTitle: string;
+  handleUpdate: (element: any) => void;
   modalTitle: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   searchText: string;
@@ -24,20 +24,22 @@ interface Props {
   isModalOpen: boolean;
   searchError: string;
   setParams: React.Dispatch<React.SetStateAction<object>>;
-  filters: string[];
   addModalTitle: string;
+  isAddModalOpen: boolean;
+  setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleSearch: () => void;
   handleAdd: (element: Application | Event | Notification) => void;
 }
 const DisplayDriver = ({
+  handleUpdate,
   params,
   addModalTitle,
   setParams,
   searchError,
-  filters,
   isModalOpen,
   setIsModalOpen,
-
+  setIsAddModalOpen,
+  isAddModalOpen,
   setSearchText,
   handleSearch,
   editedCardName,
@@ -52,12 +54,13 @@ const DisplayDriver = ({
   return (
     <>
       <ToolBar
+        isAddModalOpen={isAddModalOpen}
+        setIsAddModalOpen={setIsAddModalOpen}
         handleSearch={handleSearch}
         handleAdd={handleAdd}
         params={params}
         addModalTitle={addModalTitle}
         setParams={setParams}
-        filters={filters}
         text={toolBarTitle}
         onSearch={handleSearch}
         setSearchText={setSearchText}
@@ -65,7 +68,7 @@ const DisplayDriver = ({
       {searchError && <Alert severity='error'>{searchError}</Alert>}
       {renderComponent()}
       <EditModal
-        handleSubmitElement={() => {}}
+        handleSubmitElement={handleUpdate}
         modalTitle={modalTitle}
         nameOriginal={editedCardName}
         descriptionOriginal={editedCardDescription}

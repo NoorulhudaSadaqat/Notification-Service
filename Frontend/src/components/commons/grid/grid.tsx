@@ -36,6 +36,7 @@ const itemsPerPage = 5;
 const GridComponent: React.FC<Props> = ({
   data,
   setId,
+  handleUpdate,
   setEditedCardName,
   setEditedCardDescription,
   setIsModalOpen,
@@ -120,9 +121,11 @@ const GridComponent: React.FC<Props> = ({
                         setIsModalOpen
                       )
                     }
-                    onDelete={() => handleUpdate({ ...ele, isDeleted: true })}
+                    onDelete={() =>
+                      handleUpdate({ _id: ele._id, isDeleted: true })
+                    }
                     onToggleActive={() =>
-                      handleUpdate({ ...ele, isActive: !ele.isActive })
+                      handleUpdate({ _id: ele._id, isActive: !ele.isActive })
                     }
                   />
                 </TableCell>

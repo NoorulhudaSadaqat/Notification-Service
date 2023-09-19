@@ -23,6 +23,7 @@ import {
 } from '@mui/icons-material';
 import EditModal from '../modal/modal';
 import { Application } from '../../../types/application';
+import { filters } from '../../../utils/dataUtils';
 
 const inputStyles = {
   backgroundColor: 'white', // Background color for the search input
@@ -33,7 +34,8 @@ const inputStyles = {
 
 interface Props {
   addModalTitle: string;
-  filters: string[];
+  isAddModalOpen: boolean;
+  setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSearch: () => void;
   searchText: string;
   setSearchText: (text: string) => void;
@@ -45,34 +47,31 @@ interface Props {
 }
 
 const ToolBar = ({
-  handleSearch,
+  isAddModalOpen,
   params,
-  setParams,
-  handleAdd,
-  filters,
-  onSearch,
   searchText,
-  setSearchText,
   text,
   addModalTitle,
+  setIsAddModalOpen,
+  handleSearch,
+  setParams,
+  handleAdd,
+  onSearch,
+  setSearchText,
 }: Props) => {
+  const selectedFilters = '';
   const [anchorEl, setAnchorEl] = useState(null);
-  const [sortBy, setSortBy] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterBy, setFilterBy] = useState('');
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
-  const [selectedFilters, setSelectedFilters] = useState<string>();
+
+  // Search
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 3) {
       setSearchText(e.target.value);
       handleSearch();
     }
   };
-  useEffect(() => {
-    if (!filterButtonPressed) {
-      setParams({});
-    }
-  }, [filterButtonPressed]);
-
+  //Filters
   const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -82,25 +81,26 @@ const ToolBar = ({
   };
 
   const handleSortOptionClick = (option: string) => {
-    setSortBy(option);
+    setFilterBy(option);
     setAnchorEl(null);
   };
-
-  const handleOpenModal = () => {
-    console.log('here');
-    setIsModalOpen(true);
-  };
-
+  //Filter Button control
   const handleFilter = () => {
     setFilterButtonPressed(!filterButtonPressed);
   };
-
+  //Parameters for get query
   const handleFilterCalls = (
     event: React.MouseEvent<HTMLElement>,
     newFilterCalls: string
   ) => {
     setParams({ ...params, sortBy: newFilterCalls });
   };
+
+  useEffect(() => {
+    if (!filterButtonPressed) {
+      setParams({});
+    }
+  }, [filterButtonPressed]);
 
   return (
     <AppBar
@@ -125,7 +125,6 @@ const ToolBar = ({
           <IconButton onClick={onSearch} aria-label='search'>
             <SearchIcon />
           </IconButton>
-
           <IconButton
             aria-label='sort'
             onClick={handleSortClick}
@@ -149,10 +148,18 @@ const ToolBar = ({
               </MenuItem>
             ))}
           </Menu>
-          <IconButton onClick={handleFilter}>
+          <IconButton
+            onClick={() => {
+              setFilterButtonPressed(!filterButtonPressed);
+            }}
+          >
             {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
           </IconButton>
-          <IconButton onClick={() => handleOpenModal()}>
+          <IconButton
+            onClick={() => {
+              setIsAddModalOpen(true);
+            }}
+          >
             <AddIcon />
           </IconButton>
         </Box>
@@ -199,8 +206,8 @@ const ToolBar = ({
         submitCall={handleAdd}
         nameOriginal={''}
         modalTitle={addModalTitle}
-        open={isModalOpen}
-        handleClose={() => setIsModalOpen(false)}
+        open={isAddModalOpen}
+        handleClose={() => setIsAddModalOpen(false)}
         descriptionOriginal={''}
       />
     </AppBar>

@@ -18,6 +18,7 @@ interface Props {
 }
 
 const Events = ({ applicationId, setEventId }: Props) => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [params, setParams] = useState<object>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -33,9 +34,9 @@ const Events = ({ applicationId, setEventId }: Props) => {
     applicationId,
     params
   );
-  const eventUpdateMutation = useUpdateEvents();
-  const addEventMutation = useAddEvents();
   const events = data?.events;
+  const updateMutation = useUpdateEvents(applicationId!);
+  const addMutation = useAddEvents(applicationId!);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -43,19 +44,14 @@ const Events = ({ applicationId, setEventId }: Props) => {
       'events',
       applicationId,
       'applications',
-      data,
+      'data',
+      {},
     ]);
   }, [params]);
   const handleSearch = () => {
     setParams({ ...params, search: searchText });
   };
 
-  const handleAddEvents = (event) => {
-    const { isLoading, isError, error } = addEventMutation.mutate(event);
-  };
-  const handleUpdateEvent = (event) => {
-    const { isLoading, isError, error } = eventUpdateMutation.mutate(event);
-  };
   const eventIdSetter = (id: string | undefined) => {
     setEventId(id);
   };
@@ -63,6 +59,46 @@ const Events = ({ applicationId, setEventId }: Props) => {
   const openInfoModal = (ele) => {
     setInfoModalOpen(true);
     setSelectedEvent(ele);
+  };
+
+  const handleAddEvent = async (element: Event) => {
+    try {
+      const eventToPost = { ...element, applicationId: applicationId! };
+      const result = await addMutation.mutateAsync(eventToPost);
+      setSnackbarMessage('Event has been added successfully!');
+      setSnackbarOpen(true);
+      setSeverity('success');
+      queryClient.invalidateQueries([
+        'events',
+        applicationId,
+        'applications',
+        'data',
+        {},
+      ]);
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.log(error.response.data.error);
+      setSnackbarMessage('Error:', error.response.data.error);
+      setSnackbarOpen(true);
+      setSeverity('error');
+    }
+  };
+
+  const handleUpdateEvent = async (element: Event) => {
+    try {
+      console.log(element);
+      const result = await updateMutation.mutateAsync(element);
+      console.log(result);
+      setSnackbarMessage('Event has been updated successfully!');
+      setSnackbarOpen(true);
+      setSeverity('success');
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.log(error);
+      setSnackbarMessage(`Error!`);
+      setSnackbarOpen(true);
+      setSeverity('error');
+    }
   };
 
   const renderComponent = () => {
@@ -102,10 +138,6 @@ const Events = ({ applicationId, setEventId }: Props) => {
     );
   };
 
-  function handleAddEvent(element: Event | Application | Notification): void {
-    throw new Error('Function not implemented.');
-  }
-
   return (
     <>
       <Box>
@@ -135,6 +167,8 @@ const Events = ({ applicationId, setEventId }: Props) => {
       </Snackbar>
       <div className={styles.heightControl}>
         <DisplayDriver
+          isAddModalOpen={isAddModalOpen}
+          setIsAddModalOpen={setIsAddModalOpen}
           handleSearch={handleSearch}
           handleAdd={handleAddEvent}
           setParams={setParams}

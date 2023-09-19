@@ -12,9 +12,9 @@ interface ContextType {
 }
 export const useGetEvents = (data: object | undefined) =>
   useQuery<Event[], Error>({
-    queryKey: ["events", data],
+    queryKey: ['events', data],
     queryFn: async () => {
-      const response = await apiClient("/events", "get", data);
+      const response = await apiClient('/events', 'get', data);
       return response.data;
     },
     staleTime: 1 * 60 * 1000,
@@ -23,11 +23,11 @@ export const useGetEvents = (data: object | undefined) =>
 
 export const useGetEvent = (eventId: number | undefined) =>
   useQuery<Event, Error>({
-    queryKey: ["events", eventId],
+    queryKey: ['events', eventId],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const eventId = queryKey[1];
-      const response = await apiClient(`/events/${eventId}`, "get");
+      const response = await apiClient(`/events/${eventId}`, 'get');
       return response.data;
     },
     staleTime: 1 * 60 * 1000,
@@ -46,7 +46,6 @@ export const useGetNotifications = (
         `/events/${eventId}/notification-types`,
         'get',
         data
-
       );
       return response.data;
     },
@@ -61,10 +60,9 @@ export const useAddEvents = (applicationId: string) => {
       return response.data;
     },
     onSuccess: (savedEvents) => {
-
-      const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
+      const previousEvents = queryClient.getQueryData<Event[]>(['events']);
       queryClient.setQueryData<Event[] | undefined>(
-        ["events", applicationId, "applications"],
+        ['events', applicationId, 'applications'],
         (events) => {
           if (events) {
             return [savedEvents, ...events];
@@ -77,8 +75,7 @@ export const useAddEvents = (applicationId: string) => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
-
-        ["events", applicationId, "applications"],
+        ['events', applicationId, 'applications'],
         context?.previousEvents
       );
     },
@@ -89,17 +86,29 @@ export const useUpdateEvents = (applicationId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Event, Error, Event, ContextType>({
     mutationFn: async (event: Event) => {
-
-      const response = await apiClient(`/events/${event._id}`, "patch", event);
+      const id = event._id;
+      delete event._id;
+      const response = await apiClient(`/events/${id}`, 'patch', event);
       return response.data;
     },
     onSuccess: (savedEvents) => {
-      const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
+      const previousEvents = queryClient.getQueryData<Event[]>(['events']);
       queryClient.setQueryData<Event[] | undefined>(
-        ["events", applicationId, "applications"],
+        ['events', applicationId, 'applications'],
         (events) => {
           if (events) {
-            return [savedEvents, ...events];
+            console.log(events);
+            const updatedEvents = [savedEvents, ...events.events];
+            const uniqueEventIds = new Map();
+            const filteredEvents = updatedEvents.filter((event) => {
+              if (uniqueEventIds.has(event._id)) {
+                return false;
+              } else {
+                uniqueEventIds.set(event._id, true);
+                return true;
+              }
+            });
+            return filteredEvents;
           }
           return [savedEvents];
         }
@@ -109,7 +118,7 @@ export const useUpdateEvents = (applicationId: string) => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
-        ["events", applicationId, "applications"],
+        ['events', applicationId, 'applications'],
         context?.previousEvents
       );
     },
@@ -120,19 +129,18 @@ export const useDeleteEvents = (applicationId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Event, Error, string[], ContextType>({
     mutationFn: async (data: string[]) => {
-      const response = await apiClient(`/events`, "delete", data);
+      const response = await apiClient(`/events`, 'delete', data);
       return response.data;
     },
     onSuccess: (savedEvents) => {
-      const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
+      const previousEvents = queryClient.getQueryData<Event[]>(['events']);
       queryClient.setQueryData<Event[] | undefined>(
-        ["events", applicationId, "applications"],
+        ['events', applicationId, 'applications'],
         (events) => {
           if (events) {
             return [savedEvents, ...events];
           }
           return [savedEvents];
-
         }
       );
       return { previousEvents };
@@ -140,8 +148,7 @@ export const useDeleteEvents = (applicationId: string) => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
-
-        ["events", applicationId, "applications"],
+        ['events', applicationId, 'applications'],
 
         context?.previousEvents
       );

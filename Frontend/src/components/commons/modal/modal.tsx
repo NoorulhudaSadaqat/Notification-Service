@@ -57,7 +57,7 @@ export default function EditModal({
   const onSubmit = async (data: Application | Event | Notification) => {
     try {
       await validationSchema.parseAsync(data);
-      submitCall(data);
+      await submitCall(data);
     } catch (error) {
       if (error instanceof z.ZodError) {
         error.errors.forEach((validationError) => {

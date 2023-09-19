@@ -117,9 +117,9 @@ export default function InfoCard({
                   setIsModalOpen
                 )
               }
-              onDelete={() => handleUpdate({ ...e, isDeleted: true })}
+              onDelete={() => handleUpdate({ _id: e._id, isDeleted: true })}
               onToggleActive={() =>
-                handleUpdate({ ...e, isActive: !e.isActive })
+                handleUpdate({ _id: e._id, isActive: !e.isActive })
               }
             />
           </CardActions>

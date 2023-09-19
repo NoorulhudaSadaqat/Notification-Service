@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Alert, Box, Slide, Snackbar } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
+import MuiAlert, { AlertColor } from '@mui/material/Alert';
 import GridComponent from '../commons/grid/grid';
 import DisplayDriver from '../commons/driver/displaydriver';
 import { useGetNotifications } from '../../services/eventService';
@@ -18,10 +18,11 @@ interface Props {
 const Notifications = ({ eventId, setNotificationId }: Props) => {
   const [params, setParams] = useState<object>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [severity, setSeverity] = useState<AlertColor>();
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
   const [selectedNotification, setSelectedNotification] =
     useState<Notification>();
   const [searchError, setSearchError] = useState('');
@@ -35,7 +36,7 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
   );
   const notifications = data?.notificationTypes;
   const queryClient = useQueryClient();
-  const addNotificationMutation = useAddNotifications();
+  const addMutation = useAddNotifications(eventId!);
 
   useEffect(() => {
     queryClient.invalidateQueries([
@@ -46,10 +47,21 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
     ]);
   }, [params]);
 
-  const handleAddNotifications = (notification: Notification) => {
-    const { isLoading, isError, error } =
-      addNotificationMutation.mutate(notification);
-    //TODO: onSuccess setSnackBar to be visible, and time it out, close the modal
+  const handleAddNotifications = async (notification: Notification) => {
+    try {
+      const notificationToPost = { ...notification, eventId: eventId! };
+      const result = await addMutation.mutateAsync(notificationToPost);
+      setSnackbarMessage('Event has been added successfully!');
+      setSnackbarOpen(true);
+      setSeverity('success');
+      queryClient.invalidateQueries(['events', eventId, 'data', {}]);
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.log(error.response.data.error);
+      setSnackbarMessage('Error:', error.response.data.error);
+      setSnackbarOpen(true);
+      setSeverity('error');
+    }
   };
   const notificationIdSetter = (id: string | undefined) => {
     setNotificationId(id);
@@ -99,12 +111,6 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
     );
   };
 
-  function handleAddNotification(
-    element: Application | Event | Notification
-  ): void {
-    throw new Error('Function not implemented.');
-  }
-
   return (
     <>
       {renderNotifications && (
@@ -130,17 +136,18 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
                 elevation={6}
                 variant='filled'
                 onClose={() => setSnackbarOpen(false)}
-                severity='success'
+                severity={severity}
               >
                 {snackbarMessage}
               </Alert>
             </Snackbar>
             <DisplayDriver
+              isAddModalOpen={isAddModalOpen}
+              setIsAddModalOpen={setIsAddModalOpen}
               handleSearch={handleSearch}
               handleAdd={handleAddNotifications}
               params={params!}
               setParams={setParams}
-              filters={filters}
               searchError={searchError}
               setSearchError={setSearchError}
               isModalOpen={isModalOpen}
