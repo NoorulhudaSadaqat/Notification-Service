@@ -32,9 +32,14 @@ const apiClient = (url: string, method = "get", data = {}) => {
     return config;
   });
 
-  axios.interceptors.response.use((response) => {
-    return response;
-  });
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async (error) => {
+      return Promise.reject(error);
+    }
+  );
   return axios(config);
 };
 
