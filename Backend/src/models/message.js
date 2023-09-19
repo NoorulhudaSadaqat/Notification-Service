@@ -16,6 +16,11 @@ const MessageSchema = new mongoose.Schema({
     type: String,
     required: [true, "notificationTypeId is Required"],
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+    required: [false],
+  },
   isActive: {
     type: Boolean,
     default: true,

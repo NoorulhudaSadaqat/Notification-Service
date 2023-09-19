@@ -21,17 +21,23 @@ const getAllTag = async (req, res) => {
       .offset(offset);
     return res.send(tags);
   }
-  const tags = await Tag.find(queryParams);
-  return res.send(tags);
+  const tags = await Tag.find({ isDeleted: false, ...queryParams })
+    .skip(offset)
+    .limit(pageSize);
+  const totalCount = await Tag.countDocuments({
+    isDeleted: false,
+    ...queryParams,
+  });
+  return res.send({ tags, totalCount });
 };
 
 const createTag = async (req, res) => {
   const reqBody = {
     ...req.body,
     isActive: true,
-    createdBy: req.user.id || req.user._id,
+    createdBy: req.user.firstName + " " + req.user.lastName,
     createdDate: new Date(),
-    modifiedBy: req.user.id || req.user._id,
+    modifiedBy: req.user.firstName + " " + req.user.lastName,
     modifiedDate: new Date(),
   };
   if (config.get("server.db") === "postgres") {
@@ -47,7 +53,7 @@ const updateTag = async (req, res) => {
   const tagId = req.params.id;
   const reqBody = {
     ...req.body,
-    modifiedBy: req.user.id || req.user._id,
+    modifiedBy: req.user.firstName + " " + req.user.lastName,
     modifiedDate: new Date(),
   };
   if (config.get("server.db") === "postgres") {
@@ -77,9 +83,9 @@ const deleteTag = async (req, res) => {
       .where("id", tagId)
       .update(
         {
-          isActive: false,
+          isDeleted: false,
           modifiedDate: new Date(),
-          modifiedBy: req.user.id || req.user._id,
+          modifiedBy: req.user.firstName + " " + req.user.lastName,
         },
         ["*"]
       );
@@ -96,9 +102,9 @@ const deleteTag = async (req, res) => {
   const tag = await Tag.findByIdAndUpdate(
     tagId,
     {
-      isActive: false,
+      isDeleted: true,
       modifiedDate: new Date(),
-      modifiedBy: req.user.id || req.user._id,
+      modifiedBy: req.user.firstName + " " + req.user.lastName,
     },
     { new: true }
   );

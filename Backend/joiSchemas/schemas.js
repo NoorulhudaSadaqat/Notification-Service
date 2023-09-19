@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const schemas = {
   auth: Joi.object().keys({
@@ -59,6 +59,7 @@ const patchSchemas = {
       name: Joi.string().min(5).max(255).optional(),
       description: Joi.string().min(100).max(255).optional(),
       code: Joi.string().max(255).optional(),
+      isActive: Joi.boolean().optional(),
     })
     .min(1),
   event: Joi.object()
@@ -66,6 +67,7 @@ const patchSchemas = {
       name: Joi.string().min(5).max(255).optional(),
       description: Joi.string().min(100).max(255).optional(),
       applicationId: Joi.string().min(5).optional(),
+      isActive: Joi.boolean().optional(),
     })
     .min(1),
   notificationType: Joi.object()
@@ -75,6 +77,7 @@ const patchSchemas = {
       eventId: Joi.string().min(5).optional(),
       templateSubject: Joi.string().min(5).max(255).optional(),
       templateBody: Joi.string().min(5).max(255).optional(),
+      isActive: Joi.boolean().optional(),
     })
     .min(1),
   message: Joi.object().keys({
@@ -83,10 +86,12 @@ const patchSchemas = {
     eventId: Joi.string().min(5).optional(),
     notifcationTypeId: Joi.string().min(5).optional(),
     tags: Joi.object().optional(),
+    isActive: Joi.boolean().optional(),
   }),
   tag: Joi.object()
     .keys({
       label: Joi.string().min(5).max(255).optional(),
+      isActive: Joi.boolean().optional(),
     })
     .min(1),
 };
@@ -95,13 +100,16 @@ const querySchemas = {
   application: Joi.object().keys({
     name: Joi.string().optional(),
     code: Joi.string().optional(),
-    isActive: Joi.boolean().optional(),
     createdBy: Joi.string().optional(),
     createdDate: Joi.date().optional(),
     modifiedBy: Joi.string().optional(),
     modifiedDate: Joi.date().optional(),
+    isActive: Joi.boolean().optional(),
     page: Joi.number().optional(),
     pageSize: Joi.number().optional(),
+    search: Joi.string().optional(),
+    sortBy: Joi.string().optional(),
+    sortOrder: Joi.string().optional(),
   }),
   event: Joi.object().keys({
     name: Joi.string().optional(),
@@ -113,6 +121,9 @@ const querySchemas = {
     modifiedDate: Joi.date().optional(),
     page: Joi.number().optional(),
     pageSize: Joi.number().optional(),
+    search: Joi.string().optional(),
+    sortBy: Joi.string().optional(),
+    sortOrder: Joi.string().optional(),
   }),
   notificationType: Joi.object().keys({
     name: Joi.string().optional(),
@@ -124,6 +135,9 @@ const querySchemas = {
     modifiedDate: Joi.date().optional(),
     page: Joi.number().optional(),
     pageSize: Joi.number().optional(),
+    search: Joi.string().optional(),
+    sortBy: Joi.string().optional(),
+    sortOrder: Joi.string().optional(),
   }),
   message: Joi.object().keys({
     applicationId: Joi.string().optional(),
@@ -136,6 +150,9 @@ const querySchemas = {
     modifiedDate: Joi.date().optional(),
     page: Joi.number().optional(),
     pageSize: Joi.number().optional(),
+    search: Joi.string().optional(),
+    sortBy: Joi.string().optional(),
+    sortOrder: Joi.string().optional(),
   }),
   tag: Joi.object().keys({
     label: Joi.string().optional(),
@@ -146,6 +163,9 @@ const querySchemas = {
     modifiedDate: Joi.date().optional(),
     page: Joi.number().optional(),
     pageSize: Joi.number().optional(),
+    search: Joi.string().optional(),
+    sortBy: Joi.string().optional(),
+    sortOrder: Joi.string().optional(),
   }),
 };
 
