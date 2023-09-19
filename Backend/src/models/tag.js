@@ -9,6 +9,11 @@ const TagSchema = new mongoose.Schema({
     default: true,
     required: [false],
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+    required: [false],
+  },
   createdBy: {
     type: String,
     required: [true, "Password is Required"],
