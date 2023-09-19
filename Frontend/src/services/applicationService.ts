@@ -13,10 +13,12 @@ interface ContextType {
 
 export const useGetApplications = (data: object | undefined) =>
   useQuery<Application[], Error>({
-    queryKey: ['applications', data],
+    queryKey: ["applications", data],
     queryFn: async () => {
+
       const response = await apiClient('/applications', 'get', data);
       return response.data.applications;
+
     },
     staleTime: 1 * 60 * 1000,
     keepPreviousData: true,
@@ -24,11 +26,11 @@ export const useGetApplications = (data: object | undefined) =>
 
 export const useGetApplication = (applicationId: number | undefined) =>
   useQuery<Application[], Error>({
-    queryKey: ['applications', applicationId],
+    queryKey: ["applications", applicationId],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const applicationId = queryKey[1];
-      const response = await apiClient(`/applications/${applicationId}`, 'get');
+      const response = await apiClient(`/applications/${applicationId}`, "get");
       return response.data;
     },
     staleTime: 1 * 60 * 1000,
@@ -39,14 +41,18 @@ export const useGetEvents = (
   data: object | undefined
 ) =>
   useQuery<Event[], Error>({
+
     queryKey: ['events', applicationId, 'applications', 'data', data],
+
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const applicationId = queryKey[1];
       const response = await apiClient(
         `/applications/${applicationId}/events`,
+
         'get',
         data
+
       );
       return response.data;
     },
@@ -98,7 +104,39 @@ export const useUpateApplication = () => {
         'applications',
       ]);
       queryClient.setQueryData<Application[] | undefined>(
-        ['applications'],
+        ["applications"],
+        (applications) => {
+          if (applications) {
+            return [savedApplication, ...applications];
+          }
+          return [savedApplication];
+        }
+      );
+      return { previousApplications };
+    },
+    onError: (error, variables, context) => {
+      if (!context) return;
+      queryClient.setQueryData<Application[]>(
+        ["applications"],
+        context?.previousApplications
+      );
+    },
+  });
+};
+
+export const useDeleteApplication = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Application, Error, string[], ContextType>({
+    mutationFn: async (data: string[]) => {
+      const response = await apiClient(`/applications`, "delete", data);
+      return response.data;
+    },
+    onSuccess: (savedApplication) => {
+      const previousApplications = queryClient.getQueryData<Application[]>([
+        "applications",
+      ]);
+      queryClient.setQueryData<Application[] | undefined>(
+        ["applications"],
         (applications) => {
           if (applications) {
             return [savedApplication, ...applications];

@@ -37,7 +37,7 @@ export const useGetNotification = (notificationId: string | undefined) =>
     staleTime: 1 * 60 * 1000,
   });
 
-export const useAddNotifications = () => {
+export const useAddNotifications = (eventId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Notification, Error, Notification, ContextType>({
     mutationFn: async (notification: Notification) => {
@@ -50,10 +50,14 @@ export const useAddNotifications = () => {
     },
     onSuccess: (savedNotifications) => {
       const previousNotifications = queryClient.getQueryData<Notification[]>([
-        'notifications',
+
+        "notifications",
+        eventId,
+        "events",
       ]);
       queryClient.setQueryData<Notification[] | undefined>(
-        ['notifications'],
+        ["notifications", eventId, "events"],
+
         (notifications) => {
           if (notifications) {
             return [savedNotifications, ...notifications];
@@ -66,30 +70,36 @@ export const useAddNotifications = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Notification[]>(
-        ['notifications'],
+
+        ["notifications", eventId, "events"],
+
         context?.previousNotifications
       );
     },
   });
 };
 
-export const useUpdateNotifications = () => {
+export const useUpdateNotification = (eventId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Notification, Error, Notification, ContextType>({
     mutationFn: async (notification: Notification) => {
       const response = await apiClient(
-        `/notification-types`,
-        'patch',
+
+        `/notification-types/${notification._id}`,
+        "patch",
         notification
       );
       return response.data;
     },
     onSuccess: (savedNotifications) => {
       const previousNotifications = queryClient.getQueryData<Notification[]>([
-        'notifications',
+
+        "notifications",
+        eventId,
+        "events",
       ]);
       queryClient.setQueryData<Notification[] | undefined>(
-        ['notifications'],
+        ["notifications", eventId, "events"],
         (notifications) => {
           if (notifications) {
             return [savedNotifications, ...notifications];
@@ -102,7 +112,44 @@ export const useUpdateNotifications = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Notification[]>(
-        ['notifications'],
+        ["notifications", eventId, "events"],
+        context?.previousNotifications
+      );
+    },
+  });
+};
+
+export const useDeleteNotifications = (eventId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<Notification, Error, string[], ContextType>({
+    mutationFn: async (data: string[]) => {
+      const response = await apiClient(`/notification-types`, "delete", data);
+      return response.data;
+    },
+    onSuccess: (savedNotifications) => {
+      const previousNotifications = queryClient.getQueryData<Notification[]>([
+        "notifications",
+        eventId,
+        "events",
+      ]);
+      queryClient.setQueryData<Notification[] | undefined>(
+        ["notifications", eventId, "events"],
+
+        (notifications) => {
+          if (notifications) {
+            return [savedNotifications, ...notifications];
+          }
+          return [savedNotifications];
+        }
+      );
+      return { previousNotifications };
+    },
+    onError: (error, variables, context) => {
+      if (!context) return;
+      queryClient.setQueryData<Notification[]>(
+
+        ["notifications", eventId, "events"],
+
         context?.previousNotifications
       );
     },

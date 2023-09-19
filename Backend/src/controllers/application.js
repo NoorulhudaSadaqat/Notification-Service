@@ -231,7 +231,7 @@ const updateApplication = async (req, res) => {
 };
 
 const deleteApplication = async (req, res) => {
-  const applicationId = req.params.id;
+  const applicationIds = req.body.applicationIds;
   if (config.get("server.db") === "postgres") {
     const application = await knex("application")
       .where("id", applicationId)
@@ -252,21 +252,22 @@ const deleteApplication = async (req, res) => {
       .status(StatusCodes.OK)
       .json({ message: "The application with given Id is deleted" });
   }
-
-  const application = await Application.findByIdAndUpdate(
-    applicationId,
+  const updatedApplications = await Application.updateMany(
+    { _id: { $in: applicationIds } },
     {
-      isDeleted: true,
-      modifiedDate: new Date(),
-      modifiedBy: req.user.firstName + " " + req.user.lastName,
+      $set: {
+        isDeleted: true,
+        modifiedDate: new Date(),
+        modifiedBy: req.user.firstName + " " + req.user.lastName,
+      },
     },
     { new: true }
   );
 
-  if (!application)
+  if (!updatedApplications)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "The application with the given ID was not found." });
+      .json({ error: "Error while deleting multiple applications" });
 
   return res
     .status(StatusCodes.OK)
