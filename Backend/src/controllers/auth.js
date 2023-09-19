@@ -90,7 +90,7 @@ const login = async (req, res) => {
   const token = jwt.sign(user.toJSON(), config.get("server.jwtPrivateKey"), {
     expiresIn: 360000,
   });
-  return res.send(token);
+  return res.send({ token });
 };
 
 module.exports = { signup, login };
