@@ -1,21 +1,19 @@
-import { useEffect, useState } from 'react';
-
+import InfoCard from '../commons/card/card';
 import { Alert, Box } from '@mui/material';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './applications.module.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Loader from '../commons/loader/loader';
+import { useGetApplications } from '../../services/applicationService';
 import InfoModal from '../commons/infoModal/infoModal';
-import InfoCard from '../commons/card/card';
 import { Application } from '../../types/application';
 import { filters } from '../../utils/dataUtils';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 export const Applications = ({ setApplicationId }: Props) => {
-  const [params, setParams] = useState<object>({});
+  const [params, setParams] = useState<object>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application>();
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -23,38 +21,14 @@ export const Applications = ({ setApplicationId }: Props) => {
   const [editedCardDescription, setEditedCardDescription] = useState('');
   const [searchText, setSearchText] = useState('');
   const [searchError, setSearchError] = useState('');
-  const {
-    isLoading,
-    isError,
-    data: applications,
-    error,
-  } = useGetApplications(params);
+  const { isLoading, isError, data, error } = useGetApplications(params);
 
+  const applications = data?.applications;
   const openInfoModal = (ele) => {
     setInfoModalOpen(true);
     setSelectedApplication(ele);
   };
-  const queryClient = useQueryClient();
-
-  // Use a useEffect hook to invalidate the query when params change
-  useEffect(() => {
-    // Invalidate the query with the key 'applications'
-    console.log(params);
-    queryClient.invalidateQueries(['applications', {}]);
-  }, [params]); // Listen for changes in the params object
-
   const renderComponent = () => {
-    if (isError) {
-      return (
-        <>
-          <Alert severity='error'>
-            <strong>
-              Error! {error.name}, {error.message}
-            </strong>
-          </Alert>
-        </>
-      );
-    }
     if (isLoading) {
       return (
         <Box>
@@ -80,7 +54,6 @@ export const Applications = ({ setApplicationId }: Props) => {
       <div className={styles.scrollControl}>
         <div className={styles.cardContainer}>
           <InfoCard
-            handleUpdate={handleUpdateApplication}
             openInfoModal={openInfoModal}
             setApplicationId={setApplicationId}
             data={applications}
@@ -104,27 +77,13 @@ export const Applications = ({ setApplicationId }: Props) => {
             data={selectedApplication} // Pass the selected element's data to InfoModal
           />
         )}
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000} // Adjust the duration as needed
-          onClose={() => setSnackbarOpen(false)}
-          TransitionComponent={Slide}
-        >
-          <MuiAlert
-            elevation={6}
-            variant='filled'
-            onClose={() => setSnackbarOpen(false)}
-            severity={severity}
-          >
-            {snackbarMessage}
-          </MuiAlert>
-        </Snackbar>
 
         <DisplayDriver
-          handleAdd={handleAddApplication}
+          handleAdd={handleAddMutation}
           params={params!}
           setParams={setParams}
           filters={filters}
+          addModalTitle={'Add New Applications'}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           searchText={searchText}
@@ -136,7 +95,6 @@ export const Applications = ({ setApplicationId }: Props) => {
           setEditedCardDescription={setEditedCardDescription}
           renderComponent={renderComponent}
           modalTitle={'Edit Application'}
-          addModalTitle={'Add Application'}
           toolBarTitle={'Applications'}
           setSearchError={setSearchError}
           searchError={searchError}

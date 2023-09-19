@@ -18,17 +18,9 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
 import AddIcon from '@mui/icons-material/Add';
-import {
-  Check,
-  Close,
-  CreateRounded,
-  EditNote,
-  FilterAlt,
-  FilterAltOutlined,
-} from '@mui/icons-material';
+import { Check, CreateRounded, EditNote, FilterAlt } from '@mui/icons-material';
 import EditModal from '../modal/modal';
-import { Application } from '../../../types/application';
-import { Event } from '../../../types/event';
+
 const inputStyles = {
   backgroundColor: 'white', // Background color for the search input
   '&:hover': {
@@ -37,27 +29,27 @@ const inputStyles = {
 };
 
 interface Props {
-  modalTitle: string;
-  params: object;
+  addModalTitle: string;
   filters: string[];
   onSearch: () => void;
   searchText: string;
   setSearchText: (text: string) => void;
+  params: object;
   text: string;
   setParams: React.Dispatch<React.SetStateAction<object>>;
   handleAdd: (element: Application | Event | Notification) => void;
 }
 
 const ToolBar = ({
-  handleAdd,
-  modalTitle,
   params,
   setParams,
+  handleAdd,
   filters,
   onSearch,
   searchText,
   setSearchText,
   text,
+  addModalTitle,
 }: Props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [sortBy, setSortBy] = useState('');
@@ -87,6 +79,7 @@ const ToolBar = ({
   };
 
   const handleOpenModal = () => {
+    console.log('here');
     setIsModalOpen(true);
   };
 
@@ -96,18 +89,9 @@ const ToolBar = ({
 
   const handleFilterCalls = (
     event: React.MouseEvent<HTMLElement>,
-    newFilterCall: string
+    newFilterCalls: string
   ) => {
-<<<<<<< Updated upstream
-    setParams({ sortBy: newFilterCalls[0] });
-=======
-    if (!newFilterCall && !params.sortBy) {
-      console.log('here');
-      delete params.sortBy;
-      setParams({ ...params });
-    }
-    setParams({ ...params, sortBy: newFilterCall });
->>>>>>> Stashed changes
+    setParams({ ...params, sortBy: newFilterCalls[0] });
   };
 
   return (
@@ -209,16 +193,14 @@ const ToolBar = ({
           </ToggleButtonGroup>
         </Box>
       )}
-      {isModalOpen && (
-        <EditModal
-          handleSubmitElement={handleAdd}
-          modalTitle={modalTitle}
-          nameOriginal={''}
-          descriptionOriginal={''}
-          open={isModalOpen}
-          handleClose={() => setIsModalOpen(false)}
-        />
-      )}
+      <EditModal
+        submitCall={handleAddApplication}
+        nameOriginal={''}
+        modalTitle={addModalTitle}
+        open={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
+        descriptionOriginal={''}
+      />
     </AppBar>
   );
 };

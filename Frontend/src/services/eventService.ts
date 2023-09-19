@@ -1,8 +1,3 @@
-<<<<<<< Updated upstream
-import { useQuery, QueryFunctionContext } from '@tanstack/react-query';
-import { Event } from '../types/event';
-import apiClient from './axios';
-=======
 import {
   useQuery,
   QueryFunctionContext,
@@ -44,13 +39,8 @@ export const useGetNotifications = (
   eventId: string | undefined,
   data: object | undefined
 ) =>
-<<<<<<< Updated upstream
   useQuery<Event[], Error>({
-    queryKey: ['events', eventId, data],
-=======
-  useQuery<Notification[], Error>({
-    queryKey: ['events', eventId, 'notification-types', data],
->>>>>>> Stashed changes
+    queryKey: ['events', eventId, 'data', data],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const eventId = queryKey[1];

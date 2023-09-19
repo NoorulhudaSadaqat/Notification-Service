@@ -2,12 +2,6 @@ import {
   useQuery,
   QueryFunctionContext,
   useMutation,
-<<<<<<< Updated upstream
-  QueryClient,
-} from '@tanstack/react-query';
-import { Application } from '../types/application';
-import apiClient from './axios';
-=======
   useQueryClient,
 } from '@tanstack/react-query';
 import { Application } from '../types/application';
@@ -46,7 +40,7 @@ export const useGetEvents = (
   data: object | undefined
 ) =>
   useQuery<Event[], Error>({
-    queryKey: ['events', applicationId, 'applications', data],
+    queryKey: ['events', applicationId, 'applications', 'data', data],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const applicationId = queryKey[1];
@@ -100,7 +94,6 @@ export const useUpateApplication = () => {
   return useMutation<Application, Error, Application, ContextType>({
     mutationFn: async (application: Application) => {
       const response = await apiClient(`/applications`, 'patch', application);
->>>>>>> Stashed changes
 
   return useMutation({
     mutationFn: async () => {

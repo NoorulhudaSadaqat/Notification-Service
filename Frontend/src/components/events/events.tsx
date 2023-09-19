@@ -21,13 +21,7 @@ interface Props {
 }
 
 const Events = ({ applicationId, setEventId }: Props) => {
-<<<<<<< Updated upstream
-  const [params, setParams] = useState<object>({});
-=======
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [params, setParams] = useState<object>();
->>>>>>> Stashed changes
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [searchError, setSearchError] = useState('');
@@ -120,6 +114,10 @@ const Events = ({ applicationId, setEventId }: Props) => {
     );
   };
 
+  function handleAddEvent(element: Event | Application | Notification): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <>
       <Box>
@@ -149,16 +147,13 @@ const Events = ({ applicationId, setEventId }: Props) => {
       </Snackbar>
       <div className={styles.heightControl}>
         <DisplayDriver
-<<<<<<< Updated upstream
-=======
-          handleAdd={handleAddEvents}
-          params={params!}
->>>>>>> Stashed changes
+          handleAdd={handleAddEvent}
           setParams={setParams}
+          params={params!}
           setSearchError={setSearchError}
           searchError={searchError}
           filters={filters}
-          addModalTitle={'Add Event'}
+          addModalTitle={'Add New Events'}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           searchText={searchText}

@@ -24,16 +24,15 @@ interface Props {
   editedCardDescription: string | null;
   isModalOpen: boolean;
   searchError: string;
-
+  params: object;
   setParams: React.Dispatch<React.SetStateAction<object>>;
   filters: string[];
   addModalTitle: string;
   handleAdd: (element: Application | Event | Notification) => void;
 }
 const DisplayDriver = ({
-  handleAdd,
-  addModalTitle,
   params,
+  addModalTitle,
   setParams,
   searchError,
   filters,
@@ -49,14 +48,15 @@ const DisplayDriver = ({
   setEditedCardDescription,
   renderComponent,
   modalTitle,
+  handleAdd,
   toolBarTitle,
 }: Props) => {
   return (
     <>
       <ToolBar
         handleAdd={handleAdd}
-        modalTitle={addModalTitle}
         params={params}
+        addModalTitle={addModalTitle}
         setParams={setParams}
         filters={filters}
         text={toolBarTitle}

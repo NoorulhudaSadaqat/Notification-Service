@@ -2,7 +2,7 @@ import { Alert, Box, CssBaseline } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import TopBar from '../../components/commons/topbar/topbar';
 import styles from './dashboard.module.css';
-import { Applications } from '../../components/application/Applications';
+import { Applications } from '../../components/application/applications';
 import Events from '../../components/events/events';
 import Notifications from '../../components/notifications/notifications';
 

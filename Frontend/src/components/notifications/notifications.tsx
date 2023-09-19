@@ -26,9 +26,10 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
   const [renderNotifications, setRenderNotifications] = useState(true);
-  const { isLoading, data, isError, error } = useGetNotifications(eventId);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const { isLoading, data, isError, error } = useGetNotifications(
+    eventId,
+    params
+  );
   const notifications = data?.notificationTypes;
   const queryClient = useQueryClient();
   const addNotificationMutation = useAddNotifications();
@@ -91,6 +92,12 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
     );
   };
 
+  function handleAddNotification(
+    element: Application | Event | Notification
+  ): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <>
       {renderNotifications && (
@@ -128,7 +135,10 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
               filters={filters}
               searchError={searchError}
               setSearchError={setSearchError}
-              addModalTitle={'Add Notification'}
+              handleAdd={handleAddNotification}
+              params={params!}
+              setParams={setParams}
+              addModalTitle='Add New Notification'
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
               searchText={searchText}
