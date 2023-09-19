@@ -12,9 +12,9 @@ const AppRoutes = () => {
       <Route path='/login' element={<LogInPage />} />
       <Route path='/register' element={<SignUpPage />} />
       <Route element={<RequireAuth />}>
-        <Route path='/' element={<EditScreen />} />
+        <Route path='/' element={<Dashboard />} />
+        <Route path='/edit/:id' element={<EditScreen />} />
       </Route>
-      <Route path='/edit' element={<EditScreen />} />
     </Routes>
     // </React.Suspense>
   );

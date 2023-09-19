@@ -10,8 +10,6 @@ import apiClient from './axios';
 interface ContextType {
   previousEvents: Event[];
 }
->>>>>>> Stashed changes
-
 export const useGetEvents = (data: object | undefined) =>
   useQuery<Event[], Error>({
     queryKey: ['events', data],
@@ -53,8 +51,6 @@ export const useGetNotifications = (
     },
     staleTime: 1 * 60 * 1000,
   });
-<<<<<<< Updated upstream
-=======
 
 export const useAddEvents = () => {
   const queryClient = useQueryClient();
@@ -109,4 +105,3 @@ export const useUpdateEvents = () => {
     },
   });
 };
->>>>>>> Stashed changes

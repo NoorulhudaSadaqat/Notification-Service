@@ -37,17 +37,4 @@ export const handleCloseModal = (
   setEditedCardDescription('');
 };
 
-export const handleSearch = (
-  setSearchError: React.Dispatch<React.SetStateAction<string>>,
-  searchText: string,
-  data: (Application | Event)[] | undefined
-) => {
-  if (searchText.length < 3) {
-    console.log('Search should be more than 3 characters');
-    setSearchError('Search should be more than atleast 3 characters');
-  } else {
-    setSearchError('');
-  }
-};
-
 export const filters = ['Active', 'Created At', 'Modified At'];

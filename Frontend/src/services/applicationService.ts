@@ -10,7 +10,6 @@ import apiClient from './axios';
 interface ContextType {
   previousApplications: Application[];
 }
->>>>>>> Stashed changes
 
 export const useGetApplications = (data: object | undefined) =>
   useQuery<Application[], Error>({
@@ -55,9 +54,6 @@ export const useGetEvents = (
   });
 
 export const useAddApplication = () => {
-<<<<<<< Updated upstream
-  const queryClient = new QueryClient();
-=======
   const queryClient = useQueryClient();
   return useMutation<Application, Error, Application, ContextType>({
     mutationFn: async (application: Application) => {
@@ -91,9 +87,6 @@ export const useAddApplication = () => {
 
 export const useUpateApplication = () => {
   const queryClient = useQueryClient();
-  return useMutation<Application, Error, Application, ContextType>({
-    mutationFn: async (application: Application) => {
-      const response = await apiClient(`/applications`, 'patch', application);
 
   return useMutation({
     mutationFn: async () => {
@@ -101,12 +94,9 @@ export const useUpateApplication = () => {
       return response.data;
     },
     onSuccess: (savedApplication) => {
-<<<<<<< Updated upstream
-=======
       const previousApplications = queryClient.getQueryData<Application[]>([
         'applications',
       ]);
->>>>>>> Stashed changes
       queryClient.setQueryData<Application[] | undefined>(
         ['applications'],
         (applications) => {
@@ -116,8 +106,6 @@ export const useUpateApplication = () => {
           return [savedApplication];
         }
       );
-<<<<<<< Updated upstream
-=======
       return { previousApplications };
     },
     onError: (error, variables, context) => {
@@ -126,7 +114,6 @@ export const useUpateApplication = () => {
         ['applications'],
         context?.previousApplications
       );
->>>>>>> Stashed changes
     },
   });
 };

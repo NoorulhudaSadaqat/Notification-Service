@@ -10,11 +10,8 @@ import { useGetEvents } from '../../services/applicationService';
 import InfoModal from '../commons/infoModal/infoModal';
 import { filters } from '../../utils/dataUtils';
 import { useQueryClient } from '@tanstack/react-query';
-<<<<<<< Updated upstream
-=======
 import { useAddEvents, useUpdateEvents } from '../../services/eventService';
 
->>>>>>> Stashed changes
 interface Props {
   applicationId: string | undefined;
   setEventId: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -23,44 +20,35 @@ interface Props {
 const Events = ({ applicationId, setEventId }: Props) => {
   const [params, setParams] = useState<object>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [searchText, setSearchText] = useState('');
   const [editedCardName, setEditedCardName] = useState('');
   const [editedCardDescription, setEditedCardDescription] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<Event>();
-<<<<<<< Updated upstream
-=======
   const [severity, setSeverity] = useState<AlertColor>('success');
->>>>>>> Stashed changes
   const { isLoading, isError, data, error } = useGetEvents(
     applicationId,
     params
   );
-<<<<<<< Updated upstream
-=======
   const eventUpdateMutation = useUpdateEvents();
   const addEventMutation = useAddEvents();
->>>>>>> Stashed changes
   const events = data?.events;
   const queryClient = useQueryClient();
 
   useEffect(() => {
-<<<<<<< Updated upstream
-    console.log(params);
-=======
->>>>>>> Stashed changes
     queryClient.invalidateQueries([
       'events',
       applicationId,
       'applications',
-<<<<<<< Updated upstream
-      {},
-=======
       data,
->>>>>>> Stashed changes
     ]);
   }, [params]);
+  const handleSearch = () => {
+    setParams({ ...params, search: searchText });
+  };
 
   const handleAddEvents = (event) => {
     const { isLoading, isError, error } = addEventMutation.mutate(event);
@@ -126,7 +114,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
             type={'Event'}
             infoModalOpen={infoModalOpen}
             setInfoModalOpen={setInfoModalOpen}
-            data={selectedEvent} // Pass the selected element's data to InfoModal
+            data={selectedEvent}
           />
         )}
       </Box>
@@ -147,6 +135,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
       </Snackbar>
       <div className={styles.heightControl}>
         <DisplayDriver
+          handleSearch={handleSearch}
           handleAdd={handleAddEvent}
           setParams={setParams}
           params={params!}
@@ -156,7 +145,6 @@ const Events = ({ applicationId, setEventId }: Props) => {
           addModalTitle={'Add New Events'}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
-          searchText={searchText}
           setSearchText={setSearchText}
           data={events}
           editedCardName={editedCardName}

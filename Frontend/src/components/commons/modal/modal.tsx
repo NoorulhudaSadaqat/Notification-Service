@@ -9,7 +9,7 @@ import FormInputText from '../formtextinput/formInputText';
 import styles from './modal.module.css';
 import { Application } from '../../../types/application';
 import { useAddApplication } from '../../../services/applicationService';
-import { Application } from '../../../types/application';
+
 import { Notification } from '../../../types/notification';
 import { Event } from '../../../types/event';
 const style = {

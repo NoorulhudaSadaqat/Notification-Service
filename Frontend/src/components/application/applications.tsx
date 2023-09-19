@@ -1,19 +1,22 @@
 import InfoCard from '../commons/card/card';
-import { Alert, Box } from '@mui/material';
+import { Alert, Box, Slide, Snackbar } from '@mui/material';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './applications.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from '../commons/loader/loader';
 import { useGetApplications } from '../../services/applicationService';
 import InfoModal from '../commons/infoModal/infoModal';
 import { Application } from '../../types/application';
 import { filters } from '../../utils/dataUtils';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 export const Applications = ({ setApplicationId }: Props) => {
   const [params, setParams] = useState<object>();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application>();
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -21,13 +24,28 @@ export const Applications = ({ setApplicationId }: Props) => {
   const [editedCardDescription, setEditedCardDescription] = useState('');
   const [searchText, setSearchText] = useState('');
   const [searchError, setSearchError] = useState('');
-  const { isLoading, isError, data, error } = useGetApplications(params);
+  const {
+    isLoading,
+    isError,
+    data: applications,
+    error,
+  } = useGetApplications(params);
 
-  const applications = data?.applications;
   const openInfoModal = (ele) => {
     setInfoModalOpen(true);
     setSelectedApplication(ele);
   };
+
+  const queryClient = useQueryClient();
+
+  const handleSearch = () => {
+    setParams({ ...params, search: searchText });
+  };
+
+  useEffect(() => {
+    queryClient.invalidateQueries(['applications', {}]);
+  }, [params]);
+
   const renderComponent = () => {
     if (isLoading) {
       return (
@@ -54,6 +72,7 @@ export const Applications = ({ setApplicationId }: Props) => {
       <div className={styles.scrollControl}>
         <div className={styles.cardContainer}>
           <InfoCard
+            handleUpdate={() => {}}
             openInfoModal={openInfoModal}
             setApplicationId={setApplicationId}
             data={applications}
@@ -65,6 +84,12 @@ export const Applications = ({ setApplicationId }: Props) => {
       </div>
     );
   };
+
+  function handleAddMutation(
+    element: Event | Notification | Application
+  ): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <>
@@ -78,7 +103,24 @@ export const Applications = ({ setApplicationId }: Props) => {
           />
         )}
 
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000} // Adjust the duration as needed
+          onClose={() => setSnackbarOpen(false)}
+          TransitionComponent={Slide}
+        >
+          <Alert
+            elevation={6}
+            variant='filled'
+            onClose={() => setSnackbarOpen(false)}
+            severity='success'
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+
         <DisplayDriver
+          handleSearch={handleSearch}
           handleAdd={handleAddMutation}
           params={params!}
           setParams={setParams}

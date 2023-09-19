@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Alert, Box, Snackbar } from '@mui/material';
+import { Alert, Box, Slide, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import GridComponent from '../commons/grid/grid';
 import DisplayDriver from '../commons/driver/displaydriver';
@@ -19,6 +19,9 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
   const [params, setParams] = useState<object>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
   const [selectedNotification, setSelectedNotification] =
     useState<Notification>();
   const [searchError, setSearchError] = useState('');
@@ -50,7 +53,10 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
   };
   const notificationIdSetter = (id: string | undefined) => {
     setNotificationId(id);
-    console.log(id);
+  };
+
+  const handleSearch = () => {
+    setParams({ ...params, search: searchText });
   };
 
   const openInfoModal = (ele) => {
@@ -81,6 +87,7 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
     return (
       <Box>
         <GridComponent
+          handleUpdate={() => {}}
           openInfoModal={openInfoModal}
           data={notifications}
           setId={notificationIdSetter}
@@ -119,26 +126,23 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
               onClose={() => setSnackbarOpen(false)}
               TransitionComponent={Slide}
             >
-              <MuiAlert
+              <Alert
                 elevation={6}
                 variant='filled'
                 onClose={() => setSnackbarOpen(false)}
-                severity={severity}
+                severity='success'
               >
                 {snackbarMessage}
-              </MuiAlert>
+              </Alert>
             </Snackbar>
             <DisplayDriver
+              handleSearch={handleSearch}
               handleAdd={handleAddNotifications}
               params={params!}
               setParams={setParams}
               filters={filters}
               searchError={searchError}
               setSearchError={setSearchError}
-              handleAdd={handleAddNotification}
-              params={params!}
-              setParams={setParams}
-              addModalTitle='Add New Notification'
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
               searchText={searchText}
@@ -149,6 +153,7 @@ const Notifications = ({ eventId, setNotificationId }: Props) => {
               setEditedCardName={setEditedCardName}
               setEditedCardDescription={setEditedCardDescription}
               renderComponent={renderComponent}
+              addModalTitle='Add New Notification'
               modalTitle={'Edit Notification'}
               toolBarTitle={'Notifications'}
             />

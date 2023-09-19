@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-import React, { useEffect, useState } from 'react';
-=======
-import React, { ContextType, useState } from 'react';
->>>>>>> Stashed changes
+import React, { ContextType, useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -18,8 +14,15 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
 import AddIcon from '@mui/icons-material/Add';
-import { Check, CreateRounded, EditNote, FilterAlt } from '@mui/icons-material';
+import {
+  Check,
+  CreateRounded,
+  EditNote,
+  FilterAlt,
+  FilterAltOutlined,
+} from '@mui/icons-material';
 import EditModal from '../modal/modal';
+import { Application } from '../../../types/application';
 
 const inputStyles = {
   backgroundColor: 'white', // Background color for the search input
@@ -38,9 +41,11 @@ interface Props {
   text: string;
   setParams: React.Dispatch<React.SetStateAction<object>>;
   handleAdd: (element: Application | Event | Notification) => void;
+  handleSearch: () => void;
 }
 
 const ToolBar = ({
+  handleSearch,
   params,
   setParams,
   handleAdd,
@@ -57,7 +62,10 @@ const ToolBar = ({
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<string>();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
+    if (e.target.value.length > 3) {
+      setSearchText(e.target.value);
+      handleSearch();
+    }
   };
   useEffect(() => {
     if (!filterButtonPressed) {
@@ -91,7 +99,7 @@ const ToolBar = ({
     event: React.MouseEvent<HTMLElement>,
     newFilterCalls: string
   ) => {
-    setParams({ ...params, sortBy: newFilterCalls[0] });
+    setParams({ ...params, sortBy: newFilterCalls });
   };
 
   return (
@@ -184,17 +192,11 @@ const ToolBar = ({
                 <EditNote />
               </>
             </ToggleButton>
-            <ToggleButton value='' aria-label='close'>
-              <>
-                <Close />
-                <Typography sx={{ color: 'black' }}>Cancel</Typography>
-              </>
-            </ToggleButton>
           </ToggleButtonGroup>
         </Box>
       )}
       <EditModal
-        submitCall={handleAddApplication}
+        submitCall={handleAdd}
         nameOriginal={''}
         modalTitle={addModalTitle}
         open={isModalOpen}

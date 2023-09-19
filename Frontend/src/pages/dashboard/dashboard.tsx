@@ -5,8 +5,10 @@ import styles from './dashboard.module.css';
 import { Applications } from '../../components/application/applications';
 import Events from '../../components/events/events';
 import Notifications from '../../components/notifications/notifications';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [applicationId, setApplicationId] = useState<string | undefined>('');
   const [eventId, setEventId] = useState<string | undefined>('');
   const [notificationId, setNotificationId] = useState<string | undefined>('');
@@ -15,6 +17,11 @@ const Dashboard = () => {
     setEventId(undefined);
   }, [applicationId]);
 
+  useEffect(() => {
+    if (notificationId) {
+      navigate(`/edit/${notificationId}`);
+    }
+  }, [navigate, notificationId]);
   return (
     <>
       <CssBaseline />
