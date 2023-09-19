@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ContextType, useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -14,7 +14,15 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
 import AddIcon from '@mui/icons-material/Add';
-import { Check, CreateRounded, EditNote, FilterAlt } from '@mui/icons-material';
+import {
+  Check,
+  CreateRounded,
+  EditNote,
+  FilterAlt,
+  FilterAltOutlined,
+} from '@mui/icons-material';
+import EditModal from '../modal/modal';
+import { Application } from '../../../types/application';
 
 const inputStyles = {
   backgroundColor: 'white', // Background color for the search input
@@ -24,32 +32,46 @@ const inputStyles = {
 };
 
 interface Props {
+  addModalTitle: string;
   filters: string[];
   onSearch: () => void;
   searchText: string;
   setSearchText: (text: string) => void;
+  params: object;
   text: string;
-  AddModalId: number;
   setParams: React.Dispatch<React.SetStateAction<object>>;
+  handleAdd: (element: Application | Event | Notification) => void;
+  handleSearch: () => void;
 }
 
 const ToolBar = ({
+  handleSearch,
+  params,
   setParams,
+  handleAdd,
   filters,
   onSearch,
   searchText,
   setSearchText,
   text,
-  AddModalId,
+  addModalTitle,
 }: Props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [sortBy, setSortBy] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<string>();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
+    if (e.target.value.length > 3) {
+      setSearchText(e.target.value);
+      handleSearch();
+    }
   };
+  useEffect(() => {
+    if (!filterButtonPressed) {
+      setParams({});
+    }
+  }, [filterButtonPressed]);
 
   const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -64,7 +86,8 @@ const ToolBar = ({
     setAnchorEl(null);
   };
 
-  const handleOpenModal = (id: number) => {
+  const handleOpenModal = () => {
+    console.log('here');
     setIsModalOpen(true);
   };
 
@@ -74,28 +97,10 @@ const ToolBar = ({
 
   const handleFilterCalls = (
     event: React.MouseEvent<HTMLElement>,
-    newFilterCalls: string[]
+    newFilterCalls: string
   ) => {
-    setSelectedFilters(newFilterCalls);
-
-    const updatedFilterObject = {};
-    newFilterCalls.forEach((filter) => {
-      updatedFilterObject[filter] = true;
-    });
-
-    setParams(updatedFilterObject);
-    console.log(filterCalls);
+    setParams({ ...params, sortBy: newFilterCalls });
   };
-
-  function titleModal() {
-    const titleMap: Record<number, string> = {
-      1: 'Add New Application',
-      2: 'Add New Event',
-      3: 'Add New Notification',
-    };
-
-    return titleMap[AddModalId] || 'Undefined';
-  }
 
   return (
     <AppBar
@@ -145,9 +150,9 @@ const ToolBar = ({
             ))}
           </Menu>
           <IconButton onClick={handleFilter}>
-            <FilterAlt />
+            {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
           </IconButton>
-          <IconButton onClick={() => handleOpenModal(AddModalId)}>
+          <IconButton onClick={() => handleOpenModal()}>
             <AddIcon />
           </IconButton>
         </Box>
@@ -166,6 +171,7 @@ const ToolBar = ({
           <ToggleButtonGroup
             value={selectedFilters}
             onChange={handleFilterCalls}
+            exclusive
             aria-label='text formatting'
           >
             <ToggleButton value='isActive' aria-label='isActive'>
@@ -189,6 +195,14 @@ const ToolBar = ({
           </ToggleButtonGroup>
         </Box>
       )}
+      <EditModal
+        submitCall={handleAdd}
+        nameOriginal={''}
+        modalTitle={addModalTitle}
+        open={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
+        descriptionOriginal={''}
+      />
     </AppBar>
   );
 };

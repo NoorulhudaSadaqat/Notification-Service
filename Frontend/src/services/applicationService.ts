@@ -3,9 +3,9 @@ import {
   QueryFunctionContext,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { Application } from "../types/application";
-import apiClient from "./axios";
+} from '@tanstack/react-query';
+import { Application } from '../types/application';
+import apiClient from './axios';
 
 interface ContextType {
   previousApplications: Application[];
@@ -15,8 +15,10 @@ export const useGetApplications = (data: object | undefined) =>
   useQuery<Application[], Error>({
     queryKey: ["applications", data],
     queryFn: async () => {
-      const response = await apiClient("/applications", "get", data);
-      return response.data;
+
+      const response = await apiClient('/applications', 'get', data);
+      return response.data.applications;
+
     },
     staleTime: 1 * 60 * 1000,
     keepPreviousData: true,
@@ -34,15 +36,23 @@ export const useGetApplication = (applicationId: number | undefined) =>
     staleTime: 1 * 60 * 1000,
   });
 
-export const useGetEvents = (applicationId: string | undefined) =>
+export const useGetEvents = (
+  applicationId: string | undefined,
+  data: object | undefined
+) =>
   useQuery<Event[], Error>({
-    queryKey: ["events", applicationId, "applications"],
+
+    queryKey: ['events', applicationId, 'applications', 'data', data],
+
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const applicationId = queryKey[1];
       const response = await apiClient(
         `/applications/${applicationId}/events`,
-        "get"
+
+        'get',
+        data
+
       );
       return response.data;
     },
@@ -53,15 +63,15 @@ export const useAddApplication = () => {
   const queryClient = useQueryClient();
   return useMutation<Application, Error, Application, ContextType>({
     mutationFn: async (application: Application) => {
-      const response = await apiClient(`/applications`, "post", application);
+      const response = await apiClient(`/applications`, 'post', application);
       return response.data;
     },
     onSuccess: (savedApplication) => {
       const previousApplications = queryClient.getQueryData<Application[]>([
-        "applications",
+        'applications',
       ]);
       queryClient.setQueryData<Application[] | undefined>(
-        ["applications"],
+        ['applications'],
         (applications) => {
           if (applications) {
             return [savedApplication, ...applications];
@@ -74,7 +84,7 @@ export const useAddApplication = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Application[]>(
-        ["applications"],
+        ['applications'],
         context?.previousApplications
       );
     },
@@ -83,15 +93,15 @@ export const useAddApplication = () => {
 
 export const useUpateApplication = () => {
   const queryClient = useQueryClient();
-  return useMutation<Application, Error, Application, ContextType>({
-    mutationFn: async (application: Application) => {
-      const response = await apiClient(`/applications`, "patch", application);
 
+  return useMutation({
+    mutationFn: async () => {
+      const response = await apiClient(`/applications`, 'post');
       return response.data;
     },
     onSuccess: (savedApplication) => {
       const previousApplications = queryClient.getQueryData<Application[]>([
-        "applications",
+        'applications',
       ]);
       queryClient.setQueryData<Application[] | undefined>(
         ["applications"],
@@ -139,7 +149,7 @@ export const useDeleteApplication = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Application[]>(
-        ["applications"],
+        ['applications'],
         context?.previousApplications
       );
     },

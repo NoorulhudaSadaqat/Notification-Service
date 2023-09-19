@@ -3,14 +3,13 @@ import {
   QueryFunctionContext,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { Event } from "../types/event";
-import apiClient from "./axios";
+} from '@tanstack/react-query';
+import { Event } from '../types/event';
+import apiClient from './axios';
 
 interface ContextType {
   previousEvents: Event[];
 }
-
 export const useGetEvents = (data: object | undefined) =>
   useQuery<Event[], Error>({
     queryKey: ["events", data],
@@ -34,15 +33,20 @@ export const useGetEvent = (eventId: number | undefined) =>
     staleTime: 1 * 60 * 1000,
   });
 
-export const useGetNotifications = (eventId: string | undefined) =>
-  useQuery<Notification[], Error>({
-    queryKey: ["notifications", eventId, "events"],
+export const useGetNotifications = (
+  eventId: string | undefined,
+  data: object | undefined
+) =>
+  useQuery<Event[], Error>({
+    queryKey: ['events', eventId, 'data', data],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const eventId = queryKey[1];
       const response = await apiClient(
         `/events/${eventId}/notification-types`,
-        "get"
+        'get',
+        data
+
       );
       return response.data;
     },
@@ -53,10 +57,11 @@ export const useAddEvents = (applicationId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Event, Error, Event, ContextType>({
     mutationFn: async (event: Event) => {
-      const response = await apiClient(`/events`, "post", event);
+      const response = await apiClient(`/events`, 'post', event);
       return response.data;
     },
     onSuccess: (savedEvents) => {
+
       const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
       queryClient.setQueryData<Event[] | undefined>(
         ["events", applicationId, "applications"],
@@ -72,6 +77,7 @@ export const useAddEvents = (applicationId: string) => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
+
         ["events", applicationId, "applications"],
         context?.previousEvents
       );
@@ -83,6 +89,7 @@ export const useUpdateEvents = (applicationId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Event, Error, Event, ContextType>({
     mutationFn: async (event: Event) => {
+
       const response = await apiClient(`/events/${event._id}`, "patch", event);
       return response.data;
     },
@@ -125,6 +132,7 @@ export const useDeleteEvents = (applicationId: string) => {
             return [savedEvents, ...events];
           }
           return [savedEvents];
+
         }
       );
       return { previousEvents };
@@ -132,7 +140,9 @@ export const useDeleteEvents = (applicationId: string) => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
+
         ["events", applicationId, "applications"],
+
         context?.previousEvents
       );
     },

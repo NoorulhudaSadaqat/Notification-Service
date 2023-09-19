@@ -3,6 +3,7 @@ import LogInPage from '../pages/login/login';
 import SignUpPage from '../pages/signup/signup';
 import Dashboard from '../pages/dashboard/dashboard';
 import { RequireAuth } from '../utils/requireAuth';
+import EditScreen from '../pages/editScreen/editScreen';
 
 const AppRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
       <Route path='/register' element={<SignUpPage />} />
       <Route element={<RequireAuth />}>
         <Route path='/' element={<Dashboard />} />
+        <Route path='/edit/:id' element={<EditScreen />} />
       </Route>
     </Routes>
     // </React.Suspense>

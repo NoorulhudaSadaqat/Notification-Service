@@ -1,5 +1,5 @@
-import { handleSearch, handleCloseModal } from '../../../utils/dataUtils';
-import React from 'react';
+import { handleCloseModal } from '../../../utils/dataUtils';
+import React, { ContextType } from 'react';
 import styles from './displaydriver.module.css';
 import ToolBar from '../toolbar/toolbar';
 import EditModal from '../modal/modal';
@@ -8,6 +8,7 @@ import { Event } from '../../../types/event';
 import { Alert } from '@mui/material';
 
 interface Props {
+  params: object;
   data: (Application | Event)[] | undefined;
   toolBarTitle: string;
   modalTitle: string;
@@ -22,43 +23,49 @@ interface Props {
   editedCardDescription: string | null;
   isModalOpen: boolean;
   searchError: string;
-  AddModalId: number;
   setParams: React.Dispatch<React.SetStateAction<object>>;
   filters: string[];
+  addModalTitle: string;
+  handleSearch: () => void;
+  handleAdd: (element: Application | Event | Notification) => void;
 }
 const DisplayDriver = ({
+  params,
+  addModalTitle,
   setParams,
   searchError,
   filters,
-  setSearchError,
   isModalOpen,
   setIsModalOpen,
-  searchText,
+
   setSearchText,
-  data,
+  handleSearch,
   editedCardName,
   setEditedCardName,
   editedCardDescription,
   setEditedCardDescription,
   renderComponent,
   modalTitle,
+  handleAdd,
   toolBarTitle,
-  AddModalId,
 }: Props) => {
   return (
     <>
       <ToolBar
+        handleSearch={handleSearch}
+        handleAdd={handleAdd}
+        params={params}
+        addModalTitle={addModalTitle}
         setParams={setParams}
         filters={filters}
-        AddModalId={AddModalId}
         text={toolBarTitle}
-        onSearch={() => handleSearch(setSearchError, searchText, data)}
+        onSearch={handleSearch}
         setSearchText={setSearchText}
-        searchText={searchText}
       />
       {searchError && <Alert severity='error'>{searchError}</Alert>}
       {renderComponent()}
       <EditModal
+        handleSubmitElement={() => {}}
         modalTitle={modalTitle}
         nameOriginal={editedCardName}
         descriptionOriginal={editedCardDescription}

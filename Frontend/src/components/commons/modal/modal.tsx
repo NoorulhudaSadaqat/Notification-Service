@@ -7,6 +7,11 @@ import Modal from '@mui/material/Modal';
 import { z, string } from 'zod';
 import FormInputText from '../formtextinput/formInputText';
 import styles from './modal.module.css';
+import { Application } from '../../../types/application';
+import { useAddApplication } from '../../../services/applicationService';
+
+import { Notification } from '../../../types/notification';
+import { Event } from '../../../types/event';
 const style = {
   position: 'absolute' as const,
   top: '50%',
@@ -29,32 +34,30 @@ const validationSchema = z.object({
     .max(128, 'Length is too long'),
 });
 
-interface IFormInput {
-  name: string;
-  description: string;
-}
-
 interface Props {
   nameOriginal: string | null;
   descriptionOriginal: string | null;
   modalTitle: string;
   open: boolean;
   handleClose: () => void;
+  submitCall: (element: Application | Event | Notification) => void;
 }
 
 export default function EditModal({
+  submitCall,
   modalTitle,
   nameOriginal,
   descriptionOriginal,
   open,
   handleClose,
 }: Props) {
-  const methods = useForm<IFormInput>({});
+  const methods = useForm<Application | Event | Notification>({});
   const { handleSubmit, setError, control } = methods;
 
-  const onSubmit = async (data: IFormInput) => {
+  const onSubmit = async (data: Application | Event | Notification) => {
     try {
       await validationSchema.parseAsync(data);
+      submitCall(data);
     } catch (error) {
       if (error instanceof z.ZodError) {
         error.errors.forEach((validationError) => {

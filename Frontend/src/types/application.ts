@@ -8,4 +8,5 @@ export interface Application {
   modifiedBy?: string;
   createdDate?: string;
   modifiedDate?: string;
+  isDeleted?: boolean;
 }

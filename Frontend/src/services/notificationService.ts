@@ -3,9 +3,9 @@ import {
   QueryFunctionContext,
   useQueryClient,
   useMutation,
-} from "@tanstack/react-query";
-import { Notification } from "../types/notification";
-import apiClient from "./axios";
+} from '@tanstack/react-query';
+import { Notification } from '../types/notification';
+import apiClient from './axios';
 
 interface ContextType {
   previousNotifications: Notification[];
@@ -13,24 +13,24 @@ interface ContextType {
 
 export const useGetNotifications = (data: object | undefined) =>
   useQuery<Notification[], Error>({
-    queryKey: ["notifications", data],
+    queryKey: ['notifications', data],
     queryFn: async () => {
-      const response = await apiClient("/notification-types", "get", data);
+      const response = await apiClient('/notification-types', 'get', data);
       return response.data;
     },
     staleTime: 1 * 60 * 1000,
     keepPreviousData: true,
   });
 
-export const useGetNotification = (notificationId: number | undefined) =>
+export const useGetNotification = (notificationId: string | undefined) =>
   useQuery<Notification[], Error>({
-    queryKey: ["notifications", notificationId],
+    queryKey: ['notifications', notificationId],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const notificationId = queryKey[1];
       const response = await apiClient(
         `/notification-types/${notificationId}`,
-        "get"
+        'get'
       );
       return response.data;
     },
@@ -43,19 +43,21 @@ export const useAddNotifications = (eventId: string) => {
     mutationFn: async (notification: Notification) => {
       const response = await apiClient(
         `/notification-types`,
-        "post",
+        'post',
         notification
       );
       return response.data;
     },
     onSuccess: (savedNotifications) => {
       const previousNotifications = queryClient.getQueryData<Notification[]>([
+
         "notifications",
         eventId,
         "events",
       ]);
       queryClient.setQueryData<Notification[] | undefined>(
         ["notifications", eventId, "events"],
+
         (notifications) => {
           if (notifications) {
             return [savedNotifications, ...notifications];
@@ -68,7 +70,9 @@ export const useAddNotifications = (eventId: string) => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Notification[]>(
+
         ["notifications", eventId, "events"],
+
         context?.previousNotifications
       );
     },
@@ -80,6 +84,7 @@ export const useUpdateNotification = (eventId: string) => {
   return useMutation<Notification, Error, Notification, ContextType>({
     mutationFn: async (notification: Notification) => {
       const response = await apiClient(
+
         `/notification-types/${notification._id}`,
         "patch",
         notification
@@ -88,6 +93,7 @@ export const useUpdateNotification = (eventId: string) => {
     },
     onSuccess: (savedNotifications) => {
       const previousNotifications = queryClient.getQueryData<Notification[]>([
+
         "notifications",
         eventId,
         "events",
@@ -128,6 +134,7 @@ export const useDeleteNotifications = (eventId: string) => {
       ]);
       queryClient.setQueryData<Notification[] | undefined>(
         ["notifications", eventId, "events"],
+
         (notifications) => {
           if (notifications) {
             return [savedNotifications, ...notifications];
@@ -140,7 +147,9 @@ export const useDeleteNotifications = (eventId: string) => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Notification[]>(
+
         ["notifications", eventId, "events"],
+
         context?.previousNotifications
       );
     },

@@ -1,3 +1,4 @@
+
 import { Alert, Box, CssBaseline } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import TopBar from "../../components/commons/topbar/topbar";
@@ -29,12 +30,16 @@ const Dashboard = () => {
 
   // useTestFn();
 
-  // Use useEffect to listen for changes in applicationId
+
   useEffect(() => {
-    // When applicationId changes, unset the eventId
     setEventId(undefined);
   }, [applicationId]);
 
+  useEffect(() => {
+    if (notificationId) {
+      navigate(`/edit/${notificationId}`);
+    }
+  }, [navigate, notificationId]);
   return (
     <>
       <CssBaseline />

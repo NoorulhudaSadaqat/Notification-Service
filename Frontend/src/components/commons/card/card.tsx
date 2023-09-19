@@ -17,9 +17,11 @@ interface Props {
   setEditedCardName: React.Dispatch<React.SetStateAction<string>>;
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleUpdate: (ele: Application | Event | Notification) => void;
 }
 
 export default function InfoCard({
+  handleUpdate,
   data,
   openInfoModal,
   setApplicationId,
@@ -38,7 +40,7 @@ export default function InfoCard({
           sx={{
             curor: 'pointer',
             minWidth: 275,
-
+            justifyContent: 'space-between',
             margin: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
@@ -115,8 +117,10 @@ export default function InfoCard({
                   setIsModalOpen
                 )
               }
-              onDelete={() => handleDelete(e._id, data)}
-              onToggleActive={() => handleToggleActive(e._id, data)}
+              onDelete={() => handleUpdate({ ...e, isDeleted: true })}
+              onToggleActive={() =>
+                handleUpdate({ ...e, isActive: !e.isActive })
+              }
             />
           </CardActions>
         </Card>
