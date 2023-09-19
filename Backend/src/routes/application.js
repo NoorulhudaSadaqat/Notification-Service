@@ -591,6 +591,6 @@ applicationRouter.patch(
  *         description: Application with the given ID not found
  */
 
-applicationRouter.delete("/:id", deleteApplication);
+applicationRouter.delete("/", deleteApplication);
 
 module.exports = applicationRouter;
