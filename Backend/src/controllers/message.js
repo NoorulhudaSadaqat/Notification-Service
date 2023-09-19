@@ -16,13 +16,18 @@ const getAllMessage = async (req, res) => {
   }
   if (config.get("server.db") === "postgres") {
     const messages = await knex("message")
-      .where(queryParams)
+      .where({ isDeleted: false, ...queryParams })
       .limit(pageSize)
       .offset(offset);
     return res.send(messages);
   }
-  const messages = await Message.find(queryParams).skip(offset).limit(pageSize);
-  const totalCount = await Event.countDocuments(queryParams);
+  const messages = await Message.find({ isDeleted: false, ...queryParams })
+    .skip(offset)
+    .limit(pageSize);
+  const totalCount = await Event.countDocuments({
+    isDeleted: false,
+    ...queryParams,
+  });
   return res.send({ messages, totalCount });
 };
 const createMessage = async (req, res) => {
@@ -41,9 +46,9 @@ const createMessage = async (req, res) => {
       messages.push({
         text: message,
         isActive: true,
-        createdBy: req.user.id || req.user._id,
+        createdBy: req.user.firstName + " " + req.user.lastName,
         createdDate: new Date(),
-        modifiedBy: req.user.id || req.user._id,
+        modifiedBy: req.user.firstName + " " + req.user.lastName,
         modifiedDate: new Date(),
       });
     }
@@ -66,9 +71,8 @@ const createMessage = async (req, res) => {
     messages.push({
       text: message,
       isActive: true,
-      createdBy: req.user.id || req.user._id,
-      createdDate: new Date(),
-      modifiedBy: req.user.id || req.user._id,
+      createdBy: req.user.firstName + " " + req.user.lastName,
+      modifiedBy: req.user.firstName + " " + req.user.lastName,
       modifiedDate: new Date(),
     });
   }
@@ -81,7 +85,7 @@ const updateMessage = async (req, res) => {
   const messageId = req.params.id;
   const reqBody = {
     ...req.body,
-    modifiedBy: req.user.id || req.user._id,
+    modifiedBy: req.user.firstName + " " + req.user.lastName,
     modifiedDate: new Date(),
   };
   if (config.get("server.db") === "postgres") {
@@ -115,9 +119,9 @@ const deleteMessage = async (req, res) => {
       .where("id", messageId)
       .update(
         {
-          isActive: false,
+          isDeleted: true,
           modifiedDate: new Date(),
-          modifiedBy: req.user.id || req.user._id,
+          modifiedBy: req.user.firstName + " " + req.user.lastName,
         },
         ["*"]
       );
@@ -134,9 +138,9 @@ const deleteMessage = async (req, res) => {
   const message = await Message.findByIdAndUpdate(
     messageId,
     {
-      isActive: false,
+      isDeleted: true,
       modifiedDate: new Date(),
-      modifiedBy: req.user.id || req.user._id,
+      modifiedBy: req.user.firstName + " " + req.user.lastName,
     },
     { new: true }
   );

@@ -1,9 +1,9 @@
-const Event = require('../models/event');
-const NotificationType = require('../models/notificationType');
-const { StatusCodes } = require('http-status-codes');
-const knex = require('../knex');
-const config = require('config');
-const Message = require('../models/message');
+const Event = require("../models/event");
+const NotificationType = require("../models/notificationType");
+const { StatusCodes } = require("http-status-codes");
+const knex = require("../knex");
+const config = require("config");
+const Message = require("../models/message");
 
 const getAllEvent = async (req, res) => {
   const page = req.query.page || 1;
@@ -14,20 +14,26 @@ const getAllEvent = async (req, res) => {
     if (!(req.query[key] == page || req.query[key] == pageSize))
       queryParams[key.toString()] = req.query[key];
   }
-  if (config.get('server.db') === 'postgres') {
-    const events = await knex('event')
+  if (config.get("server.db") === "postgres") {
+    const events = await knex("event")
       .where(queryParams)
       .limit(pageSize)
       .offset(offset)
-      .orderBy('name');
+      .orderBy("name");
     return res.send(events);
   }
-  const events = await Event.find(queryParams)
+  const events = await Event.find({
+    isDeleted: false,
+    ...queryParams,
+  })
     .skip(offset)
     .limit(pageSize)
-    .sort('name');
+    .sort("name");
 
-  const totalCount = await Event.countDocuments(queryParams);
+  const totalCount = await Event.countDocuments({
+    isDeleted: false,
+    ...queryParams,
+  });
   return res.send({ events, totalCount });
 };
 
@@ -37,19 +43,39 @@ const getAllNotificationType = async (req, res) => {
   const offset = (page - 1) * pageSize;
   const eventId = req.params.id;
   const queryParams = {};
+
   for (const key in req.query) {
     if (!(req.query[key] == page || req.query[key] == pageSize))
       queryParams[key.toString()] = req.query[key];
   }
-  if (config.get('server.db') === 'postgres') {
-    const event = await knex('event').where('id', eventId).first();
+
+  const filter = {
+    isDeleted: false,
+    eventId: eventId,
+    $or: [
+      { name: { $regex: new RegExp(queryParams.search, "i") } },
+      { description: { $regex: new RegExp(queryParams.search, "i") } },
+    ],
+  };
+  if (queryParams.isActive !== undefined) {
+    filter.isActive = queryParams.isActive;
+  }
+
+  const sort = {};
+  if (queryParams.sortOrder === "ascending") {
+    sort[queryParams.sortBy] = 1;
+  } else {
+    sort[queryParams.sortBy] = -1;
+  }
+  if (config.get("server.db") === "postgres") {
+    const event = await knex("event").where("id", eventId).first();
     if (!event) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'The event with the given ID was not found.' });
+        .json({ error: "The event with the given ID was not found." });
     }
-    const notifcationTypes = await knex('notificationType')
-      .where('eventId', eventId)
+    const notifcationTypes = await knex("notificationType")
+      .where("eventId", eventId)
       .limit(pageSize)
       .offset(offset)
       .where(queryParams);
@@ -60,19 +86,16 @@ const getAllNotificationType = async (req, res) => {
   if (!event)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: 'The event with the given ID was not found.' });
-  console.log(eventId, queryParams);
-  const notificationTypes = await NotificationType.find({
-    eventId: eventId,
-    ...queryParams,
-  })
+      .json({ error: "The event with the given ID was not found." });
+  const notificationTypes = await NotificationType.find(filter)
     .skip(offset)
-    .limit(pageSize);
+    .limit(pageSize)
+    .sort(sort);
   const totalCount = await NotificationType.countDocuments({
+    isDeleted: false,
     eventId: eventId,
     ...queryParams,
   });
-  console.log(notificationTypes);
   return res.send({ notificationTypes, totalCount });
 };
 
@@ -86,16 +109,16 @@ const getAllMessage = async (req, res) => {
     if (!(req.query[key] == page || req.query[key] == pageSize))
       queryParams[key.toString()] = req.query[key];
   }
-  if (config.get('server.db') === 'postgres') {
-    const event = await knex('event').where('id', eventId).first();
+  if (config.get("server.db") === "postgres") {
+    const event = await knex("event").where("id", eventId).first();
 
     if (!event) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'The event with the given ID was not found.' });
+        .json({ error: "The event with the given ID was not found." });
     }
-    const messages = await knex('message')
-      .where('eventId', eventId)
+    const messages = await knex("message")
+      .where("eventId", eventId)
       .where(queryParams)
       .limit(pageSize)
       .offset(offset);
@@ -106,38 +129,42 @@ const getAllMessage = async (req, res) => {
   if (!event)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: 'The event with the given ID was not found.' });
+      .json({ error: "The event with the given ID was not found." });
 
   const messages = await Message.find({
+    isDeleted: false,
     eventId: eventId,
     ...queryParams,
   })
     .skip(offset)
     .limit(pageSize);
-  const totalCount = await Message.countDocuments(queryParams);
+  const totalCount = await Message.countDocuments({
+    isDeleted: false,
+    ...queryParams,
+  });
   return res.send({ messages, totalCount });
 };
 const createEvent = async (req, res) => {
   const reqBody = {
     ...req.body,
     isActive: true,
-    createdBy: req.user.id || req.user._id,
+    createdBy: req.user.firstName + " " + req.user.lastName,
     createdDate: new Date(),
-    modifiedBy: req.user.id || req.user._id,
+    modifiedBy: req.user.firstName + " " + req.user.lastName,
     modifiedDate: new Date(),
   };
-  if (config.get('server.db') === 'postgres') {
-    const existingEvent = await knex('event')
-      .where('name', req.body.name)
-      .where('applicationId', req.body.applicationId)
+  if (config.get("server.db") === "postgres") {
+    const existingEvent = await knex("event")
+      .where("name", req.body.name)
+      .where("applicationId", req.body.applicationId)
       .first();
     if (existingEvent) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         error:
-          'This Event already exists in this Application. Please create event with a different name',
+          "This Event already exists in this Application. Please create event with a different name",
       });
     }
-    const createdEvent = await knex('event').insert(reqBody).returning('*');
+    const createdEvent = await knex("event").insert(reqBody).returning("*");
     return res.send(createdEvent);
   }
   const existingEvent = await Event.findOne({
@@ -147,7 +174,7 @@ const createEvent = async (req, res) => {
   if (existingEvent) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       error:
-        'This Event already exists in this Application. Please create event with a different name',
+        "This Event already exists in this Application. Please create event with a different name",
     });
   }
   let event = new Event(reqBody);
@@ -159,18 +186,18 @@ const updateEvent = async (req, res) => {
   const eventId = req.params.id;
   const reqBody = {
     ...req.body,
-    modifiedBy: req.user.id || req.user._id,
+    modifiedBy: req.user.firstName + " " + req.user.lastName,
     modifiedDate: new Date(),
   };
-  if (config.get('server.db') === 'postgres') {
-    const event = await knex('event')
-      .where('id', eventId)
-      .update(reqBody, ['*']);
+  if (config.get("server.db") === "postgres") {
+    const event = await knex("event")
+      .where("id", eventId)
+      .update(reqBody, ["*"]);
 
     if (!event.length) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'The event with the given ID was not found.' });
+        .json({ error: "The event with the given ID was not found." });
     }
 
     return res.send(event[0]);
@@ -179,40 +206,40 @@ const updateEvent = async (req, res) => {
   if (!event)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: 'The event with the given ID was not found.' });
+      .json({ error: "The event with the given ID was not found." });
 
   return res.send(event);
 };
 
 const deleteEvent = async (req, res) => {
   const eventId = req.params.id;
-  if (config.get('server.db') === 'postgres') {
-    const event = await knex('event')
-      .where('id', eventId)
+  if (config.get("server.db") === "postgres") {
+    const event = await knex("event")
+      .where("id", eventId)
       .update(
         {
-          isActive: false,
+          isDeleted: false,
           modifiedDate: new Date(),
-          modifiedBy: req.user.id || req.user._id,
+          modifiedBy: req.user.firstName + " " + req.user.lastName,
         },
-        ['*']
+        ["*"]
       );
     if (!event.length) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'The eevnt with the given ID was not found.' });
+        .json({ error: "The eevnt with the given ID was not found." });
     }
     return res
       .status(StatusCodes.OK)
-      .json({ message: 'The event with given Id is deleted' });
+      .json({ message: "The event with given Id is deleted" });
   }
 
   const event = await Event.findByIdAndUpdate(
     eventId,
     {
-      isActive: false,
+      isDeleted: true,
       modifiedDate: new Date(),
-      modifiedBy: req.user.id || req.user._id,
+      modifiedBy: req.user.firstName + " " + req.user.lastName,
     },
     { new: true }
   );
@@ -220,22 +247,22 @@ const deleteEvent = async (req, res) => {
   if (!event)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: 'The event with the given ID was not found.' });
+      .json({ error: "The event with the given ID was not found." });
 
   return res
     .status(StatusCodes.OK)
-    .json({ message: 'The application with the given ID is deleted' });
+    .json({ message: "The application with the given ID is deleted" });
 };
 
 const getEvent = async (req, res) => {
   const eventId = req.params.id;
-  if (config.get('server.db') === 'postgres') {
-    const event = await knex('event').where('id', eventId).first();
+  if (config.get("server.db") === "postgres") {
+    const event = await knex("event").where("id", eventId).first();
 
     if (!event) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'The event with the given ID was not found.' });
+        .json({ error: "The event with the given ID was not found." });
     }
 
     return res.send(event);
@@ -247,7 +274,7 @@ const getEvent = async (req, res) => {
   if (!event)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: 'The event with the given ID was not found.' });
+      .json({ error: "The event with the given ID was not found." });
 
   return res.send(event);
 };
