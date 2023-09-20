@@ -1,11 +1,23 @@
 import InfoCard from '../commons/card/card';
-import { Alert, AlertColor, Box, Slide, Snackbar } from '@mui/material';
+import {
+  Alert,
+  AlertColor,
+  Box,
+  Button,
+  IconButton,
+  Slide,
+  Snackbar,
+  Typography,
+} from '@mui/material';
+
+import DeleteIcon from '@mui/icons-material/Delete';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './applications.module.css';
 import { useEffect, useState } from 'react';
 import Loader from '../commons/loader/loader';
 import {
   useAddApplication,
+  useDeleteApplication,
   useGetApplications,
   useUpdateApplication,
 } from '../../services/applicationService';
@@ -31,19 +43,51 @@ export const Applications = ({ setApplicationId }: Props) => {
   const [searchText, setSearchText] = useState('');
   const [searchError, setSearchError] = useState('');
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
+  const [elementToEdit, setElementToEdit] = useState<object>();
   const addMutation = useAddApplication();
+  const queryClient = useQueryClient();
   const updateMutation = useUpdateApplication();
-  const { isLoading, isError, data, error } = useGetApplications(params);
+  const deleteMutation = useDeleteApplication();
+  const { isLoading, data } = useGetApplications(params);
   const applications = data?.applications;
-  const openInfoModal = (ele) => {
+  const openInfoModal = (ele: Application) => {
     setInfoModalOpen(true);
     setSelectedApplication(ele);
   };
 
-  const handleDelete = () => {};
-
-  const queryClient = useQueryClient();
-
+  const handleDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync(idsToDelete);
+      setSnackbarMessage(
+        `${idsToDelete} application(s) have been deleted successfully!`
+      );
+      setSnackbarOpen(true);
+      setSeverity('success');
+    } catch (error) {
+      setSnackbarMessage('Error:', error.response.data.error);
+      setSnackbarOpen(true);
+      setSeverity('error');
+    }
+  };
+  const text =
+    idsToDelete.length === 0 ? (
+      <Typography sx={{ color: 'black' }}>Applications</Typography>
+    ) : (
+      <>
+        <Button
+          sx={{ border: '1px red solid', color: 'red' }}
+          variant='outlined'
+          startIcon={<DeleteIcon sx={{ color: 'red' }} />}
+          onClick={() => {
+            handleDelete();
+          }}
+        >
+          Delete {'('}
+          {idsToDelete.length}
+          {')'}
+        </Button>
+      </>
+    );
   const handleSearch = () => {
     setParams({ ...params, search: searchText });
   };
@@ -58,7 +102,7 @@ export const Applications = ({ setApplicationId }: Props) => {
       setIsAddModalOpen(false);
     } catch (error) {
       console.log(error.response.data.error);
-      setSnackbarMessage('Error:', error.response.data.error);
+      setSnackbarMessage(`Error:, ${error.response.data.error}`);
       setSnackbarOpen(true);
       setSeverity('error');
     }
@@ -83,6 +127,7 @@ export const Applications = ({ setApplicationId }: Props) => {
   useEffect(() => {
     queryClient.invalidateQueries(['applications']);
   }, [params]);
+
   const renderComponent = () => {
     if (isLoading) {
       return (
@@ -109,6 +154,7 @@ export const Applications = ({ setApplicationId }: Props) => {
       <div className={styles.scrollControl}>
         <div className={styles.cardContainer}>
           <InfoCard
+            setElement={setElementToEdit}
             setSelectedCards={setIdsToDelete}
             selectedCards={idsToDelete}
             handleUpdate={handleUpdate}
@@ -153,6 +199,8 @@ export const Applications = ({ setApplicationId }: Props) => {
         </Snackbar>
 
         <DisplayDriver
+          element={elementToEdit!}
+          setElement={setElementToEdit}
           selectedCardIds={idsToDelete}
           setIsAddModalOpen={setIsAddModalOpen}
           isAddModalOpen={isAddModalOpen}
@@ -166,14 +214,9 @@ export const Applications = ({ setApplicationId }: Props) => {
           setIsModalOpen={setIsModalOpen}
           searchText={searchText}
           setSearchText={setSearchText}
-          data={applications}
-          editedCardName={editedCardName}
-          editedCardDescription={editedCardDescription}
-          setEditedCardName={setEditedCardName}
-          setEditedCardDescription={setEditedCardDescription}
           renderComponent={renderComponent}
           modalTitle={'Edit Application'}
-          toolBarTitle={'Applications'}
+          toolBarTitle={text}
           setSearchError={setSearchError}
           searchError={searchError}
         />

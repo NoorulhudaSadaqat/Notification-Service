@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './grid.module.css';
 import {
+  Checkbox, // Import Checkbox
   IconButton,
   Link,
   Table,
@@ -11,11 +12,6 @@ import {
   TableRow,
 } from '@mui/material';
 import HandlerButtons from '../handlers/handler';
-import {
-  handleEdit,
-  handleDelete,
-  handleToggleActive,
-} from '../../../utils/dataUtils';
 import { Event } from '../../../types/event';
 import PaginationControls from '../paginationControl/paginationControl';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -29,41 +25,58 @@ interface Props {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   openInfoModal: (e: Event) => void;
   handleUpdate: (e: Event | Notification) => void;
+  setElement: React.Dispatch<React.SetStateAction<object>>;
+  selectedIds: string[];
+  currentPage: number; // Add currentPage prop
+  setIdsToDelete: React.Dispatch<React.SetStateAction<string[]>>;
+  handlePageChange: (page: number) => void;
+  totalPages: number;
 }
 
-const itemsPerPage = 5;
-
 const GridComponent: React.FC<Props> = ({
+  currentPage,
+  totalPages,
   data,
   setId,
+  selectedIds,
   handleUpdate,
-  setEditedCardName,
-  setEditedCardDescription,
+  handlePageChange,
+  setElement,
+  setIdsToDelete,
   setIsModalOpen,
   openInfoModal,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const id = event.target.value;
 
-  const totalItems = data?.length;
-  let totalPages;
-  if (totalItems) totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const paginatedData = data?.slice(startIndex, endIndex);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    if (event.target.checked) {
+      setIdsToDelete((prevSelectedIds) => [...prevSelectedIds, id]);
+    } else {
+      setIdsToDelete((prevSelectedIds) =>
+        prevSelectedIds.filter((selectedId) => selectedId !== id)
+      );
+    }
   };
 
   return (
     <div className={styles.heightControl}>
-      <TableContainer sx={{ minHeight: '20vh' }}>
+      <TableContainer sx={{ minHeight: '20vh', marginBottom: '3vh' }}>
         <Table>
           <TableHead sx={{ position: 'sticky', top: 0 }}>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold' }}></TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>
+                {/* Checkbox Header */}
+                <Checkbox
+                  color='primary'
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setIdsToDelete(data?.map((ele) => ele._id) || []);
+                    } else {
+                      setIdsToDelete([]);
+                    }
+                  }}
+                />
+              </TableCell>
 
               <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
               <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
@@ -71,16 +84,16 @@ const GridComponent: React.FC<Props> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedData?.map((ele) => (
+            {data?.map((ele) => (
               <TableRow key={ele._id}>
                 <TableCell>
-                  <IconButton
-                    aria-label='info'
-                    sx={{ fontSize: '18px' }}
-                    onClick={() => openInfoModal(ele)}
-                  >
-                    <InfoOutlinedIcon sx={{ fontSize: '18px' }} />
-                  </IconButton>
+                  {/* Checkbox for each row */}
+                  <Checkbox
+                    color='primary'
+                    value={ele._id}
+                    onChange={handleCheckboxChange}
+                    checked={selectedIds.includes(ele._id)}
+                  />
                 </TableCell>
                 <TableCell>
                   <Link
@@ -112,15 +125,10 @@ const GridComponent: React.FC<Props> = ({
                 <TableCell>
                   <HandlerButtons
                     isActive={ele.isActive}
-                    onEdit={() =>
-                      handleEdit(
-                        ele.name,
-                        ele.description,
-                        setEditedCardName,
-                        setEditedCardDescription,
-                        setIsModalOpen
-                      )
-                    }
+                    onEdit={() => {
+                      setElement(ele);
+                      setIsModalOpen(true);
+                    }}
                     onDelete={() =>
                       handleUpdate({ _id: ele._id, isDeleted: true })
                     }

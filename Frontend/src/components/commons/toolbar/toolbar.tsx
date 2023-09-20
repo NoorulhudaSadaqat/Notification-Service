@@ -1,4 +1,4 @@
-import React, { ContextType, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -14,6 +14,8 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import SortIcon from '@mui/icons-material/Sort';
 import AddIcon from '@mui/icons-material/Add';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {
   Check,
   CreateRounded,
@@ -26,9 +28,9 @@ import { Application } from '../../../types/application';
 import { filters } from '../../../utils/dataUtils';
 
 const inputStyles = {
-  backgroundColor: 'white', // Background color for the search input
+  backgroundColor: 'white',
   '&:hover': {
-    backgroundColor: 'white', // Hover background color
+    backgroundColor: 'white',
   },
 };
 
@@ -40,7 +42,7 @@ interface Props {
   searchText: string;
   setSearchText: (text: string) => void;
   params: object;
-  text: string;
+  text: JSX.Element;
   setParams: React.Dispatch<React.SetStateAction<object>>;
   handleAdd: (element: Application | Event | Notification) => void;
   handleSearch: () => void;
@@ -63,15 +65,17 @@ const ToolBar = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [filterBy, setFilterBy] = useState('');
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
+  const [sortingOrder, setSortingOrder] = useState<'ascending' | 'descending'>(
+    'ascending'
+  );
 
-  // Search
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 3) {
       setSearchText(e.target.value);
       handleSearch();
     }
   };
-  //Filters
+
   const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -80,15 +84,19 @@ const ToolBar = ({
     setAnchorEl(null);
   };
 
-  const handleSortOptionClick = (option: string) => {
-    setFilterBy(option);
+  const handleSortOptionClick = () => {
+    const newSortingOrder =
+      sortingOrder === 'ascending' ? 'descending' : 'ascending';
+
+    setSortingOrder(newSortingOrder);
+    if (!params?.sortBy) {
+      setParams({ ...params, sortBy: 'isActive', sortOrder: newSortingOrder });
+    } else {
+      setParams({ ...params, sortOrder: newSortingOrder });
+    }
     setAnchorEl(null);
   };
-  //Filter Button control
-  const handleFilter = () => {
-    setFilterButtonPressed(!filterButtonPressed);
-  };
-  //Parameters for get query
+
   const handleFilterCalls = (
     event: React.MouseEvent<HTMLElement>,
     newFilterCalls: string
@@ -112,7 +120,7 @@ const ToolBar = ({
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Typography sx={{ color: 'black' }}>{text}</Typography>
+        <Box>{text}</Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <InputBase
@@ -154,6 +162,17 @@ const ToolBar = ({
             }}
           >
             {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              handleSortOptionClick(filterBy);
+            }}
+          >
+            {sortingOrder === 'ascending' ? (
+              <ArrowUpwardIcon />
+            ) : (
+              <ArrowDownwardIcon />
+            )}
           </IconButton>
           <IconButton
             onClick={() => {

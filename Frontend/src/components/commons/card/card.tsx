@@ -5,19 +5,14 @@ import {
   CardActions,
   Box,
   Checkbox,
+  Tooltip,
 } from '@mui/material';
 import styles from './card.module.css';
 import HandlerButtons from '../handlers/handler';
 import IconButton from '@mui/material/IconButton';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import {
-  handleEdit,
-  handleDelete,
-  handleToggleActive,
-} from '../../../utils/dataUtils';
 import { Application } from '../../../types/application';
 import { useState } from 'react';
-import { CheckBox } from '@mui/icons-material';
 
 interface Props {
   data: Application[] | undefined;
@@ -29,6 +24,7 @@ interface Props {
   handleUpdate: (ele: Application | Event | Notification) => void;
   setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
   selectedCards: string[];
+  setElement: React.Dispatch<React.SetStateAction<object>>;
 }
 
 export default function InfoCard({
@@ -36,8 +32,7 @@ export default function InfoCard({
   data,
   openInfoModal,
   setApplicationId,
-  setEditedCardName,
-  setEditedCardDescription,
+  setElement,
   setIsModalOpen,
   selectedCards,
   setSelectedCards,
@@ -86,6 +81,7 @@ export default function InfoCard({
               <Typography sx={{ textAlign: 'left', fontSize: '0.75rem' }}>
                 {e.code}
               </Typography>
+
               <IconButton
                 aria-label='info'
                 sx={{ fontSize: '18px' }}
@@ -135,15 +131,10 @@ export default function InfoCard({
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <HandlerButtons
               isActive={e.isActive}
-              onEdit={() =>
-                handleEdit(
-                  e.name,
-                  e.description,
-                  setEditedCardName,
-                  setEditedCardDescription,
-                  setIsModalOpen
-                )
-              }
+              onEdit={() => {
+                setIsModalOpen(true);
+                setElement(e);
+              }}
               onDelete={() => handleUpdate({ _id: e._id, isDeleted: true })}
               onToggleActive={() =>
                 handleUpdate({ _id: e._id, isActive: !e.isActive })

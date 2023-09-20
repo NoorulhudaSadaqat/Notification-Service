@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Box, Slide, Snackbar } from '@mui/material';
+import React, { useDeferredValue, useEffect, useState } from 'react';
+import { Alert, Box, Button, Slide, Snackbar, Typography } from '@mui/material';
 import GridComponent from '../commons/grid/grid';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './Events.module.css';
 import { Event } from '../../types/event';
 import Loader from '../commons/loader/loader';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
-import { useGetEvents } from '../../services/applicationService';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import {
+  useDeleteApplication,
+  useGetEvents,
+} from '../../services/applicationService';
 import InfoModal from '../commons/infoModal/infoModal';
 import { filters } from '../../utils/dataUtils';
 import { useQueryClient } from '@tanstack/react-query';
-import { useAddEvents, useUpdateEvents } from '../../services/eventService';
+import {
+  useAddEvents,
+  useDeleteEvents,
+  useUpdateEvents,
+} from '../../services/eventService';
 
 interface Props {
   applicationId: string | undefined;
@@ -18,16 +27,18 @@ interface Props {
 }
 
 const Events = ({ applicationId, setEventId }: Props) => {
+  const pageSize = 4;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [params, setParams] = useState<object>();
+  const [params, setParams] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [searchError, setSearchError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState('');
-  const [editedCardName, setEditedCardName] = useState('');
-  const [editedCardDescription, setEditedCardDescription] = useState('');
+  const [elementToEdit, setElementToEdit] = useState<object>();
+  const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event>();
   const [severity, setSeverity] = useState<AlertColor>('success');
   const { isLoading, isError, data, error } = useGetEvents(
@@ -35,8 +46,10 @@ const Events = ({ applicationId, setEventId }: Props) => {
     params
   );
   const events = data?.events;
+  const totalPages = Math.ceil(data?.totalCount / pageSize);
   const updateMutation = useUpdateEvents(applicationId!);
   const addMutation = useAddEvents(applicationId!);
+  const deleteMutation = useDeleteEvents(applicationId!);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -44,10 +57,12 @@ const Events = ({ applicationId, setEventId }: Props) => {
       'events',
       applicationId,
       'applications',
-      'data',
       {},
     ]);
-  }, [params]);
+  }, [params, currentPage, queryClient, applicationId]);
+  useEffect(() => {
+    console.log('Ids to be deleted', idsToDelete);
+  }, [idsToDelete]);
   const handleSearch = () => {
     setParams({ ...params, search: searchText });
   };
@@ -78,7 +93,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
       setIsAddModalOpen(false);
     } catch (error) {
       console.log(error.response.data.error);
-      setSnackbarMessage('Error:', error.response.data.error);
+      setSnackbarMessage(`Error: ${error.response.data.error}`);
       setSnackbarOpen(true);
       setSeverity('error');
     }
@@ -101,8 +116,47 @@ const Events = ({ applicationId, setEventId }: Props) => {
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync(idsToDelete);
+      setSnackbarMessage(
+        `${idsToDelete} event(s) have been deleted successfully!`
+      );
+      setSnackbarOpen(true);
+      setSeverity('success');
+    } catch (error) {
+      setSnackbarMessage(`Error: ${error.response.data.error}`);
+      setSnackbarOpen(true);
+      setSeverity('error');
+    }
+  };
+
+  const handlePagination = (page: number): void => {
+    console.log('Page: ', page);
+    setCurrentPage(page);
+    setParams({ ...params, pageSize: pageSize, page: currentPage });
+  };
+  const text =
+    idsToDelete.length === 0 ? (
+      <Typography sx={{ color: 'black' }}>Events</Typography>
+    ) : (
+      <>
+        <Button
+          sx={{ border: '1px red solid', color: 'red' }}
+          variant='outlined'
+          startIcon={<DeleteIcon sx={{ color: 'red' }} />}
+          onClick={() => {
+            handleDelete();
+          }}
+        >
+          Delete {'('}
+          {idsToDelete.length}
+          {')'}
+        </Button>
+      </>
+    );
+
   const renderComponent = () => {
-    console.log(applicationId);
     if (isLoading) {
       return (
         <Box>
@@ -126,13 +180,18 @@ const Events = ({ applicationId, setEventId }: Props) => {
     return (
       <Box>
         <GridComponent
+          totalCount={data?.totalCount}
+          selectedIds={idsToDelete}
+          setIdsToDelete={setIdsToDelete}
+          setElement={setElementToEdit}
           handleUpdate={handleUpdateEvent}
           openInfoModal={openInfoModal}
           data={events}
           setId={eventIdSetter}
-          setEditedCardName={setEditedCardName}
-          setEditedCardDescription={setEditedCardDescription}
           setIsModalOpen={setIsModalOpen}
+          handlePageChange={handlePagination}
+          currentPage={currentPage}
+          totalPages={totalPages}
         />
       </Box>
     );
@@ -167,6 +226,8 @@ const Events = ({ applicationId, setEventId }: Props) => {
       </Snackbar>
       <div className={styles.heightControl}>
         <DisplayDriver
+          element={elementToEdit!}
+          setElement={setElementToEdit}
           isAddModalOpen={isAddModalOpen}
           setIsAddModalOpen={setIsAddModalOpen}
           handleSearch={handleSearch}
@@ -181,13 +242,9 @@ const Events = ({ applicationId, setEventId }: Props) => {
           setIsModalOpen={setIsModalOpen}
           setSearchText={setSearchText}
           data={events}
-          editedCardName={editedCardName}
-          editedCardDescription={editedCardDescription}
-          setEditedCardName={setEditedCardName}
-          setEditedCardDescription={setEditedCardDescription}
           renderComponent={renderComponent}
           modalTitle={'Edit Events'}
-          toolBarTitle={'Events'}
+          toolBarTitle={text}
         />
       </div>
     </>

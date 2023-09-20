@@ -9,18 +9,16 @@ import { Alert } from '@mui/material';
 
 interface Props {
   params: object;
-  toolBarTitle: string;
+  toolBarTitle: JSX.Element;
   handleUpdate: (element: any) => void;
   modalTitle: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   searchText: string;
   renderComponent: () => void;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setEditedCardName: React.Dispatch<React.SetStateAction<string>>;
-  editedCardName: string | null;
-  setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
+
   setSearchError: React.Dispatch<React.SetStateAction<string>>;
-  editedCardDescription: string | null;
+
   isModalOpen: boolean;
   searchError: string;
   setParams: React.Dispatch<React.SetStateAction<object>>;
@@ -30,6 +28,8 @@ interface Props {
   handleSearch: () => void;
   handleAdd: (element: Application | Event | Notification) => void;
   selectedCards: string[];
+  element: object;
+  setElement: React.Dispatch<React.SetStateAction<object>>;
 }
 const DisplayDriver = ({
   selectedCards,
@@ -44,10 +44,8 @@ const DisplayDriver = ({
   isAddModalOpen,
   setSearchText,
   handleSearch,
-  editedCardName,
-  setEditedCardName,
-  editedCardDescription,
-  setEditedCardDescription,
+  setElement,
+  element,
   renderComponent,
   modalTitle,
   handleAdd,
@@ -73,16 +71,12 @@ const DisplayDriver = ({
       <EditModal
         handleSubmitElement={handleUpdate}
         modalTitle={modalTitle}
-        nameOriginal={editedCardName}
-        descriptionOriginal={editedCardDescription}
         open={isModalOpen}
-        handleClose={() =>
-          handleCloseModal(
-            setIsModalOpen,
-            setEditedCardName,
-            setEditedCardDescription
-          )
-        }
+        element={element}
+        handleClose={() => {
+          setIsModalOpen(false);
+          setElement({});
+        }}
       />
     </>
   );

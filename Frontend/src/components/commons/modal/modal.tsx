@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { useForm, FormProvider, Controller } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -41,18 +41,18 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   submitCall: (element: Application | Event | Notification) => void;
+  element?: object;
 }
 
 export default function EditModal({
+  element,
   submitCall,
   modalTitle,
-  nameOriginal,
-  descriptionOriginal,
   open,
   handleClose,
 }: Props) {
   const methods = useForm<Application | Event | Notification>({});
-  const { handleSubmit, setError, control } = methods;
+  const { handleSubmit, setError } = methods;
 
   const onSubmit = async (data: Application | Event | Notification) => {
     try {
@@ -101,13 +101,13 @@ export default function EditModal({
                 name='name'
                 label='Title'
                 type='text'
-                defaultValue={nameOriginal}
+                defaultValue={element ? element?.name : ''}
               />
               <FormInputText
                 name='description'
                 label='Description'
                 type='text'
-                defaultValue={descriptionOriginal}
+                defaultValue={element ? element?.description : ''}
               />
             </Box>
             <Box id='controller-buttons'>

@@ -33,7 +33,9 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         >
           <KeyboardArrowLeftIcon />
         </Button>
-        <Typography>{currentPage}</Typography>
+        <Typography>
+          {currentPage} of {totalPages}
+        </Typography>
 
         <Button
           sx={{

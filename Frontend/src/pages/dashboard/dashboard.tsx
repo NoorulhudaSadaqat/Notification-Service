@@ -61,6 +61,7 @@ const Dashboard = () => {
           {applicationId && (
             <Events applicationId={applicationId} setEventId={setEventId} />
           )}
+          <Box sx={{ minHeight: '20vh' }}></Box>
           {applicationId && !eventId && (
             <Alert severity='warning'>
               Please select an event to see notifications.
