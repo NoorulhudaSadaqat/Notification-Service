@@ -13,7 +13,7 @@ interface ContextType {
 
 export const useGetApplications = (data: object | undefined) =>
   useQuery<Application[], Error>({
-    queryKey: ['applications'],
+    queryKey: ['applications', data],
     queryFn: async () => {
       const response = await apiClient('/applications', 'get', data);
       return response.data;
@@ -65,9 +65,10 @@ export const useAddApplication = () => {
     onSuccess: (savedApplication) => {
       const previousApplications = queryClient.getQueryData<Application[]>([
         'applications',
+        {},
       ]);
       queryClient.setQueryData<Application[] | undefined>(
-        ['applications'],
+        ['applications', {}],
         (applications) => {
           if (applications) {
             return [savedApplication, ...applications];
@@ -80,7 +81,7 @@ export const useAddApplication = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Application[]>(
-        ['applications'],
+        ['applications', {}],
         context?.previousApplications
       );
     },
@@ -102,15 +103,14 @@ export const useUpdateApplication = () => {
     onSuccess: (savedApplication) => {
       const previousApplications = queryClient.getQueryData<Application[]>([
         'applications',
+        {},
       ]);
       queryClient.setQueryData<Application[] | undefined>(
-        ['applications'],
+        ['applications', {}],
         (applications) => {
+          console.log(applications);
           if (applications) {
-            const updatedApplications = [
-              savedApplication,
-              ...applications.applications,
-            ];
+            const updatedApplications = [savedApplication, ...applications];
             const uniqueApplicationIds = new Map();
             const filteredApplications = updatedApplications.filter(
               (application) => {
@@ -132,7 +132,7 @@ export const useUpdateApplication = () => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Application[]>(
-        ['applications'],
+        ['applications', {}],
         context?.previousApplications
       );
     },

@@ -29,8 +29,10 @@ interface Props {
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleSearch: () => void;
   handleAdd: (element: Application | Event | Notification) => void;
+  selectedCards: string[];
 }
 const DisplayDriver = ({
+  selectedCards,
   handleUpdate,
   params,
   addModalTitle,
@@ -54,6 +56,7 @@ const DisplayDriver = ({
   return (
     <>
       <ToolBar
+        selectedCard={selectedCards}
         isAddModalOpen={isAddModalOpen}
         setIsAddModalOpen={setIsAddModalOpen}
         handleSearch={handleSearch}

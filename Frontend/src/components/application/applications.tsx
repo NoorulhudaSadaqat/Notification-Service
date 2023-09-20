@@ -30,6 +30,7 @@ export const Applications = ({ setApplicationId }: Props) => {
   const [editedCardDescription, setEditedCardDescription] = useState('');
   const [searchText, setSearchText] = useState('');
   const [searchError, setSearchError] = useState('');
+  const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const addMutation = useAddApplication();
   const updateMutation = useUpdateApplication();
   const { isLoading, isError, data, error } = useGetApplications(params);
@@ -38,6 +39,8 @@ export const Applications = ({ setApplicationId }: Props) => {
     setInfoModalOpen(true);
     setSelectedApplication(ele);
   };
+
+  const handleDelete = () => {};
 
   const queryClient = useQueryClient();
 
@@ -78,7 +81,7 @@ export const Applications = ({ setApplicationId }: Props) => {
     }
   };
   useEffect(() => {
-    queryClient.invalidateQueries(['applications', {}]);
+    queryClient.invalidateQueries(['applications']);
   }, [params]);
   const renderComponent = () => {
     if (isLoading) {
@@ -106,6 +109,8 @@ export const Applications = ({ setApplicationId }: Props) => {
       <div className={styles.scrollControl}>
         <div className={styles.cardContainer}>
           <InfoCard
+            setSelectedCards={setIdsToDelete}
+            selectedCards={idsToDelete}
             handleUpdate={handleUpdate}
             openInfoModal={openInfoModal}
             setApplicationId={setApplicationId}
@@ -127,13 +132,13 @@ export const Applications = ({ setApplicationId }: Props) => {
             type={'Application'}
             infoModalOpen={infoModalOpen}
             setInfoModalOpen={setInfoModalOpen}
-            data={selectedApplication} // Pass the selected element's data to InfoModal
+            data={selectedApplication}
           />
         )}
 
         <Snackbar
           open={snackbarOpen}
-          autoHideDuration={3000} // Adjust the duration as needed
+          autoHideDuration={3000}
           onClose={() => setSnackbarOpen(false)}
           TransitionComponent={Slide}
         >
@@ -148,6 +153,7 @@ export const Applications = ({ setApplicationId }: Props) => {
         </Snackbar>
 
         <DisplayDriver
+          selectedCardIds={idsToDelete}
           setIsAddModalOpen={setIsAddModalOpen}
           isAddModalOpen={isAddModalOpen}
           handleSearch={handleSearch}

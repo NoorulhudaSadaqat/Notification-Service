@@ -1,4 +1,11 @@
-import { Typography, CardContent, Card, CardActions, Box } from '@mui/material';
+import {
+  Typography,
+  CardContent,
+  Card,
+  CardActions,
+  Box,
+  Checkbox,
+} from '@mui/material';
 import styles from './card.module.css';
 import HandlerButtons from '../handlers/handler';
 import IconButton from '@mui/material/IconButton';
@@ -10,6 +17,8 @@ import {
 } from '../../../utils/dataUtils';
 import { Application } from '../../../types/application';
 import { useState } from 'react';
+import { CheckBox } from '@mui/icons-material';
+
 interface Props {
   data: Application[] | undefined;
   openInfoModal: (element: Application) => void;
@@ -18,6 +27,8 @@ interface Props {
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleUpdate: (ele: Application | Event | Notification) => void;
+  setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedCards: string[];
 }
 
 export default function InfoCard({
@@ -28,7 +39,18 @@ export default function InfoCard({
   setEditedCardName,
   setEditedCardDescription,
   setIsModalOpen,
+  selectedCards,
+  setSelectedCards,
 }: Props) {
+  const toggleCardSelection = (cardId: string) => {
+    if (selectedCards.includes(cardId)) {
+      setSelectedCards(selectedCards.filter((id) => id !== cardId));
+    } else {
+      setSelectedCards([...selectedCards, cardId]);
+    }
+    console.log(selectedCards);
+  };
+
   return (
     <>
       {data?.map((e) => (
@@ -56,6 +78,11 @@ export default function InfoCard({
                 justifyContent: 'space-between',
               }}
             >
+              <Checkbox
+                checked={selectedCards.includes(e._id)}
+                onChange={() => toggleCardSelection(e._id)}
+              />
+
               <Typography sx={{ textAlign: 'left', fontSize: '0.75rem' }}>
                 {e.code}
               </Typography>
@@ -80,7 +107,7 @@ export default function InfoCard({
             <Typography
               sx={{
                 textAlign: 'left',
-                whiteSpace: 'pre-line', // or wordWrap: 'break-word'
+                whiteSpace: 'pre-line',
                 wordWrap: 'break-word',
               }}
               variant='body2'
