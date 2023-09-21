@@ -10,7 +10,8 @@ import { Alert } from "@mui/material";
 interface Props {
   params: object;
   toolBarTitle: JSX.Element;
-  handleUpdate: (element: any) => void;
+  handleUpdate: (element: unknown) => void;
+  handleEdit: (element: unknown) => void;
   modalTitle: string;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   searchText: string;
@@ -35,7 +36,7 @@ interface Props {
 }
 const DisplayDriver = ({
   selectedCards,
-  handleUpdate,
+  handleEdit,
   params,
   addModalTitle,
   setParams,
@@ -54,6 +55,7 @@ const DisplayDriver = ({
   setIdsToDelete,
   eventId,
   applicationId,
+  searchText,
 }: Props) => {
   return (
     <>
@@ -65,6 +67,7 @@ const DisplayDriver = ({
         handleAdd={handleAdd}
         params={params}
         addModalTitle={addModalTitle}
+        searchText={searchText}
         setParams={setParams}
         text={toolBarTitle}
         onSearch={handleSearch}
@@ -75,7 +78,7 @@ const DisplayDriver = ({
       {searchError && <Alert severity="error">{searchError}</Alert>}
       {renderComponent()}
       <EditModal
-        submitCall={handleUpdate}
+        submitCall={handleEdit}
         setIdsToDelete={setIdsToDelete}
         modalTitle={modalTitle}
         open={isModalOpen}

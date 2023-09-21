@@ -60,7 +60,7 @@ export const Applications = ({ setApplicationId }: Props) => {
     try {
       await deleteMutation.mutateAsync(idsToDelete);
       setSnackbarMessage(
-        `${idsToDelete} application(s) have been deleted successfully!`
+        `${idsToDelete.length} application(s) have been deleted successfully!`
       );
       setSnackbarOpen(true);
       setSeverity('success');
@@ -93,6 +93,7 @@ export const Applications = ({ setApplicationId }: Props) => {
       </>
     );
   const handleSearch = () => {
+    console.log(searchText);
     setParams({ ...params, search: searchText });
   };
 
@@ -139,7 +140,6 @@ export const Applications = ({ setApplicationId }: Props) => {
   };
   useEffect(() => {
     queryClient.invalidateQueries(['applications', {}]);
-    console.log(params);
   }, [params, queryClient]);
 
   const renderComponent = () => {
@@ -211,6 +211,8 @@ export const Applications = ({ setApplicationId }: Props) => {
         </Snackbar>
 
         <DisplayDriver
+          handleEdit={handleUpdate}
+          searchText={searchText}
           element={elementToEdit!}
           setElement={setElementToEdit}
           selectedCardIds={idsToDelete}
@@ -224,7 +226,6 @@ export const Applications = ({ setApplicationId }: Props) => {
           addModalTitle={'Add New Applications'}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
-          searchText={searchText}
           setSearchText={setSearchText}
           renderComponent={renderComponent}
           modalTitle={'Edit Application'}

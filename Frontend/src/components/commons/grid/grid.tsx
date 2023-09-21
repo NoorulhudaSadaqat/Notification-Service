@@ -33,6 +33,7 @@ interface Props {
   totalPages: number;
   handleEdit: (ele: Event | Notification) => void;
   eventId: string;
+  handleDelete: () => void;
 }
 
 const GridComponent: React.FC<Props> = ({
@@ -40,6 +41,7 @@ const GridComponent: React.FC<Props> = ({
   totalPages,
   data,
   setId,
+  handleDelete,
   selectedIds,
   handleUpdate,
   handlePageChange,
@@ -111,9 +113,9 @@ const GridComponent: React.FC<Props> = ({
                 </TableCell>
                 {isScreenLarge && (
                   <TableCell>
-                    {ele.description.length > 50 ? (
+                    {ele.description.length > 30 ? (
                       <>
-                        {ele.description.substring(0, 50)}
+                        {ele.description.substring(0, 30)}
                         <span
                           style={{
                             color: "blue",
@@ -138,9 +140,10 @@ const GridComponent: React.FC<Props> = ({
                         navigate(`notfication/${eventId}/edit/${ele._id}`);
                       handleEdit(ele);
                     }}
-                    onDelete={() =>
-                      handleUpdate({ _id: ele._id, isDeleted: true })
-                    }
+                    onDelete={() => {
+                      setIdsToDelete([ele._id!]);
+                      handleDelete();
+                    }}
                     onToggleActive={() =>
                       handleUpdate({ _id: ele._id, isActive: !ele.isActive })
                     }

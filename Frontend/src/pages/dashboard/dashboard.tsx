@@ -7,30 +7,13 @@ import Events from "../../components/events/events";
 import Notifications from "../../components/notifications/notifications";
 import { useAddApplication } from "../../services/applicationService";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../components/commons/footer/footer";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [applicationId, setApplicationId] = useState<string | undefined>("");
   const [eventId, setEventId] = useState<string | undefined>("");
   const [notificationId, setNotificationId] = useState<string | undefined>("");
-
-  //try using mutations this way
-  // const useTestFn = async () => {
-  //   try {
-  //     const mutation = useAddApplication();
-  //     const result = await mutation.mutateAsync({
-  //       name: "nddddmmzzzzzzdcccccccccdddddddddccccccccccddddzzzzzzzmmm",
-  //       description: "2222222222dddddddddddd222222222222",
-  //       code: "232323",
-  //     });
-  //     console.log("result ", result);
-  //   } catch (error) {
-  //     console.log("error : ", error.response.data.error);
-  //   }
-  // };
-
-  // useTestFn();
-
   useEffect(() => {
     setEventId(undefined);
   }, [applicationId]);
@@ -73,11 +56,11 @@ const Dashboard = () => {
             <Notifications
               eventId={eventId}
               setNotificationId={setNotificationId}
-              applicationId={applicationId}
             />
           )}
         </Box>
       </div>
+      <Footer />
     </>
   );
 };

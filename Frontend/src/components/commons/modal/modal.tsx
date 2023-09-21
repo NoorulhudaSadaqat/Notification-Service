@@ -26,7 +26,12 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   submitCall: (element: Application | Event | Notification) => void;
-  element?: { name: string; description: string };
+  element?: {
+    name: string;
+    description: string;
+    applicationId?: string;
+    _id: string;
+  };
 }
 
 export default function EditModal({
@@ -67,7 +72,14 @@ export default function EditModal({
   const onSubmit = async (data: Application | Event | Notification) => {
     try {
       await validationSchema.parseAsync(data);
+      console.log('Called On Submit');
+      if (element?.applicationId) {
+        data = { ...data, applicationId: element?.applicationId };
+      }
+      data = { _id: element?._id || '', ...data };
+      console.log('Data', data);
       await submitCall(data);
+      handleClose();
     } catch (error) {
       if (error instanceof z.ZodError) {
         error.errors.forEach((validationError) => {

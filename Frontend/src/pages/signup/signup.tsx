@@ -1,4 +1,4 @@
-import { Container, CssBaseline, Box } from '@mui/material';
+import { Container, CssBaseline, Box, Button } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { Link } from 'react-router-dom';
@@ -7,11 +7,11 @@ import FormInputText from '../../components/commons/formtextinput/formInputText'
 import { z, string } from 'zod';
 import gslogo from '../../assets/gslogo-red.png';
 import styles from './signup.module.css';
-import Button from '../../components/commons/button/button';
 import { signUpService } from '../../services/authService';
 import { ISignUp } from '../../types/auth';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/commons/footer/footer';
 
 const validationSchema = z.object({
   email: string().email('Invalid email format').nonempty('Email is required'),
@@ -72,68 +72,66 @@ const SignUpPage = () => {
 
   return (
     <>
-      <CssBaseline />
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={showToast?.state}
-        onClose={handleCloseToast}
-        message={showToast?.message}
-        autoHideDuration={6000}
-      >
-        <Alert
+      <Box sx={{ minWidth: '100vw', minHeight: '80vh' }}>
+        <CssBaseline />
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={showToast?.state}
           onClose={handleCloseToast}
-          sx={{ width: '100%' }}
-          severity='error'
+          message={showToast?.message}
+          autoHideDuration={6000}
         >
-          {showToast?.message}
-        </Alert>
-      </Snackbar>
-      <Container
-        component='main'
-        maxWidth='xs'
-        style={{
-          border: '1px solid #007fff',
-          borderRadius: '0 10%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: '5rem',
-          marginInlineStart: '35vw',
-          minHeight: '70vh',
-          minWidth: '30vw',
-        }}
-      >
-        <FormProvider {...methods}>
-          <Box
-            component='form'
-            noValidate
-            autoComplete='off'
-            display='flex'
-            flexDirection='column'
-            alignItems='center'
-            sx={{ gap: 1 }}
+          <Alert
+            onClose={handleCloseToast}
+            sx={{ width: '100%' }}
+            severity='error'
           >
-            <img src={gslogo} alt='GoSaaS logo' />
-            <FormInputText name='firstName' label='First Name' />
-            <FormInputText name='lastName' label='Last Name' type='email' />
-            <FormInputText name='email' label='Email' type='email' />
-            <FormInputText name='password' label='Password' type='password' />
-            <Button
-              text={'Sign Up'}
-              border={'outlineOnHover'}
-              onClick={handleSubmit(onSubmit)} // Call handleSubmit when the button is clicked
-            />
-
-            <p className={styles.registrationMsg}>
-              Already have an account?{' '}
-              <Link to='/' className={styles.resgistration}>
-                Log In
-              </Link>
-            </p>
-          </Box>
-        </FormProvider>
-      </Container>
+            {showToast?.message}
+          </Alert>
+        </Snackbar>
+        <Container
+          component='main'
+          maxWidth='xs'
+          className={styles.signUpContainer} // Add a className for responsive styling
+        >
+          <FormProvider {...methods}>
+            <Box
+              component='form'
+              noValidate
+              autoComplete='off'
+              display='flex'
+              flexDirection='column'
+              alignItems='center'
+              sx={{ gap: 1 }}
+            >
+              <img
+                src={gslogo}
+                alt='GoSaaS logo'
+                className={styles.ImageSize}
+              />
+              Sign Up
+              <FormInputText name='firstName' label='First Name' />
+              <FormInputText name='lastName' label='Last Name' type='email' />
+              <FormInputText name='email' label='Email' type='email' />
+              <FormInputText name='password' label='Password' type='password' />
+              <Button
+                sx={{ width: '100%' }}
+                variant='contained'
+                onClick={handleSubmit(onSubmit)}
+              >
+                Sign Up
+              </Button>
+              <p className={styles.registrationMsg}>
+                Already have an account?{' '}
+                <Link to='/' className={styles.resgistration}>
+                  Log In
+                </Link>
+              </p>
+            </Box>
+          </FormProvider>
+        </Container>
+        <Footer />
+      </Box>
     </>
   );
 };

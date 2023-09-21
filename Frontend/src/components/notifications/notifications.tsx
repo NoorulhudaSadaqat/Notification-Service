@@ -21,8 +21,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   useAddNotification,
   useDeleteNotifications,
+  useUpdateNotification,
 } from "../../services/notificationService";
 import { Notification } from "../../types/notification";
+import { useUpdateApplication } from "../../services/applicationService";
 interface Props {
   eventId: string | undefined;
   setNotificationId: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -37,6 +39,7 @@ const Notifications = ({
   const pageSize = 4;
   const [params, setParams] = useState({ pageSize: pageSize, page: 1 });
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
+  const [elementToEdit, setElementToEdit] = useState<object>();
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [severity, setSeverity] = useState<AlertColor>();
@@ -59,7 +62,7 @@ const Notifications = ({
   const queryClient = useQueryClient();
   const addMutation = useAddNotification(eventId!);
   const deleteMutation = useDeleteNotifications(eventId!);
-
+  const updateMutation = useUpdateNotification(eventId!);
   const totalPages = Math.ceil(data?.totalCount / pageSize);
   useEffect(() => {
     queryClient.invalidateQueries([
@@ -92,6 +95,23 @@ const Notifications = ({
 
   const handleSearch = () => {
     setParams({ ...params, search: searchText });
+  };
+
+  const handleUpdateNotification = async (notification: Notification) => {
+    try {
+      console.log(notification);
+      const result = await updateMutation.mutateAsync(notification);
+      console.log(result);
+      setSnackbarMessage("Notification has been updated successfully!");
+      setSnackbarOpen(true);
+      setSeverity("success");
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.log(error);
+      setSnackbarMessage(`Error!`);
+      setSnackbarOpen(true);
+      setSeverity("error");
+    }
   };
 
   const handleDelete = async () => {
@@ -163,18 +183,21 @@ const Notifications = ({
     return (
       <Box>
         <GridComponent
-          totalPages={totalPages}
-          currentPage={currentPage}
-          handlePageChange={handlePagination}
+          totalCount={data?.totalCount}
+          selectedIds={idsToDelete}
           setIdsToDelete={setIdsToDelete}
-          handleUpdate={() => {}}
+          setElement={setElementToEdit}
+          handleUpdate={handleUpdateNotification}
           openInfoModal={openInfoModal}
           data={notifications}
           setId={notificationIdSetter}
-          setEditedCardName={setEditedCardName}
-          setEditedCardDescription={setEditedCardDescription}
           setIsModalOpen={setIsModalOpen}
           eventId={eventId}
+          handlePageChange={handlePagination}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
         />
       </Box>
     );
