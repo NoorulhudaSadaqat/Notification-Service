@@ -1,4 +1,11 @@
-import { Container, CssBaseline, Box, Button } from '@mui/material';
+import {
+  Container,
+  CssBaseline,
+  Box,
+  Button,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { Link } from 'react-router-dom';
@@ -35,6 +42,8 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const SignUpPage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showToast, setShowToast] = useState({
     state: false,
     message: '',
@@ -92,6 +101,7 @@ const SignUpPage = () => {
         <Container
           component='main'
           maxWidth='xs'
+          sx={{ width: isMobile ? '90vw' : '100vw' }}
           className={styles.signUpContainer} // Add a className for responsive styling
         >
           <FormProvider {...methods}>
@@ -133,8 +143,8 @@ const SignUpPage = () => {
               </p>
             </Box>
           </FormProvider>
+          <Footer />
         </Container>
-        <Footer />
       </Box>
     </>
   );
