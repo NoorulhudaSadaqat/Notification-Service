@@ -12,3 +12,33 @@
 .resgistration {
   color: #ff0a0a;
 }
+
+/* Default styles for larger screens */
+.signUpContainer {
+  border: 1px solid #007fff;
+  border-radius: 0 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5rem;
+  margin-inline-start: 35vw;
+  min-height: 70vh;
+  min-width: 25vw;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+  .signUpContainer {
+    margin-top: 2rem;
+    margin-inline-start: auto;
+    min-height: auto;
+    margin-bottom: 20vh;
+
+    width: 50vw;
+  }
+  .ImageSize {
+    width: 50%;
+    height: 50%;
+  }
+}

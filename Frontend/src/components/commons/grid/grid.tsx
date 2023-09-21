@@ -63,7 +63,7 @@ const GridComponent: React.FC<Props> = ({
 
   return (
     <div className={styles.heightControl}>
-      <TableContainer sx={{ minHeight: '20vh', marginBottom: '3vh' }}>
+      <TableContainer sx={{ minHeight: '10vh', marginBottom: '3vh' }}>
         <Table>
           <TableHead sx={{ position: 'sticky', top: 0 }}>
             <TableRow>
@@ -109,9 +109,9 @@ const GridComponent: React.FC<Props> = ({
                 </TableCell>
                 {isScreenLarge && (
                   <TableCell>
-                    {ele.description.length > 50 ? (
+                    {ele.description.length > 30 ? (
                       <>
-                        {ele.description.substring(0, 50)}
+                        {ele.description.substring(0, 30)}
                         <span
                           style={{
                             color: 'blue',

@@ -173,7 +173,11 @@ const ToolBar = ({
               aria-controls='sort-menu'
               aria-haspopup='true'
             >
-              {activeTrue ? <ToggleOn /> : <ToggleOff />}
+              {activeTrue ? (
+                <ToggleOn sx={{ color: '#007fff' }} />
+              ) : (
+                <ToggleOff />
+              )}
             </IconButton>
 
             <IconButton
