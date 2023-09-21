@@ -29,16 +29,27 @@ export default function InfoCard({
   setEditedCardDescription,
   setIsModalOpen,
 }: Props) {
+  const toggleCardSelection = (cardId: string) => {
+    if (selectedCards.includes(cardId)) {
+      setSelectedCards(selectedCards.filter((id) => id !== cardId));
+    } else {
+      setSelectedCards([...selectedCards, cardId]);
+    }
+    console.log(selectedCards);
+  };
+  const [currentCard, setCurrentCard] = useState();
   return (
     <>
       {data?.map((e) => (
         <Card
           onClick={() => {
             setApplicationId(e._id);
+            setCurrentCard(e._id);
           }}
           key={e._id}
           sx={{
             curor: 'pointer',
+            backgroundColor: currentCard === e._id ? '#A0D0FF' : '',
             minWidth: 275,
             justifyContent: 'space-between',
             margin: '1.25rem',

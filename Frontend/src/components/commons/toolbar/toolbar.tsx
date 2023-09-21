@@ -7,6 +7,7 @@ import {
   Menu,
   MenuItem,
   Toolbar,
+  useTheme,
   Typography,
   ToggleButtonGroup,
   ToggleButton,
@@ -63,6 +64,10 @@ const ToolBar = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [filterBy, setFilterBy] = useState('');
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
+  const [sortingOrder, setSortingOrder] = useState<'ascending' | 'descending'>(
+    'ascending'
+  );
+  const toolBarTheme = useTheme();
 
   // Search
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +103,8 @@ const ToolBar = ({
 
   useEffect(() => {
     if (!filterButtonPressed) {
-      setParams({});
+      delete params.sortBy;
+      delete params.sortOrder;
     }
   }, [filterButtonPressed]);
 
@@ -126,34 +132,11 @@ const ToolBar = ({
             <SearchIcon />
           </IconButton>
           <IconButton
-            aria-label='sort'
-            onClick={handleSortClick}
-            aria-controls='sort-menu'
-            aria-haspopup='true'
-          >
-            <SortIcon />
-          </IconButton>
-          <Menu
-            id='sort-menu'
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleSortClose}
-          >
-            {filters.map((filter) => (
-              <MenuItem
-                key={filter}
-                onClick={() => handleSortOptionClick(filter)}
-              >
-                {filter}
-              </MenuItem>
-            ))}
-          </Menu>
-          <IconButton
             onClick={() => {
               setFilterButtonPressed(!filterButtonPressed);
             }}
           >
-            {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
+            <SortIcon />
           </IconButton>
           <IconButton
             onClick={() => {
@@ -215,3 +198,29 @@ const ToolBar = ({
 };
 
 export default ToolBar;
+
+{
+  /* <IconButton
+                aria-label='sort'
+                onClick={handleSortClick}
+                aria-controls='sort-menu'
+                aria-haspopup='true'
+              >
+                <SortIcon />
+              </IconButton>
+              <Menu
+                id='sort-menu'
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleSortClose}
+              >
+                {filters.map((filter) => (
+                  <MenuItem
+                    key={filter}
+                    onClick={() => handleSortOptionClick(filter)}
+                  >
+                    {filter}
+                  </MenuItem>
+                ))}
+              </Menu> */
+}

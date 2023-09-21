@@ -12,7 +12,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { string, z } from 'zod';
 import { useNavigate } from 'react-router-dom';
-
+import TopBar from '../../components/commons/topbar/topbar';
 const validationSchema = z.object({
   name: string()
     .min(3, 'Name needs to be atleast 3 characters')
@@ -94,139 +94,143 @@ const EditScreen = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          paddingInline: '5vw',
-          paddingBlock: '5vh',
-          minWidth: '90vw',
-          minHeight: '90vh',
-          backgroundColor: 'white',
-        }}
-      >
-        {notification && (
-          <Box
-            sx={{
-              flex: 1,
-              marginRight: '1vw',
-              backgroundColor: 'white',
-            }}
-          >
-            <Typography variant='h2' color={'black'}>
-              Notification Screen
-            </Typography>
-
-            <div className={styles.colorBand}></div>
+      <Box sx={{ overflow: 'hidden' }}>
+        <TopBar />
+        <Box
+          sx={{
+            marginBlockStart: '-4vh',
+            display: 'flex',
+            flexDirection: 'row',
+            paddingInline: '5vw',
+            paddingBlock: '5vh',
+            minWidth: '90vw',
+            minHeight: '90vh',
+            backgroundColor: 'white',
+          }}
+        >
+          {notification && (
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                minWidth: '100%',
-                marginTop: '5vh',
+                flex: 1,
+                marginRight: '1vw',
+                backgroundColor: 'white',
               }}
             >
+              <Typography variant='h2' color={'black'}>
+                Notification Screen
+              </Typography>
+
+              <div className={styles.colorBand}></div>
               <Box
                 sx={{
-                  backgroundColor: 'white',
-                  width: '40%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  minWidth: '100%',
+                  marginTop: '5vh',
                 }}
               >
-                <FormProvider {...methods}>
-                  <Box
-                    component='form'
-                    noValidate
-                    autoComplete='off'
-                    display='flex'
-                    flexDirection='column'
-                    alignItems='center'
-                    sx={{ gap: 1, minWidth: '35vw' }}
-                  >
-                    <FormInputText
-                      name='name'
-                      label='Name'
-                      defaultValue={notification.name}
-                      type='text'
-                    />
-                    <FormInputText
-                      defaultValue={notification.description}
-                      name='description'
-                      label='Description'
-                      type='text'
-                    />
-                    <FormInputText
-                      defaultValue={notification.templateSubject}
-                      name='templateSubject'
-                      label='Template Subject'
-                      type='text'
-                      onTextChange={handleTemplateSubjectChange}
-                    />
-                    <FormInputText
-                      defaultValue={notification.templateBody}
-                      name='templateBody'
-                      label='Template Body'
-                      type='text'
-                      textBox={true}
-                      rowNumber={20}
-                      onTextChange={handleTemplateBodyChange}
-                    />
-                  </Box>
-                </FormProvider>
-              </Box>
-              <Box
-                sx={{
-                  marginInline: 'auto',
-                  padding: '1rem',
-                  width: '30vw',
-                  color: 'black',
-                  whiteSpace: 'pre-wrap',
-                  wordWrap: 'break-word',
-                }}
-              >
-                <img src={gslogo} alt='GoSaaS logo' width='300px' />
                 <Box
                   sx={{
-                    display: 'flex',
-                    fontSize: '1.2rem',
-                    alignItems: 'flex-start',
-                    justifyItems: 'left',
-                    textAlign: 'left',
-                    flexDirection: 'column',
-                    width: '100%',
+                    backgroundColor: 'white',
+                    width: '40%',
                   }}
                 >
-                  <Box sx={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
-                    Subject: {templateSubjectText}
+                  <FormProvider {...methods}>
+                    <Box
+                      component='form'
+                      noValidate
+                      autoComplete='off'
+                      display='flex'
+                      flexDirection='column'
+                      alignItems='center'
+                      sx={{ gap: 1, minWidth: '35vw' }}
+                    >
+                      <FormInputText
+                        name='name'
+                        label='Name'
+                        defaultValue={notification.name}
+                        type='text'
+                      />
+                      <FormInputText
+                        defaultValue={notification.description}
+                        name='description'
+                        label='Description'
+                        type='text'
+                      />
+                      <FormInputText
+                        defaultValue={notification.templateSubject}
+                        name='templateSubject'
+                        label='Template Subject'
+                        type='text'
+                        onTextChange={handleTemplateSubjectChange}
+                      />
+                      <FormInputText
+                        defaultValue={notification.templateBody}
+                        name='templateBody'
+                        label='Template Body'
+                        type='text'
+                        textBox={true}
+                        rowNumber={20}
+                        onTextChange={handleTemplateBodyChange}
+                      />
+                    </Box>
+                  </FormProvider>
+                </Box>
+                <Box
+                  sx={{
+                    marginInline: 'auto',
+                    padding: '1rem',
+                    width: '30vw',
+                    color: 'black',
+                    whiteSpace: 'pre-wrap',
+                    wordWrap: 'break-word',
+                  }}
+                >
+                  <img src={gslogo} alt='GoSaaS logo' width='300px' />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      fontSize: '1.2rem',
+                      alignItems: 'flex-start',
+                      justifyItems: 'left',
+                      textAlign: 'left',
+                      flexDirection: 'column',
+                      width: '100%',
+                    }}
+                  >
+                    <Box sx={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                      Subject: {templateSubjectText}
+                    </Box>
+                    <div>
+                      <strong>Body:</strong>
+                    </div>
+                    <div>{templateBodyText}</div>
                   </Box>
-                  <div>
-                    <strong>Body:</strong>
-                  </div>
-                  <div>{templateBodyText}</div>
                 </Box>
               </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button
+                  sx={{ marginInline: '1vw' }}
+                  variant='outlined'
+                  endIcon={<CloseOutlinedIcon />}
+                  onClick={() => {
+                    navigate('/');
+                  }}
+                >
+                  Close
+                </Button>
+                <Button
+                  variant='contained'
+                  endIcon={<SaveOutlinedIcon />}
+                  onClick={handleSubmit(onSubmit)}
+                >
+                  Save
+                </Button>
+              </Box>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button
-                sx={{ marginInline: '1vw' }}
-                variant='outlined'
-                endIcon={<CloseOutlinedIcon />}
-                onClick={() => {
-                  navigate('/');
-                }}
-              >
-                Close
-              </Button>
-              <Button
-                variant='contained'
-                endIcon={<SaveOutlinedIcon />}
-                onClick={handleSubmit(onSubmit)}
-              >
-                Save
-              </Button>
-            </Box>
-          </Box>
-        )}
+          )}
+        </Box>
       </Box>
     </>
   );

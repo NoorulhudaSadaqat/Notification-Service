@@ -1,5 +1,18 @@
 import InfoCard from '../commons/card/card';
-import { Alert, AlertColor, Box, Slide, Snackbar } from '@mui/material';
+import {
+  Alert,
+  AlertColor,
+  Box,
+  Button,
+  IconButton,
+  Slide,
+  useMediaQuery,
+  useTheme,
+  Snackbar,
+  Typography,
+} from '@mui/material';
+
+import DeleteIcon from '@mui/icons-material/Delete';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './applications.module.css';
 import { useEffect, useState } from 'react';
@@ -39,8 +52,42 @@ export const Applications = ({ setApplicationId }: Props) => {
     setSelectedApplication(ele);
   };
 
-  const queryClient = useQueryClient();
-
+  const handleDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync(idsToDelete);
+      setSnackbarMessage(
+        `${idsToDelete} application(s) have been deleted successfully!`
+      );
+      setSnackbarOpen(true);
+      setSeverity('success');
+    } catch (error) {
+      setSnackbarMessage('Error:', error.response.data.error);
+      setSnackbarOpen(true);
+      setSeverity('error');
+    }
+  };
+  const theme = useTheme();
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm')); // Adjust the breakpoint as needed
+  const toShow = isScreenLarge
+    ? `Delete(${idsToDelete.length})`
+    : `(${idsToDelete.length})`;
+  const text =
+    idsToDelete.length === 0 ? (
+      <Typography sx={{ color: 'black' }}>Applications</Typography>
+    ) : (
+      <>
+        <Button
+          sx={{ border: '1px red solid', color: 'red' }}
+          variant='outlined'
+          startIcon={<DeleteIcon sx={{ color: 'red' }} />}
+          onClick={() => {
+            handleDelete();
+          }}
+        >
+          {toShow}
+        </Button>
+      </>
+    );
   const handleSearch = () => {
     setParams({ ...params, search: searchText });
   };
