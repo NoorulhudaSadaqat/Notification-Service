@@ -38,7 +38,7 @@ interface Props {
 const Events = ({ applicationId, setEventId }: Props) => {
   const pageSize = 4;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [params, setParams] = useState({ pageSize: pageSize, page: 1 });
+  const [params, setParams] = useState({ page: 1, pageSize: pageSize });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
@@ -50,10 +50,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event>();
   const [severity, setSeverity] = useState<AlertColor>('success');
-  const { isLoading, isError, data, error } = useGetEvents(
-    applicationId,
-    params
-  );
+  const { isLoading, data } = useGetEvents(applicationId, params);
   const events = data?.events;
   const totalPages = Math.ceil(data?.totalCount / pageSize);
   const updateMutation = useUpdateEvents(applicationId!);

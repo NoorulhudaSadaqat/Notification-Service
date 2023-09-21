@@ -50,20 +50,20 @@ export default function InfoCard({
   };
   const theme = useTheme();
   const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
-
+  const [currentCard, setCurrentCard] = useState();
   return (
     <>
       {data?.map((e) => (
         <Card
           onClick={() => {
             setApplicationId(e._id);
-            setSelectedCard(e._id);
+            setCurrentCard(e._id);
           }}
           key={e._id}
           sx={{
             curor: 'pointer',
-            backgroundColor: selectedCard === e._id ? '#e6e6e6' : 'white',
-            minWidth: isScreenLarge ? 275 : 150,
+            backgroundColor: currentCard === e._id ? '#A0D0FF' : '',
+            minWidth: 275,
             justifyContent: 'space-between',
             margin: '1.25rem',
             display: 'flex',
