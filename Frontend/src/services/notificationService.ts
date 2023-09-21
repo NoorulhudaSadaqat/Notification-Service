@@ -4,7 +4,7 @@ import {
   useQueryClient,
   useMutation,
 } from "@tanstack/react-query";
-import { Notification } from "../types/notification";
+import { Notification, NotificationResult } from "../types/notification";
 import apiClient from "./axios";
 
 interface ContextType {
@@ -12,7 +12,7 @@ interface ContextType {
 }
 
 export const useGetNotifications = (data: object | undefined) =>
-  useQuery<Notification[], Error>({
+  useQuery<NotificationResult, Error>({
     queryKey: ["notifications", data],
     queryFn: async () => {
       const response = await apiClient("/notification-types", "get", data);
@@ -23,7 +23,7 @@ export const useGetNotifications = (data: object | undefined) =>
   });
 
 export const useGetNotification = (notificationId: string | undefined) =>
-  useQuery<Notification[], Error>({
+  useQuery<Notification, Error>({
     queryKey: ["notifications", notificationId],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
@@ -48,24 +48,27 @@ export const useAddNotifications = (eventId: string) => {
       );
       return response.data;
     },
-    onSuccess: (savedNotifications) => {
-      const previousNotifications = queryClient.getQueryData<Notification[]>([
-        "notifications",
-        eventId,
-        "events",
-      ]);
-      queryClient.setQueryData<Notification[] | undefined>(
-        ["notifications", eventId, "events"],
-
-        (notifications) => {
-          if (notifications) {
-            return [savedNotifications, ...notifications];
-          }
-          return [savedNotifications];
-        }
-      );
-      return { previousNotifications };
+    onSettled: () => {
+      queryClient.invalidateQueries(["notifications", eventId, "events", {}]);
     },
+    // onSuccess: (savedNotifications) => {
+    //   const previousNotifications = queryClient.getQueryData<Notification[]>([
+    //     "notifications",
+    //     eventId,
+    //     "events",
+    //   ]);
+    //   queryClient.setQueryData<Notification[] | undefined>(
+    //     ["notifications", eventId, "events"],
+
+    //     (notifications) => {
+    //       if (notifications) {
+    //         return [savedNotifications, ...notifications];
+    //       }
+    //       return [savedNotifications];
+    //     }
+    //   );
+    //   return { previousNotifications };
+    // },
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Notification[]>(
@@ -88,35 +91,38 @@ export const useUpdateNotification = (eventId: string) => {
       );
       return response.data;
     },
-    onSuccess: (savedNotifications) => {
-      const previousNotifications = queryClient.getQueryData<Notification[]>([
-        "notifications",
-        eventId,
-        "events",
-      ]);
-      queryClient.setQueryData<Notification[] | undefined>(
-        ["notifications", eventId, "events"],
-        (notifications) => {
-          if (notifications) {
-            const updatedNotifications = [savedNotifications, ...notifications];
-            const uniqueNotificationIds = new Map();
-            const filteredNotifications = updatedNotifications.filter(
-              (notification) => {
-                if (uniqueNotificationIds.has(notification._id)) {
-                  return false;
-                } else {
-                  uniqueNotificationIds.set(notification._id, true);
-                  return true;
-                }
-              }
-            );
-            return filteredNotifications;
-          }
-          return [savedNotifications];
-        }
-      );
-      return { previousNotifications };
+    onSettled: () => {
+      queryClient.invalidateQueries(["notifications", eventId, "events", {}]);
     },
+    // onSuccess: (savedNotifications) => {
+    //   const previousNotifications = queryClient.getQueryData<Notification[]>([
+    //     "notifications",
+    //     eventId,
+    //     "events",
+    //   ]);
+    //   queryClient.setQueryData<Notification[] | undefined>(
+    //     ["notifications", eventId, "events"],
+    //     (notifications) => {
+    //       if (notifications) {
+    //         const updatedNotifications = [savedNotifications, ...notifications];
+    //         const uniqueNotificationIds = new Map();
+    //         const filteredNotifications = updatedNotifications.filter(
+    //           (notification) => {
+    //             if (uniqueNotificationIds.has(notification._id)) {
+    //               return false;
+    //             } else {
+    //               uniqueNotificationIds.set(notification._id, true);
+    //               return true;
+    //             }
+    //           }
+    //         );
+    //         return filteredNotifications;
+    //       }
+    //       return [savedNotifications];
+    //     }
+    //   );
+    //   return { previousNotifications };
+    // },
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Notification[]>(
@@ -134,23 +140,26 @@ export const useDeleteNotifications = (eventId: string) => {
       const response = await apiClient(`/notification-types`, "delete", data);
       return response.data;
     },
-    onSuccess: (savedNotifications) => {
-      const previousNotifications = queryClient.getQueryData<Notification[]>([
-        "notifications",
-        eventId,
-        "events",
-      ]);
-      queryClient.setQueryData<Notification[] | undefined>(
-        ["notifications", eventId, "events"],
-        (notifications) => {
-          if (notifications) {
-            return [savedNotifications, ...notifications];
-          }
-          return [savedNotifications];
-        }
-      );
-      return { previousNotifications };
+    onSettled: () => {
+      queryClient.invalidateQueries(["notifications", eventId, "events", {}]);
     },
+    // onSuccess: (savedNotifications) => {
+    //   const previousNotifications = queryClient.getQueryData<Notification[]>([
+    //     "notifications",
+    //     eventId,
+    //     "events",
+    //   ]);
+    //   queryClient.setQueryData<Notification[] | undefined>(
+    //     ["notifications", eventId, "events"],
+    //     (notifications) => {
+    //       if (notifications) {
+    //         return [savedNotifications, ...notifications];
+    //       }
+    //       return [savedNotifications];
+    //     }
+    //   );
+    //   return { previousNotifications };
+    // },
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Notification[]>(

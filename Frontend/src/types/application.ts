@@ -10,3 +10,8 @@ export interface Application {
   modifiedDate?: string;
   isDeleted?: boolean;
 }
+
+export interface ApplicationResult {
+  applications: Application[];
+  totalCount: number;
+}

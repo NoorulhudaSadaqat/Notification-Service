@@ -11,3 +11,8 @@ export interface Event {
 
   modifiedDate?: string;
 }
+
+export interface EventResult {
+  applications: Event[];
+  totalCount: number;
+}

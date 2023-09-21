@@ -3,14 +3,16 @@ import {
   QueryFunctionContext,
   useMutation,
   useQueryClient,
-} from '@tanstack/react-query';
-import { Event } from '../types/event';
-import apiClient from './axios';
+} from "@tanstack/react-query";
+import { Event } from "../types/event";
+import apiClient from "./axios";
 
 interface ContextType {
   previousEvents: Event[];
 }
 export const useGetEvents = (data: object | undefined) =>
+  useQuery<EventResult[], Error>({
+    queryKey: ["events"],
   useQuery<Event[], Error>({
     queryKey: ['events', data],
     queryFn: async () => {
@@ -37,8 +39,8 @@ export const useGetNotifications = (
   eventId: string | undefined,
   data: object | undefined
 ) =>
-  useQuery<Event[], Error>({
-    queryKey: ['events', eventId, 'data', data],
+  useQuery<NotificationResult, Error>({
+    queryKey: ["notifications", eventId, "events", data],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const eventId = queryKey[1];
@@ -59,19 +61,22 @@ export const useAddEvents = (applicationId: string) => {
       const response = await apiClient(`/events`, 'post', event);
       return response.data;
     },
-    onSuccess: (savedEvents) => {
-      const previousEvents = queryClient.getQueryData<Event[]>(['events']);
-      queryClient.setQueryData<Event[] | undefined>(
-        ['events', applicationId, 'applications'],
-        (events) => {
-          if (events) {
-            return [savedEvents, ...events];
-          }
-          return [savedEvents];
-        }
-      );
-      return { previousEvents };
+    onSettled: () => {
+      queryClient.invalidateQueries(["events", applicationId, "applications"]);
     },
+    // onSuccess: (savedEvents) => {
+    //   const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
+    //   queryClient.setQueryData<Event[] | undefined>(
+    //     ["events", applicationId, "applications"],
+    //     (events) => {
+    //       if (events) {
+    //         return [savedEvents, ...events];
+    //       }
+    //       return [savedEvents];
+    //     }
+    //   );
+    //   return { previousEvents };
+    // },
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
@@ -91,29 +96,32 @@ export const useUpdateEvents = (applicationId: string) => {
       const response = await apiClient(`/events/${id}`, 'patch', event);
       return response.data;
     },
-    onSuccess: (savedEvents) => {
-      const previousEvents = queryClient.getQueryData<Event[]>(['events']);
-      queryClient.setQueryData<Event[] | undefined>(
-        ['events', applicationId, 'applications'],
-        (events) => {
-          if (events) {
-            const updatedEvents = [savedEvents, ...events];
-            const uniqueEventIds = new Map();
-            const filteredEvents = updatedEvents.filter((event) => {
-              if (uniqueEventIds.has(event._id)) {
-                return false;
-              } else {
-                uniqueEventIds.set(event._id, true);
-                return true;
-              }
-            });
-            return filteredEvents;
-          }
-          return [savedEvents];
-        }
-      );
-      return { previousEvents };
+    onSettled: () => {
+      queryClient.invalidateQueries(["events", applicationId, "applications"]);
     },
+    // onSuccess: (savedEvents) => {
+    //   const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
+    //   queryClient.setQueryData<Event[] | undefined>(
+    //     ["events", applicationId, "applications"],
+    //     (events) => {
+    //       if (events) {
+    //         const updatedEvents = [savedEvents, ...events];
+    //         const uniqueEventIds = new Map();
+    //         const filteredEvents = updatedEvents.filter((event) => {
+    //           if (uniqueEventIds.has(event._id)) {
+    //             return false;
+    //           } else {
+    //             uniqueEventIds.set(event._id, true);
+    //             return true;
+    //           }
+    //         });
+    //         return filteredEvents;
+    //       }
+    //       return [savedEvents];
+    //     }
+    //   );
+    //   return { previousEvents };
+    // },
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
@@ -131,19 +139,22 @@ export const useDeleteEvents = (applicationId: string) => {
       const response = await apiClient(`/events`, 'delete', data);
       return response.data;
     },
-    onSuccess: (savedEvents) => {
-      const previousEvents = queryClient.getQueryData<Event[]>(['events']);
-      queryClient.setQueryData<Event[] | undefined>(
-        ['events', applicationId, 'applications'],
-        (events) => {
-          if (events) {
-            return [savedEvents, ...events];
-          }
-          return [savedEvents];
-        }
-      );
-      return { previousEvents };
+    onSettled: () => {
+      queryClient.invalidateQueries(["events", applicationId, "applications"]);
     },
+    // onSuccess: (savedEvents) => {
+    //   const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
+    //   queryClient.setQueryData<Event[] | undefined>(
+    //     ["events", applicationId, "applications"],
+    //     (events) => {
+    //       if (events) {
+    //         return [savedEvents, ...events];
+    //       }
+    //       return [savedEvents];
+    //     }
+    //   );
+    //   return { previousEvents };
+    // },
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(

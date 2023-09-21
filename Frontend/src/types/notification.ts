@@ -21,3 +21,8 @@ export interface INotificationEdit {
   modifiedDate: string;
   isActive?: boolean;
 }
+
+export interface NotificationResult {
+  applications: Notification[];
+  totalCount: number;
+}
