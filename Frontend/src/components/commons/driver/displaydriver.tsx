@@ -30,6 +30,8 @@ interface Props {
   element: object;
   setElement: React.Dispatch<React.SetStateAction<object>>;
   handleCloseEditModal: () => void;
+  eventId: string;
+  applicationId: string;
 }
 const DisplayDriver = ({
   selectedCards,
@@ -50,6 +52,8 @@ const DisplayDriver = ({
   handleAdd,
   toolBarTitle,
   setIdsToDelete,
+  eventId,
+  applicationId,
 }: Props) => {
   return (
     <>
@@ -65,6 +69,8 @@ const DisplayDriver = ({
         text={toolBarTitle}
         onSearch={handleSearch}
         setSearchText={setSearchText}
+        eventId={eventId}
+        applicationId={applicationId}
       />
       {searchError && <Alert severity="error">{searchError}</Alert>}
       {renderComponent()}

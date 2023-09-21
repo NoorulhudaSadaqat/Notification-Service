@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const schemas = {
   auth: Joi.object().keys({
@@ -26,7 +26,7 @@ const schemas = {
     description: Joi.string().min(5).max(255).required(),
     eventId: Joi.string().required(),
     templateSubject: Joi.string().min(5).max(255).required(),
-    templateBody: Joi.string().min(5).max(255).required(),
+    templateBody: Joi.string().min(5).max(1000).required(),
   }),
   message: Joi.object().keys({
     tags: Joi.array().min(1).required(),
@@ -73,10 +73,10 @@ const patchSchemas = {
   notificationType: Joi.object()
     .keys({
       name: Joi.string().min(5).max(255).optional(),
-      description: Joi.string().min(100).max(255).optional(),
+      description: Joi.string().min(5).max(255).optional(),
       eventId: Joi.string().min(5).optional(),
       templateSubject: Joi.string().min(5).max(255).optional(),
-      templateBody: Joi.string().min(5).max(255).optional(),
+      templateBody: Joi.string().min(5).max(1000).optional(),
       isActive: Joi.boolean().optional(),
     })
     .min(1),

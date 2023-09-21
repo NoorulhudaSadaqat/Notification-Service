@@ -140,6 +140,8 @@ const updateNotificationType = async (req, res) => {
 
 const deleteNotificationType = async (req, res) => {
   const notificationTypeId = req.params.id;
+  const notificationIds = req.body.notificationIds;
+
   if (config.get("server.db") === "postgres") {
     const notificationType = await knex("notificationType")
       .where("id", notificationTypeId)
@@ -161,24 +163,26 @@ const deleteNotificationType = async (req, res) => {
       .json({ message: "The notification type with given Id is deleted" });
   }
 
-  const notificationType = await NotificationType.findByIdAndUpdate(
-    notificationTypeId,
+  const updatedNotifications = await NotificationType.updateMany(
+    { _id: { $in: notificationIds } },
     {
-      isActive: false,
-      modifiedDate: new Date(),
-      modifiedBy: req.user.firstName + " " + req.user.lastName,
+      $set: {
+        isDeleted: true,
+        modifiedDate: new Date(),
+        modifiedBy: req.user.firstName + " " + req.user.lastName,
+      },
     },
     { new: true }
   );
 
-  if (!notificationType)
+  if (!updatedNotifications)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "The notificationType with the given ID was not found." });
+      .json({ error: "The notification with the given ID was not found." });
 
   return res
     .status(StatusCodes.OK)
-    .json({ message: "The application with the given ID is deleted" });
+    .json({ message: "The notifications with the given Id is deleted" });
 };
 
 const getNotificationType = async (req, res) => {

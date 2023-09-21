@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, IconButton } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Grid } from "@mui/material";
 import gslogo from "../../../assets/gslogo-white.svg";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import styles from "./topbar.module.css";
@@ -18,16 +18,20 @@ const TopBar = () => {
       sx={{ backgroundColor: "#007fff" }}
     >
       <Toolbar>
-        <div style={{ flexGrow: 1 }}>
-          <img src={gslogo} alt="AlertWave Icon" />
-        </div>
-        <IconButton
-          color="inherit"
-          aria-label="Sign Out"
-          onClick={handleSignOut}
-        >
-          <ExitToAppIcon />
-        </IconButton>
+        <Grid container alignItems="center" justifyContent="space-between">
+          <Grid item>
+            <img src={gslogo} alt="AlertWave Icon" />
+          </Grid>
+          <Grid item>
+            <IconButton
+              color="inherit"
+              aria-label="Sign Out"
+              onClick={handleSignOut}
+            >
+              <ExitToAppIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       </Toolbar>
     </AppBar>
   );

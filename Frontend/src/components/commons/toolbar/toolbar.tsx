@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -12,27 +12,28 @@ import {
   ToggleButton,
   useTheme,
   useMediaQuery,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import SortIcon from '@mui/icons-material/Sort';
-import AddIcon from '@mui/icons-material/Add';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import SortIcon from "@mui/icons-material/Sort";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import {
   Check,
   CreateRounded,
   EditNote,
   FilterAlt,
   FilterAltOutlined,
-} from '@mui/icons-material';
-import EditModal from '../modal/modal';
-import { Application } from '../../../types/application';
-import { filters } from '../../../utils/dataUtils';
+} from "@mui/icons-material";
+import EditModal from "../modal/modal";
+import { Application } from "../../../types/application";
+import { filters } from "../../../utils/dataUtils";
+import { useNavigate } from "react-router-dom";
 
 const inputStyles = {
-  backgroundColor: 'white',
-  '&:hover': {
-    backgroundColor: 'white',
+  backgroundColor: "white",
+  "&:hover": {
+    backgroundColor: "white",
   },
 };
 
@@ -48,6 +49,7 @@ interface Props {
   setParams: React.Dispatch<React.SetStateAction<object>>;
   handleAdd: (element: Application | Event | Notification) => void;
   handleSearch: () => void;
+  eventId: string;
 }
 
 const ToolBar = ({
@@ -62,16 +64,18 @@ const ToolBar = ({
   handleAdd,
   onSearch,
   setSearchText,
+  eventId,
 }: Props) => {
-  const selectedFilters = '';
+  const selectedFilters = "";
   const [anchorEl, setAnchorEl] = useState(null);
-  const [filterBy, setFilterBy] = useState('');
+  const [filterBy, setFilterBy] = useState("");
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
-  const [sortingOrder, setSortingOrder] = useState<'ascending' | 'descending'>(
-    'ascending'
+  const [sortingOrder, setSortingOrder] = useState<"ascending" | "descending">(
+    "ascending"
   );
   const theme = useTheme();
-  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
+  const navigate = useNavigate();
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up("sm"));
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 3) {
       setSearchText(e.target.value);
@@ -89,11 +93,11 @@ const ToolBar = ({
 
   const handleSortOptionClick = () => {
     const newSortingOrder =
-      sortingOrder === 'ascending' ? 'descending' : 'ascending';
+      sortingOrder === "ascending" ? "descending" : "ascending";
 
     setSortingOrder(newSortingOrder);
     if (!params?.sortBy) {
-      setParams({ ...params, sortBy: 'isActive', sortOrder: newSortingOrder });
+      setParams({ ...params, sortBy: "isActive", sortOrder: newSortingOrder });
     } else {
       setParams({ ...params, sortOrder: newSortingOrder });
     }
@@ -115,40 +119,40 @@ const ToolBar = ({
   }, [filterButtonPressed]);
   return (
     <AppBar
-      position='static'
+      position="static"
       sx={{
-        backgroundColor: 'white',
+        backgroundColor: "white",
         height: filterButtonPressed
-          ? '4rem'
-          : `${isScreenLarge ? '8rem' : '14rem'}`,
-        transition: 'height 0.25s ease',
+          ? "4rem"
+          : `${isScreenLarge ? "8rem" : "14rem"}`,
+        transition: "height 0.25s ease",
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
         <Box>{text}</Box>
 
         {isScreenLarge ? (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <InputBase
-              placeholder='Search…'
+              placeholder="Search…"
               sx={inputStyles}
-              inputProps={{ 'aria-label': 'search' }}
+              inputProps={{ "aria-label": "search" }}
               value={searchText}
               onChange={handleInputChange}
             />
-            <IconButton onClick={onSearch} aria-label='search'>
+            <IconButton onClick={onSearch} aria-label="search">
               <SearchIcon />
             </IconButton>
             <IconButton
-              aria-label='sort'
+              aria-label="sort"
               onClick={handleSortClick}
-              aria-controls='sort-menu'
-              aria-haspopup='true'
+              aria-controls="sort-menu"
+              aria-haspopup="true"
             >
               <SortIcon />
             </IconButton>
             <Menu
-              id='sort-menu'
+              id="sort-menu"
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleSortClose}
@@ -174,7 +178,7 @@ const ToolBar = ({
                 handleSortOptionClick(filterBy);
               }}
             >
-              {sortingOrder === 'ascending' ? (
+              {sortingOrder === "ascending" ? (
                 <ArrowUpwardIcon />
               ) : (
                 <ArrowDownwardIcon />
@@ -182,7 +186,11 @@ const ToolBar = ({
             </IconButton>
             <IconButton
               onClick={() => {
-                setIsAddModalOpen(true);
+                if (text.props.children == "Notifications") {
+                  navigate(`notfication/${eventId}/edit/${-1}`);
+                } else {
+                  setIsAddModalOpen(true);
+                }
               }}
             >
               <AddIcon />
@@ -190,7 +198,7 @@ const ToolBar = ({
           </Box>
         ) : (
           <>
-            {' '}
+            {" "}
             <>
               <IconButton
                 onClick={() => {
@@ -204,7 +212,7 @@ const ToolBar = ({
                   handleSortOptionClick(filterBy);
                 }}
               >
-                {sortingOrder === 'ascending' ? (
+                {sortingOrder === "ascending" ? (
                   <ArrowUpwardIcon />
                 ) : (
                   <ArrowDownwardIcon />
@@ -212,7 +220,11 @@ const ToolBar = ({
               </IconButton>
               <IconButton
                 onClick={() => {
-                  setIsAddModalOpen(true);
+                  if (text.props.children == "Notifications") {
+                    navigate(`notfication/${eventId}/edit/${-1}`);
+                  } else {
+                    setIsAddModalOpen(true);
+                  }
                 }}
               >
                 <AddIcon />
@@ -224,38 +236,38 @@ const ToolBar = ({
       {!filterButtonPressed && (
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: isScreenLarge ? 'row' : 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginInline: '1rem',
-            marginBlock: '0.5rem',
+            display: "flex",
+            flexDirection: isScreenLarge ? "row" : "column",
+            justifyContent: "center",
+            alignItems: "center",
+            marginInline: "1rem",
+            marginBlock: "0.5rem",
           }}
         >
           <ToggleButtonGroup
-            orientation={`${isScreenLarge ? 'horizontal' : 'vertical'}`}
+            orientation={`${isScreenLarge ? "horizontal" : "vertical"}`}
             value={selectedFilters}
             onChange={handleFilterCalls}
             exclusive
-            aria-label='text formatting'
+            aria-label="text formatting"
           >
-            <ToggleButton value='isActive' aria-label='isActive'>
+            <ToggleButton value="isActive" aria-label="isActive">
               <>
                 <Check />
                 <Typography
                   sx={{
-                    color: 'black',
+                    color: "black",
                   }}
                 >
                   Active
                 </Typography>
               </>
             </ToggleButton>
-            <ToggleButton value='createdAt' aria-label='createdAt'>
+            <ToggleButton value="createdAt" aria-label="createdAt">
               <>
                 <Typography
                   sx={{
-                    color: 'black',
+                    color: "black",
                   }}
                 >
                   Created At
@@ -263,11 +275,11 @@ const ToolBar = ({
                 <CreateRounded />
               </>
             </ToggleButton>
-            <ToggleButton value='modifiedAt' aria-label='modifiedAt'>
+            <ToggleButton value="modifiedAt" aria-label="modifiedAt">
               <>
                 <Typography
                   sx={{
-                    color: 'black',
+                    color: "black",
                   }}
                 >
                   Modified At
@@ -280,11 +292,11 @@ const ToolBar = ({
       )}
       <EditModal
         submitCall={handleAdd}
-        nameOriginal={''}
+        nameOriginal={""}
         modalTitle={addModalTitle}
         open={isAddModalOpen}
         handleClose={() => setIsAddModalOpen(false)}
-        descriptionOriginal={''}
+        descriptionOriginal={""}
       />
     </AppBar>
   );

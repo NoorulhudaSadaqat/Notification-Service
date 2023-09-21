@@ -212,7 +212,7 @@ const updateEvent = async (req, res) => {
 };
 
 const deleteEvent = async (req, res) => {
-  const eventId = req.params.id;
+  const eventIds = req.body.eventIds;
   if (config.get("server.db") === "postgres") {
     const event = await knex("event")
       .where("id", eventId)
@@ -234,24 +234,26 @@ const deleteEvent = async (req, res) => {
       .json({ message: "The event with given Id is deleted" });
   }
 
-  const event = await Event.findByIdAndUpdate(
-    eventId,
+  const updatedEvents = await Event.updateMany(
+    { _id: { $in: eventIds } },
     {
-      isDeleted: true,
-      modifiedDate: new Date(),
-      modifiedBy: req.user.firstName + " " + req.user.lastName,
+      $set: {
+        isDeleted: true,
+        modifiedDate: new Date(),
+        modifiedBy: req.user.firstName + " " + req.user.lastName,
+      },
     },
     { new: true }
   );
 
-  if (!event)
+  if (!updatedEvents)
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "The event with the given ID was not found." });
+      .json({ error: "The event with the given Id was not found." });
 
   return res
     .status(StatusCodes.OK)
-    .json({ message: "The application with the given ID is deleted" });
+    .json({ message: "The events with the given Id is deleted" });
 };
 
 const getEvent = async (req, res) => {

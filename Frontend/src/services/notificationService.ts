@@ -37,7 +37,7 @@ export const useGetNotification = (notificationId: string | undefined) =>
     staleTime: 1 * 60 * 1000,
   });
 
-export const useAddNotifications = (eventId: string) => {
+export const useAddNotification = (eventId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Notification, Error, Notification, ContextType>({
     mutationFn: async (notification: Notification) => {
@@ -84,8 +84,10 @@ export const useUpdateNotification = (eventId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Notification, Error, Notification, ContextType>({
     mutationFn: async (notification: Notification) => {
+      const id = notification._id;
+      delete notification._id;
       const response = await apiClient(
-        `/notification-types/${notification._id}`,
+        `/notification-types/${id}`,
         "patch",
         notification
       );

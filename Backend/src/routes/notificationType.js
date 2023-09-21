@@ -781,6 +781,6 @@ notificationTypeRouter.patch(
  *         $ref: '#/components/responses/noTokenProvided'
  */
 
-notificationTypeRouter.delete("/:id", deleteNotificationType);
+notificationTypeRouter.delete("/", deleteNotificationType);
 
 module.exports = notificationTypeRouter;
