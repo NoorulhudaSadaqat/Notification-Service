@@ -13,10 +13,14 @@ import { Event } from '../../../types/event';
 import { useMediaQuery, useTheme } from '@mui/material';
 
 const validationSchema = z.object({
-  name: string().min(5, 'Name is too short').max(50, 'Name is too long'),
+  name: string()
+    .min(5, 'Name is too short')
+    .max(50, 'Name is too long')
+    .nonempty('Name is required'),
   description: string()
     .min(50, 'Description is too short')
-    .max(130, 'Description is too long'),
+    .max(130, 'Description is too long')
+    .nonempty('Description is required'),
 });
 
 interface Props {
