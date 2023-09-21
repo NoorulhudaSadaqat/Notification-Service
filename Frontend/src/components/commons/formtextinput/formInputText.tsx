@@ -49,7 +49,7 @@ const FormInputText = ({
               onTextChange(e.target.value);
             }
           }}
-          value={defaultValueState || value}
+          value={value}
           fullWidth
           label={label}
           variant='outlined'
