@@ -22,20 +22,22 @@ interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
   handleEdit: (ele: Application) => void;
   handleUpdate: (ele: Application | Event | Notification) => void;
-  handleDelete: (ele: Application | Event | Notification) => void;
+  handleDelete: () => void;
   setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
   selectedCards: string[];
+  setIdsToDelete: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 export default function InfoCard({
   handleUpdate,
   data,
   openInfoModal,
+  handleDelete,
   setApplicationId,
   handleEdit,
   selectedCards,
   setSelectedCards,
-  handleDelete,
+  setIdsToDelete,
 }: Props) {
   const [selectedCard, setSelectedCard] = useState<string>();
   const toggleCardSelection = (cardId: string) => {
@@ -137,7 +139,10 @@ export default function InfoCard({
             <HandlerButtons
               isActive={e.isActive}
               onEdit={() => handleEdit(e)}
-              onDelete={() => handleUpdate({ _id: e._id, isDeleted: true })}
+              onDelete={async () => {
+                setIdsToDelete([e._id!]);
+                await handleDelete();
+              }}
               onToggleActive={() =>
                 handleUpdate({ _id: e._id, isActive: !e.isActive })
               }
