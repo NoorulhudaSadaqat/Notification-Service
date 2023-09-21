@@ -1349,3 +1349,189 @@
   traceId: '-1',
   timestamp: '2023-09-21T08:52:37.305Z'
 }
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:21:18.575Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:21:21.004Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:22:12.312Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:23:43.617Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:23:45.014Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:23:45.429Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:23:47.977Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:23:48.494Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:23:48.578Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:13.656Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:15.018Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:15.434Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:17.981Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:18.499Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:18.583Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:40.515Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:40.518Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"} and req params {"email":"SHAIQ@GOSAAS.IO","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:40.520Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:24:48.003Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:25:09.350Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:25:44.713Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:25:52.539Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:25:52.665Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:25:52.802Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:25:52.953Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:25:53.111Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:26:14.717Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:26:22.543Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:26:22.670Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:26:22.806Z'
+}
+{
+  level: 'error',
+  message: 'connect ECONNREFUSED 127.0.0.1:27017 Error received with request body {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"} and req params {"firstName":"Shaiq","lastName":"Mustafa","email":"shaiq@gosaas.io","password":"m65UVH~a"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T11:26:22.958Z'
+}

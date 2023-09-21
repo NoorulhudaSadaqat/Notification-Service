@@ -59,9 +59,7 @@ export const Applications = ({ setApplicationId }: Props) => {
   const handleDelete = async () => {
     try {
       await deleteMutation.mutateAsync(idsToDelete);
-      setSnackbarMessage(
-        `${idsToDelete.length} application(s) have been deleted successfully!`
-      );
+      setSnackbarMessage(`Application(s) have been deleted successfully!`);
       setSnackbarOpen(true);
       setSeverity('success');
     } catch (error) {
@@ -168,6 +166,7 @@ export const Applications = ({ setApplicationId }: Props) => {
       <div className={styles.scrollControl}>
         <div className={styles.cardContainer}>
           <InfoCard
+            setIdsToDelete={setIdsToDelete}
             setSelectedCards={setIdsToDelete}
             selectedCards={idsToDelete}
             handleUpdate={handleUpdate}

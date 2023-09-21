@@ -110,10 +110,14 @@ const SignUpPage = () => {
                 className={styles.ImageSize}
               />
               Sign Up
-              <FormInputText name='firstName' label='First Name' />
-              <FormInputText name='lastName' label='Last Name' type='email' />
-              <FormInputText name='email' label='Email' type='email' />
-              <FormInputText name='password' label='Password' type='password' />
+              <FormInputText name='firstName' label='First Name*' />
+              <FormInputText name='lastName' label='Last Name*' type='email' />
+              <FormInputText name='email' label='Email*' type='email' />
+              <FormInputText
+                name='password'
+                label='Password*'
+                type='password'
+              />
               <Button
                 sx={{ width: '100%' }}
                 variant='contained'

@@ -52,7 +52,7 @@ const LogInPage = () => {
         console.log(response);
         navigate('/');
       } else {
-        console.log('token not received');
+        console.log('response.response.data.error');
         setShowToast({ state: true, message: response.response.data.error });
       }
     } catch (error) {
@@ -117,8 +117,12 @@ const LogInPage = () => {
                 className={styles.ImageSize}
               />
               Log In
-              <FormInputText name='email' label='Email' type='email' />
-              <FormInputText name='password' label='Password' type='password' />
+              <FormInputText name='email' label='Email*' type='email' />
+              <FormInputText
+                name='password'
+                label='Password*'
+                type='password'
+              />
               <Button
                 sx={{ width: '100%' }}
                 variant='contained'
