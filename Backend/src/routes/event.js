@@ -559,6 +559,6 @@ eventRouter.patch("/:id", bodySchemaValidator(patchSchemas.event), updateEvent);
  *         description: Event with the given ID not found
  */
 
-eventRouter.delete("/:id", deleteEvent);
+eventRouter.delete("/", deleteEvent);
 
 module.exports = eventRouter;

@@ -1,11 +1,11 @@
-import { handleCloseModal } from '../../../utils/dataUtils';
-import React, { ContextType } from 'react';
-import styles from './displaydriver.module.css';
-import ToolBar from '../toolbar/toolbar';
-import EditModal from '../modal/modal';
-import { Application } from '../../../types/application';
-import { Event } from '../../../types/event';
-import { Alert } from '@mui/material';
+import { handleCloseModal } from "../../../utils/dataUtils";
+import React, { ContextType } from "react";
+import styles from "./displaydriver.module.css";
+import ToolBar from "../toolbar/toolbar";
+import EditModal from "../modal/modal";
+import { Application } from "../../../types/application";
+import { Event } from "../../../types/event";
+import { Alert } from "@mui/material";
 
 interface Props {
   params: object;
@@ -31,6 +31,8 @@ interface Props {
   element: object;
   setElement: React.Dispatch<React.SetStateAction<object>>;
   handleCloseEditModal: () => void;
+  eventId: string;
+  applicationId: string;
 }
 const DisplayDriver = ({
   selectedCards,
@@ -51,6 +53,8 @@ const DisplayDriver = ({
   handleAdd,
   toolBarTitle,
   setIdsToDelete,
+  eventId,
+  applicationId,
   searchText,
 }: Props) => {
   return (
@@ -68,8 +72,10 @@ const DisplayDriver = ({
         text={toolBarTitle}
         onSearch={handleSearch}
         setSearchText={setSearchText}
+        eventId={eventId}
+        applicationId={applicationId}
       />
-      {searchError && <Alert severity='error'>{searchError}</Alert>}
+      {searchError && <Alert severity="error">{searchError}</Alert>}
       {renderComponent()}
       <EditModal
         submitCall={handleEdit}
