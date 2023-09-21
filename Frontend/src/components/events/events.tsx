@@ -128,9 +128,11 @@ const Events = ({ applicationId, setEventId }: Props) => {
   const handleDelete = async () => {
     try {
       await deleteMutation.mutateAsync(idsToDelete);
-      setSnackbarMessage(
-        `${idsToDelete} event(s) have been deleted successfully!`
-      );
+      const message =
+        idsToDelete.length < 2
+          ? `${idsToDelete.length} event(s) have been deleted successfully!`
+          : 'event has been deleted successfully!';
+      setSnackbarMessage(message);
       setSnackbarOpen(true);
       setSeverity('success');
     } catch (error) {
@@ -213,6 +215,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
           currentPage={currentPage}
           totalPages={totalPages}
           handleEdit={handleEdit}
+          handleDelete={handleDelete}
         />
       </Box>
     );
@@ -247,6 +250,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
       </Snackbar>
       <div className={styles.heightControl}>
         <DisplayDriver
+          handleEdit={handleUpdateEvent}
           element={elementToEdit!}
           setElement={setElementToEdit}
           isAddModalOpen={isAddModalOpen}

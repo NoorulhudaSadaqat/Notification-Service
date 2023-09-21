@@ -15,7 +15,6 @@ import HandlerButtons from '../handlers/handler';
 import { Event } from '../../../types/event';
 import PaginationControls from '../paginationControl/paginationControl';
 import { Notification } from '../../../types/notification';
-
 interface Props {
   data: (Event | Notification)[] | undefined;
   setId: (id: string | undefined) => void;
@@ -31,6 +30,7 @@ interface Props {
   handlePageChange: (page: number) => void;
   totalPages: number;
   handleEdit: (ele: Event | Notification) => void;
+  handleDelete: () => void;
 }
 
 const GridComponent: React.FC<Props> = ({
@@ -38,6 +38,7 @@ const GridComponent: React.FC<Props> = ({
   totalPages,
   data,
   setId,
+  handleDelete,
   selectedIds,
   handleUpdate,
   handlePageChange,
@@ -62,7 +63,7 @@ const GridComponent: React.FC<Props> = ({
 
   return (
     <div className={styles.heightControl}>
-      <TableContainer sx={{ minHeight: '20vh', marginBottom: '3vh' }}>
+      <TableContainer sx={{ minHeight: '10vh', marginBottom: '3vh' }}>
         <Table>
           <TableHead sx={{ position: 'sticky', top: 0 }}>
             <TableRow>
@@ -108,9 +109,9 @@ const GridComponent: React.FC<Props> = ({
                 </TableCell>
                 {isScreenLarge && (
                   <TableCell>
-                    {ele.description.length > 50 ? (
+                    {ele.description.length > 30 ? (
                       <>
-                        {ele.description.substring(0, 50)}
+                        {ele.description.substring(0, 30)}
                         <span
                           style={{
                             color: 'blue',
@@ -131,9 +132,10 @@ const GridComponent: React.FC<Props> = ({
                   <HandlerButtons
                     isActive={ele.isActive}
                     onEdit={() => handleEdit(ele)}
-                    onDelete={() =>
-                      handleUpdate({ _id: ele._id, isDeleted: true })
-                    }
+                    onDelete={() => {
+                      setIdsToDelete([ele._id!]);
+                      handleDelete();
+                    }}
                     onToggleActive={() =>
                       handleUpdate({ _id: ele._id, isActive: !ele.isActive })
                     }

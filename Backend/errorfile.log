@@ -1343,3 +1343,9 @@
   ],
   timestamp: '2023-09-19T12:22:24.113Z'
 }
+{
+  level: 'error',
+  message: 'Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "Application" Error received with request body {"name":"ets-new-app","description":"thisisisisiisiisiisiisthisisisisiisiisiisiisiisiisiisiis"} and req params {"name":"ets-new-app","description":"thisisisisiisiisiisiisthisisisisiisiisiisiisiisiisiisiis"}',
+  traceId: '-1',
+  timestamp: '2023-09-21T08:52:37.305Z'
+}

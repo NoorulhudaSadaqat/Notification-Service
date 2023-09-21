@@ -24,6 +24,8 @@ import {
   EditNote,
   FilterAlt,
   FilterAltOutlined,
+  ToggleOn,
+  ToggleOff,
 } from '@mui/icons-material';
 import EditModal from '../modal/modal';
 import { Application } from '../../../types/application';
@@ -42,7 +44,7 @@ interface Props {
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onSearch: () => void;
   searchText: string;
-  setSearchText: (text: string) => void;
+  setSearchText: React.Dispatch<React.SetStateAction<string>>;
   params: object;
   text: JSX.Element;
   setParams: React.Dispatch<React.SetStateAction<object>>;
@@ -67,14 +69,18 @@ const ToolBar = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [filterBy, setFilterBy] = useState('');
   const [filterButtonPressed, setFilterButtonPressed] = useState(true);
+  const [activeTrue, setActiveTrue] = useState(true);
   const [sortingOrder, setSortingOrder] = useState<'ascending' | 'descending'>(
     'ascending'
   );
   const theme = useTheme();
   const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    if (e.target.value.length < 3) {
+      delete params.search;
+    }
     if (e.target.value.length > 3) {
-      setSearchText(e.target.value);
       handleSearch();
     }
   };
@@ -85,6 +91,12 @@ const ToolBar = ({
 
   const handleSortClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleActiveTrue = () => {
+    setActiveTrue(!activeTrue);
+    setAnchorEl(null);
+    setParams({ ...params, isActive: !activeTrue });
   };
 
   const handleSortOptionClick = () => {
@@ -106,7 +118,15 @@ const ToolBar = ({
   ) => {
     setParams({ ...params, sortBy: newFilterCalls });
   };
+  const [showSearchInput, setShowSearchInput] = useState(false);
 
+  const handleSearchClick = () => {
+    setShowSearchInput(!showSearchInput);
+  };
+
+  const closeSearchInput = () => {
+    setShowSearchInput(false);
+  };
   useEffect(() => {
     if (!filterButtonPressed) {
       delete params.sortBy;
@@ -125,43 +145,41 @@ const ToolBar = ({
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Box>{text}</Box>
+        <Box>{!showSearchInput && text}</Box>
 
         {isScreenLarge ? (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <InputBase
-              placeholder='Search…'
-              sx={inputStyles}
-              inputProps={{ 'aria-label': 'search' }}
-              value={searchText}
-              onChange={handleInputChange}
-            />
-            <IconButton onClick={onSearch} aria-label='search'>
-              <SearchIcon />
-            </IconButton>
+            {showSearchInput ? (
+              <>
+                <InputBase
+                  placeholder='Search…'
+                  sx={inputStyles}
+                  inputProps={{ 'aria-label': 'search' }}
+                  value={searchText}
+                  onChange={handleInputChange}
+                />
+                <IconButton onClick={handleSearchClick} aria-label='search'>
+                  <SearchIcon />
+                </IconButton>
+              </>
+            ) : (
+              <IconButton onClick={handleSearchClick} aria-label='search'>
+                <SearchIcon />
+              </IconButton>
+            )}
             <IconButton
               aria-label='sort'
-              onClick={handleSortClick}
+              onClick={handleActiveTrue}
               aria-controls='sort-menu'
               aria-haspopup='true'
             >
-              <SortIcon />
+              {activeTrue ? (
+                <ToggleOn sx={{ color: '#007fff' }} />
+              ) : (
+                <ToggleOff />
+              )}
             </IconButton>
-            <Menu
-              id='sort-menu'
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleSortClose}
-            >
-              {filters.map((filter) => (
-                <MenuItem
-                  key={filter}
-                  onClick={() => handleSortOptionClick(filter)}
-                >
-                  {filter}
-                </MenuItem>
-              ))}
-            </Menu>
+
             <IconButton
               onClick={() => {
                 setFilterButtonPressed(!filterButtonPressed);
@@ -189,19 +207,52 @@ const ToolBar = ({
             </IconButton>
           </Box>
         ) : (
-          <>
-            {' '}
-            <>
-              <IconButton
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {showSearchInput && (
+              <>
+                <InputBase
+                  placeholder='Search…'
+                  sx={inputStyles}
+                  inputProps={{ 'aria-label': 'search' }}
+                  value={searchText}
+                  onChange={handleInputChange}
+                />
+                <IconButton onClick={handleSearchClick} aria-label='search'>
+                  <SearchIcon />
+                </IconButton>
+              </>
+            )}
+            <IconButton
+              onClick={handleSortClick}
+              aria-label='more options'
+              aria-controls='small-screen-menu'
+              aria-haspopup='true'
+            >
+              <SortIcon />
+            </IconButton>
+            <Menu
+              id='small-screen-menu'
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleSortClose}
+            >
+              <MenuItem onClick={handleSearchClick}>
+                <SearchIcon />
+                Search
+              </MenuItem>
+              <MenuItem
                 onClick={() => {
                   setFilterButtonPressed(!filterButtonPressed);
+                  handleSortClose();
                 }}
               >
                 {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
-              </IconButton>
-              <IconButton
+                Filter
+              </MenuItem>
+              <MenuItem
                 onClick={() => {
                   handleSortOptionClick(filterBy);
+                  handleSortClose();
                 }}
               >
                 {sortingOrder === 'ascending' ? (
@@ -209,16 +260,19 @@ const ToolBar = ({
                 ) : (
                   <ArrowDownwardIcon />
                 )}
-              </IconButton>
-              <IconButton
+                Sort
+              </MenuItem>
+              <MenuItem
                 onClick={() => {
                   setIsAddModalOpen(true);
+                  handleSortClose();
                 }}
               >
                 <AddIcon />
-              </IconButton>
-            </>
-          </>
+                Add
+              </MenuItem>
+            </Menu>
+          </Box>
         )}
       </Toolbar>
       {!filterButtonPressed && (

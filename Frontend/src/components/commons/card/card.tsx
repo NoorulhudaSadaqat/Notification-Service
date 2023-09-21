@@ -61,7 +61,7 @@ export default function InfoCard({
           sx={{
             curor: 'pointer',
             backgroundColor: selectedCard === e._id ? '#e6e6e6' : 'white',
-            minWidth: isScreenLarge ? 275 : '100%',
+            minWidth: isScreenLarge ? 275 : 150,
             justifyContent: 'space-between',
             margin: '1.25rem',
             display: 'flex',
