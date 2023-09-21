@@ -1,4 +1,4 @@
-import styles from "./grid.module.css";
+import styles from './grid.module.css';
 import {
   Checkbox,
   Link,
@@ -10,12 +10,12 @@ import {
   TableRow,
   useMediaQuery,
   useTheme,
-} from "@mui/material";
-import HandlerButtons from "../handlers/handler";
-import { Event } from "../../../types/event";
-import PaginationControls from "../paginationControl/paginationControl";
-import { Notification } from "../../../types/notification";
-import { useNavigate } from "react-router-dom";
+} from '@mui/material';
+import HandlerButtons from '../handlers/handler';
+import { Event } from '../../../types/event';
+import PaginationControls from '../paginationControl/paginationControl';
+import { Notification } from '../../../types/notification';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   data: (Event | Notification)[] | undefined;
@@ -45,6 +45,7 @@ const GridComponent: React.FC<Props> = ({
   selectedIds,
   handleUpdate,
   handlePageChange,
+  setElement,
   handleEdit,
   setIdsToDelete,
   eventId,
@@ -52,7 +53,7 @@ const GridComponent: React.FC<Props> = ({
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const isScreenLarge = useMediaQuery(theme.breakpoints.up("sm"));
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const id = event.target.value;
 
@@ -66,61 +67,60 @@ const GridComponent: React.FC<Props> = ({
   };
 
   return (
-    <div className={styles.heightControl}>
-      <TableContainer sx={{ minHeight: "20vh", marginBottom: "3vh" }}>
-        <Table>
-          <TableHead sx={{ position: "sticky", top: 0 }}>
-            <TableRow>
-              <TableCell sx={{ fontWeight: "bold" }}>
-                {/* Checkbox Header */}
-                <Checkbox
-                  color="primary"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setIdsToDelete(data?.map((ele) => ele._id!) || []);
-                    } else {
-                      setIdsToDelete([]);
-                    }
-                  }}
-                />
-              </TableCell>
-
-              <TableCell sx={{ fontWeight: "bold" }}>Title</TableCell>
-              {isScreenLarge && (
-                <TableCell sx={{ fontWeight: "bold" }}>Description</TableCell>
-              )}
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data?.map((ele) => (
-              <TableRow key={ele._id}>
-                <TableCell>
+    <>
+      <div className={styles.heightControl}>
+        <TableContainer sx={{ minHeight: '20vh', marginBottom: '3vh' }}>
+          <Table>
+            <TableHead sx={{ position: 'sticky', top: 0 }}>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 'bold' }}>
+                  {/* Checkbox Header */}
                   <Checkbox
-                    color="primary"
-                    value={ele._id}
-                    onChange={handleCheckboxChange}
-                    checked={selectedIds?.includes(ele._id!)}
+                    color='primary'
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setIdsToDelete(data?.map((ele) => ele._id) || []);
+                      } else {
+                        setIdsToDelete([]);
+                      }
+                    }}
                   />
                 </TableCell>
-                <TableCell>
-                  <Link
-                    sx={{ cursor: "pointer", color: "black" }}
-                    onClick={() => setId(ele._id)}
-                  >
-                    {ele.name}
-                  </Link>
-                </TableCell>
-                {isScreenLarge && (
+
+                <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data?.map((ele) => (
+                <TableRow key={ele._id}>
                   <TableCell>
-                    {ele.description.length > 30 ? (
+                    {/* Checkbox for each row */}
+                    <Checkbox
+                      color='primary'
+                      value={ele._id}
+                      onChange={handleCheckboxChange}
+                      checked={selectedIds.includes(ele._id)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      sx={{ cursor: 'pointer', color: 'black' }}
+                      onClick={() => setId(ele._id)}
+                    >
+                      {ele.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    {ele.description.length > 50 ? (
                       <>
-                        {ele.description.substring(0, 30)}
+                        {ele.description.substring(0, 50)}
                         <span
                           style={{
-                            color: "blue",
-                            textDecoration: "underline",
-                            cursor: "pointer",
+                            color: 'blue',
+                            textDecoration: 'underline',
+                            cursor: 'pointer',
                           }}
                           onClick={() => openInfoModal(ele)}
                         >
@@ -131,35 +131,38 @@ const GridComponent: React.FC<Props> = ({
                       ele.description
                     )}
                   </TableCell>
-                )}
-                <TableCell>
-                  <HandlerButtons
-                    isActive={ele.isActive}
-                    onEdit={() => {
-                      if (ele.eventId)
-                        navigate(`notfication/${eventId}/edit/${ele._id}`);
-                      handleEdit(ele);
-                    }}
-                    onDelete={() => {
-                      setIdsToDelete([ele._id!]);
-                      handleDelete();
-                    }}
-                    onToggleActive={() =>
-                      handleUpdate({ _id: ele._id, isActive: !ele.isActive })
-                    }
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                  <TableCell>
+                    <HandlerButtons
+                      isActive={ele.isActive}
+                      onEdit={() => {
+                        if (ele.eventId) {
+                          navigate(
+                            `notfication/${ele.eventId}/edit/${ele._id}}`
+                          );
+                        }
+                        setElement(ele);
+                        setIsModalOpen(true);
+                      }}
+                      onDelete={() =>
+                        handleUpdate({ _id: ele._id, isDeleted: true })
+                      }
+                      onToggleActive={() =>
+                        handleUpdate({ _id: ele._id, isActive: !ele.isActive })
+                      }
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
       <PaginationControls
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
-    </div>
+    </>
   );
 };
 

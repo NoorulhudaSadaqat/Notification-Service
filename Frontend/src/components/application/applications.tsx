@@ -5,13 +5,12 @@ import {
   Box,
   Button,
   IconButton,
+  useTheme,
+  useMediaQuery,
   Slide,
   Snackbar,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
-
 import DeleteIcon from '@mui/icons-material/Delete';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './applications.module.css';
@@ -27,7 +26,6 @@ import InfoModal from '../commons/infoModal/infoModal';
 import { Application } from '../../types/application';
 import { filters } from '../../utils/dataUtils';
 import { useQueryClient } from '@tanstack/react-query';
-import { set } from 'react-hook-form';
 
 interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -68,9 +66,10 @@ export const Applications = ({ setApplicationId }: Props) => {
       setSeverity('error');
     }
   };
-  const setTheme = useTheme();
-  const isScreenLarge = useMediaQuery(setTheme.breakpoints.up('sm'));
-  const showThis = isScreenLarge
+  console.log('ids to delete', idsToDelete);
+  const theme = useTheme();
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm')); // Adjust the breakpoint as needed
+  const toShow = isScreenLarge
     ? `Delete(${idsToDelete.length})`
     : `(${idsToDelete.length})`;
   const text =
@@ -86,7 +85,7 @@ export const Applications = ({ setApplicationId }: Props) => {
             handleDelete();
           }}
         >
-          {showThis}
+          {toShow}
         </Button>
       </>
     );
