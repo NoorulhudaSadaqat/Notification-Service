@@ -12,9 +12,10 @@ import {
   ToggleButton,
   useTheme,
   useMediaQuery,
+  Tooltip, // Import Tooltip component
 } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import SortIcon from '@mui/icons-material/Sort';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -136,6 +137,7 @@ const ToolBar = ({
       delete params.sortOrder;
     }
   }, [filterButtonPressed]);
+
   return (
     <AppBar
       position='static'
@@ -154,6 +156,11 @@ const ToolBar = ({
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {showSearchInput ? (
               <>
+                <Tooltip title='Search'>
+                  <IconButton onClick={handleSearchClick} aria-label='search'>
+                    <SearchIcon />
+                  </IconButton>
+                </Tooltip>
                 <InputBase
                   placeholder='Search…'
                   sx={inputStyles}
@@ -161,57 +168,72 @@ const ToolBar = ({
                   value={searchText}
                   onChange={handleInputChange}
                 />
+              </>
+            ) : (
+              <Tooltip title='Search'>
                 <IconButton onClick={handleSearchClick} aria-label='search'>
                   <SearchIcon />
                 </IconButton>
-              </>
-            ) : (
-              <IconButton onClick={handleSearchClick} aria-label='search'>
-                <SearchIcon />
-              </IconButton>
+              </Tooltip>
             )}
-            <IconButton
-              aria-label='sort'
-              onClick={handleActiveTrue}
-              aria-controls='sort-menu'
-              aria-haspopup='true'
-            >
-              {activeTrue ? (
-                <ToggleOn sx={{ color: '#007fff' }} />
-              ) : (
-                <ToggleOff />
-              )}
-            </IconButton>
+            <Tooltip title={activeTrue ? 'Active' : 'Inactive'}>
+              <IconButton
+                aria-label='sort'
+                onClick={handleActiveTrue}
+                aria-controls='sort-menu'
+                aria-haspopup='true'
+              >
+                {activeTrue ? (
+                  <ToggleOn sx={{ color: '#007fff' }} />
+                ) : (
+                  <ToggleOff />
+                )}
+              </IconButton>
+            </Tooltip>
 
-            <IconButton
-              onClick={() => {
-                setFilterButtonPressed(!filterButtonPressed);
-              }}
+            <Tooltip title={filterButtonPressed ? 'Filter On' : 'Filter Off'}>
+              <IconButton
+                onClick={() => {
+                  setFilterButtonPressed(!filterButtonPressed);
+                }}
+              >
+                {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip
+              title={
+                sortingOrder === 'ascending'
+                  ? 'Sort Ascending'
+                  : 'Sort Descending'
+              }
             >
-              {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                handleSortOptionClick(filterBy);
-              }}
-            >
-              {sortingOrder === 'ascending' ? (
-                <ArrowUpwardIcon />
-              ) : (
-                <ArrowDownwardIcon />
-              )}
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                if (text.props.children == 'Notifications') {
-                  navigate(`notfication/${eventId}/edit/${-1}`);
-                } else {
-                  setIsAddModalOpen(true);
-                }
-              }}
-            >
-              <AddIcon />
-            </IconButton>
+              <IconButton
+                onClick={() => {
+                  handleSortOptionClick(filterBy);
+                }}
+              >
+                {sortingOrder === 'ascending' ? (
+                  <ArrowUpwardIcon />
+                ) : (
+                  <ArrowDownwardIcon />
+                )}
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title='Add'>
+              <IconButton
+                onClick={() => {
+                  if (text.props.children == 'Notifications') {
+                    navigate(`notfication/${eventId}/edit/${-1}`);
+                  } else {
+                    setIsAddModalOpen(true);
+                  }
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
         ) : (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -235,7 +257,7 @@ const ToolBar = ({
               aria-controls='small-screen-menu'
               aria-haspopup='true'
             >
-              <SortIcon />
+              <MenuIcon />
             </IconButton>
             <Menu
               id='small-screen-menu'

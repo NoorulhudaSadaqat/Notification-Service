@@ -1,4 +1,4 @@
-import styles from './grid.module.css';
+import React, { useEffect } from 'react';
 import {
   Checkbox,
   Link,
@@ -8,15 +8,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Menu,
+  MenuItem,
   useMediaQuery,
   useTheme,
+  IconButton,
 } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HandlerButtons from '../handlers/handler';
 import { Event } from '../../../types/event';
 import PaginationControls from '../paginationControl/paginationControl';
 import { Notification } from '../../../types/notification';
 import { useNavigate } from 'react-router-dom';
-
+import { useState } from 'react';
+import styles from './grid.module.css';
 interface Props {
   data: (Event | Notification)[] | undefined;
   setId: (id: string | undefined) => void;
@@ -41,14 +46,11 @@ const GridComponent: React.FC<Props> = ({
   totalPages,
   data,
   setId,
-  handleDelete,
   selectedIds,
   handleUpdate,
   handlePageChange,
   setElement,
-  handleEdit,
   setIdsToDelete,
-  eventId,
   openInfoModal,
 }) => {
   const theme = useTheme();
@@ -65,11 +67,17 @@ const GridComponent: React.FC<Props> = ({
       );
     }
   };
+  const [currentRow, setCurrentRow] = useState<string>();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
       <div className={styles.heightControl}>
-        <TableContainer sx={{ minHeight: '20vh', marginBottom: '3vh' }}>
+        <TableContainer sx={{ marginBottom: '3vh' }}>
           <Table>
             <TableHead sx={{ position: 'sticky', top: 0 }}>
               <TableRow>
@@ -88,7 +96,9 @@ const GridComponent: React.FC<Props> = ({
                 </TableCell>
 
                 <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                {isScreenLarge && (
+                  <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                )}
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -96,7 +106,6 @@ const GridComponent: React.FC<Props> = ({
               {data?.map((ele) => (
                 <TableRow key={ele._id}>
                   <TableCell>
-                    {/* Checkbox for each row */}
                     <Checkbox
                       color='primary'
                       value={ele._id}
@@ -112,44 +121,96 @@ const GridComponent: React.FC<Props> = ({
                       {ele.name}
                     </Link>
                   </TableCell>
+                  {isScreenLarge && (
+                    <TableCell>
+                      {ele.description.length > 50 ? (
+                        <>
+                          {ele.description.substring(0, 50)}
+                          <span
+                            style={{
+                              color: 'blue',
+                              textDecoration: 'underline',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => openInfoModal(ele)}
+                          >
+                            ...
+                          </span>
+                        </>
+                      ) : (
+                        ele.description
+                      )}
+                    </TableCell>
+                  )}
                   <TableCell>
-                    {ele.description.length > 50 ? (
-                      <>
-                        {ele.description.substring(0, 50)}
-                        <span
-                          style={{
-                            color: 'blue',
-                            textDecoration: 'underline',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => openInfoModal(ele)}
-                        >
-                          ...
-                        </span>
-                      </>
-                    ) : (
-                      ele.description
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <HandlerButtons
-                      isActive={ele.isActive}
-                      onEdit={() => {
-                        if (ele.eventId) {
-                          navigate(
-                            `notfication/${ele.eventId}/edit/${ele._id}}`
-                          );
+                    {isScreenLarge ? (
+                      <HandlerButtons
+                        onInfo={() => openInfoModal(ele)}
+                        isActive={ele.isActive}
+                        onEdit={() => {
+                          if (ele.eventId) {
+                            navigate(
+                              `notfication/${ele.eventId}/edit/${ele._id}}`
+                            );
+                          }
+                          setElement(ele);
+                          setIsModalOpen(true);
+                        }}
+                        onDelete={() =>
+                          handleUpdate({ _id: ele._id, isDeleted: true })
                         }
-                        setElement(ele);
-                        setIsModalOpen(true);
-                      }}
-                      onDelete={() =>
-                        handleUpdate({ _id: ele._id, isDeleted: true })
-                      }
-                      onToggleActive={() =>
-                        handleUpdate({ _id: ele._id, isActive: !ele.isActive })
-                      }
-                    />
+                        onToggleActive={() =>
+                          handleUpdate({
+                            _id: ele._id,
+                            isActive: !ele.isActive,
+                          })
+                        }
+                      />
+                    ) : (
+                      <>
+                        <IconButton
+                          onClick={(event) => {
+                            setAnchorEl(event.currentTarget); // Set anchorEl to the current target when the icon button is clicked
+                          }}
+                          aria-label='more options'
+                          aria-controls='small-screen-menu'
+                          aria-haspopup='true'
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                        <Menu
+                          id='small-screen-menu'
+                          anchorEl={anchorEl}
+                          open={Boolean(anchorEl)}
+                          onClose={handleMenuClose}
+                        >
+                          <MenuItem>
+                            <HandlerButtons
+                              onInfo={() => openInfoModal(ele)}
+                              isActive={ele.isActive}
+                              onEdit={() => {
+                                if (ele.eventId) {
+                                  navigate(
+                                    `notfication/${ele.eventId}/edit/${ele._id}}`
+                                  );
+                                }
+                                setElement(ele);
+                                setIsModalOpen(true);
+                              }}
+                              onDelete={() =>
+                                handleUpdate({ _id: ele._id, isDeleted: true })
+                              }
+                              onToggleActive={() =>
+                                handleUpdate({
+                                  _id: ele._id,
+                                  isActive: !ele.isActive,
+                                })
+                              }
+                            />
+                          </MenuItem>
+                        </Menu>
+                      </>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

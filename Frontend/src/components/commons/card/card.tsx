@@ -22,7 +22,7 @@ interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
   handleEdit: (ele: Application) => void;
   handleUpdate: (ele: Application | Event | Notification) => void;
-  handleDelete: () => void;
+  handleDelete: (e: string) => void;
   setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
   selectedCards: string[];
   setIdsToDelete: React.Dispatch<React.SetStateAction<string[]>>;
@@ -39,7 +39,6 @@ export default function InfoCard({
   setSelectedCards,
   setIdsToDelete,
 }: Props) {
-  const [selectedCard, setSelectedCard] = useState<string>();
   const toggleCardSelection = (cardId: string) => {
     if (selectedCards.includes(cardId)) {
       setSelectedCards(selectedCards.filter((id) => id !== cardId));
@@ -62,14 +61,19 @@ export default function InfoCard({
           key={e._id}
           sx={{
             curor: 'pointer',
-            backgroundColor: currentCard === e._id ? '#A0D0FF' : '',
-            minWidth: 275,
+            backgroundColor: currentCard === e._id ? '#0000000a' : '',
+            minWidth: isScreenLarge ? 275 : 200,
             justifyContent: 'space-between',
             margin: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',
-            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.197)',
+            boxShadow: `2px 2px 5px ${
+              currentCard === e._id
+                ? 'rgba(0, 0, 0, 0.800)'
+                : 'rgba(0, 0, 0, 0.100)'
+            }`,
+            transition: 'box-shadow 0.3s ease-in-out',
           }}
         >
           <CardContent sx={{ minHeight: 200 }}>
@@ -88,14 +92,6 @@ export default function InfoCard({
               <Typography sx={{ textAlign: 'left', fontSize: '0.75rem' }}>
                 {e.code}
               </Typography>
-
-              <IconButton
-                aria-label='info'
-                sx={{ fontSize: '18px' }}
-                onClick={() => openInfoModal(e)}
-              >
-                <InfoOutlinedIcon sx={{ fontSize: '18px' }} />
-              </IconButton>
             </Box>
             <div className={styles.colorBand}></div>
             <Typography
@@ -116,9 +112,9 @@ export default function InfoCard({
               variant='body2'
               color='text.secondary'
             >
-              {e.description.length > 100 ? (
+              {e.description.length > 50 ? (
                 <>
-                  {e.description.substring(0, 100)}
+                  {e.description.substring(0, 50)}
                   <span
                     style={{
                       color: 'blue',
@@ -137,11 +133,11 @@ export default function InfoCard({
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <HandlerButtons
+              onInfo={() => openInfoModal(e)}
               isActive={e.isActive}
               onEdit={() => handleEdit(e)}
               onDelete={async () => {
-                setIdsToDelete([e._id!]);
-                await handleDelete();
+                await handleDelete(e._id!);
               }}
               onToggleActive={() =>
                 handleUpdate({ _id: e._id, isActive: !e.isActive })

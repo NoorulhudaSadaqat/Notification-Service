@@ -1535,3 +1535,275 @@
   traceId: '-1',
   timestamp: '2023-09-21T11:26:22.958Z'
 }
+{
+  error: Error: write EIO
+      at afterWriteDispatched (node:internal/stream_base_commons:160:15)
+      at writeGeneric (node:internal/stream_base_commons:151:3)
+      at Socket._writeGeneric (node:net:931:11)
+      at Socket._write (node:net:943:8)
+      at writeOrBuffer (node:internal/streams/writable:392:12)
+      at _write (node:internal/streams/writable:333:10)
+      at Writable.write (node:internal/streams/writable:337:10)
+      at Function.log (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/debug/src/node.js:194:24)
+      at debug (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/debug/src/common.js:113:10)
+      at Server.<anonymous> (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/index.js:35:3) {
+    errno: -5,
+    code: 'EIO',
+    syscall: 'write'
+  },
+  level: 'error',
+  message: 'uncaughtException: write EIO\n' +
+    'Error: write EIO\n' +
+    '    at afterWriteDispatched (node:internal/stream_base_commons:160:15)\n' +
+    '    at writeGeneric (node:internal/stream_base_commons:151:3)\n' +
+    '    at Socket._writeGeneric (node:net:931:11)\n' +
+    '    at Socket._write (node:net:943:8)\n' +
+    '    at writeOrBuffer (node:internal/streams/writable:392:12)\n' +
+    '    at _write (node:internal/streams/writable:333:10)\n' +
+    '    at Writable.write (node:internal/streams/writable:337:10)\n' +
+    '    at Function.log (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/debug/src/node.js:194:24)\n' +
+    '    at debug (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/debug/src/common.js:113:10)\n' +
+    '    at Server.<anonymous> (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/index.js:35:3)',
+  stack: 'Error: write EIO\n' +
+    '    at afterWriteDispatched (node:internal/stream_base_commons:160:15)\n' +
+    '    at writeGeneric (node:internal/stream_base_commons:151:3)\n' +
+    '    at Socket._writeGeneric (node:net:931:11)\n' +
+    '    at Socket._write (node:net:943:8)\n' +
+    '    at writeOrBuffer (node:internal/streams/writable:392:12)\n' +
+    '    at _write (node:internal/streams/writable:333:10)\n' +
+    '    at Writable.write (node:internal/streams/writable:337:10)\n' +
+    '    at Function.log (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/debug/src/node.js:194:24)\n' +
+    '    at debug (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/debug/src/common.js:113:10)\n' +
+    '    at Server.<anonymous> (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/index.js:35:3)',
+  exception: true,
+  date: 'Thu Sep 21 2023 23:55:33 GMT+0500 (Pakistan Standard Time)',
+  process: {
+    pid: 15162,
+    uid: 1000,
+    gid: 1000,
+    cwd: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend',
+    execPath: '/home/gosaas/.nvm/versions/node/v18.17.1/bin/node',
+    version: 'v18.17.1',
+    argv: [
+      '/home/gosaas/.nvm/versions/node/v18.17.1/bin/node',
+      '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/index.js'
+    ],
+    memoryUsage: {
+      rss: 167161856,
+      heapTotal: 82644992,
+      heapUsed: 62140544,
+      external: 20351115,
+      arrayBuffers: 18392115
+    }
+  },
+  os: { loadavg: [ 3.81, 3.22, 2.27 ], uptime: 4426.93 },
+  trace: [
+    {
+      column: 15,
+      file: 'node:internal/stream_base_commons',
+      function: 'afterWriteDispatched',
+      line: 160,
+      method: null,
+      native: false
+    },
+    {
+      column: 3,
+      file: 'node:internal/stream_base_commons',
+      function: 'writeGeneric',
+      line: 151,
+      method: null,
+      native: false
+    },
+    {
+      column: 11,
+      file: 'node:net',
+      function: 'Socket._writeGeneric',
+      line: 931,
+      method: '_writeGeneric',
+      native: false
+    },
+    {
+      column: 8,
+      file: 'node:net',
+      function: 'Socket._write',
+      line: 943,
+      method: '_write',
+      native: false
+    },
+    {
+      column: 12,
+      file: 'node:internal/streams/writable',
+      function: 'writeOrBuffer',
+      line: 392,
+      method: null,
+      native: false
+    },
+    {
+      column: 10,
+      file: 'node:internal/streams/writable',
+      function: '_write',
+      line: 333,
+      method: null,
+      native: false
+    },
+    {
+      column: 10,
+      file: 'node:internal/streams/writable',
+      function: 'Writable.write',
+      line: 337,
+      method: 'write',
+      native: false
+    },
+    {
+      column: 24,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/debug/src/node.js',
+      function: 'Function.log',
+      line: 194,
+      method: 'log',
+      native: false
+    },
+    {
+      column: 10,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/debug/src/common.js',
+      function: 'debug',
+      line: 113,
+      method: null,
+      native: false
+    },
+    {
+      column: 3,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/index.js',
+      function: null,
+      line: 35,
+      method: null,
+      native: false
+    }
+  ],
+  timestamp: '2023-09-21T18:55:33.384Z'
+}
+{
+  level: 'error',
+  message: 'Operation `applications.find()` buffering timed out after 10000ms Error received with request body {} and req params {}',
+  traceId: '-1',
+  timestamp: '2023-09-21T19:01:05.714Z'
+}
+{
+  error: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+      at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)
+      at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)
+      at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16) {
+    reason: TopologyDescription {
+      type: 'Unknown',
+      servers: Map(1) {
+        'localhost:27017' => ServerDescription {
+          address: 'localhost:27017',
+          type: 'Unknown',
+          hosts: [],
+          passives: [],
+          arbiters: [],
+          tags: {},
+          minWireVersion: 0,
+          maxWireVersion: 0,
+          roundTripTime: -1,
+          lastUpdateTime: 290326,
+          lastWriteDate: 0,
+          error: MongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017
+              at connectionFailureError (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/node_modules/mongodb/lib/cmap/connect.js:367:20)
+              at Socket.<anonymous> (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/node_modules/mongodb/lib/cmap/connect.js:290:22)
+              at Object.onceWrapper (node:events:629:26)
+              at Socket.emit (node:events:514:28)
+              at emitErrorNT (node:internal/streams/destroy:151:8)
+              at emitErrorCloseNT (node:internal/streams/destroy:116:3)
+              at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+            cause: Error: connect ECONNREFUSED 127.0.0.1:27017
+                at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1495:16) {
+              errno: -111,
+              code: 'ECONNREFUSED',
+              syscall: 'connect',
+              address: '127.0.0.1',
+              port: 27017
+            },
+            [Symbol(errorLabels)]: Set(1) { 'ResetPool' }
+          },
+          topologyVersion: null,
+          setName: null,
+          setVersion: null,
+          electionId: null,
+          logicalSessionTimeoutMinutes: null,
+          primary: null,
+          me: null,
+          '$clusterTime': null
+        }
+      },
+      stale: false,
+      compatible: true,
+      heartbeatFrequencyMS: 10000,
+      localThresholdMS: 15,
+      setName: null,
+      maxElectionId: null,
+      maxSetVersion: null,
+      commonWireVersion: 0,
+      logicalSessionTimeoutMinutes: null
+    },
+    code: undefined
+  },
+  level: 'error',
+  message: 'uncaughtException: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    'MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    '    at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)\n' +
+    '    at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)\n' +
+    '    at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16)',
+  stack: 'MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017\n' +
+    '    at _handleConnectionErrors (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:788:11)\n' +
+    '    at NativeConnection.openUri (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js:763:11)\n' +
+    '    at async connectDB (/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js:5:16)',
+  exception: true,
+  date: 'Fri Sep 22 2023 00:01:06 GMT+0500 (Pakistan Standard Time)',
+  process: {
+    pid: 8032,
+    uid: 1000,
+    gid: 1000,
+    cwd: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend',
+    execPath: '/home/gosaas/.nvm/versions/node/v18.17.1/bin/node',
+    version: 'v18.17.1',
+    argv: [
+      '/home/gosaas/.nvm/versions/node/v18.17.1/bin/node',
+      '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/index.js'
+    ],
+    memoryUsage: {
+      rss: 135774208,
+      heapTotal: 49913856,
+      heapUsed: 46171864,
+      external: 20388134,
+      arrayBuffers: 18303415
+    }
+  },
+  os: { loadavg: [ 2.52, 2.19, 1.03 ], uptime: 290.65 },
+  trace: [
+    {
+      column: 11,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js',
+      function: '_handleConnectionErrors',
+      line: 788,
+      method: null,
+      native: false
+    },
+    {
+      column: 11,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/node_modules/mongoose/lib/connection.js',
+      function: 'NativeConnection.openUri',
+      line: 763,
+      method: 'openUri',
+      native: false
+    },
+    {
+      column: 16,
+      file: '/home/gosaas/Documents/Notification Services/Notification-Service/Backend/startup/mongoDb.js',
+      function: 'async connectDB',
+      line: 5,
+      method: null,
+      native: false
+    }
+  ],
+  timestamp: '2023-09-21T19:01:06.598Z'
+}

@@ -78,8 +78,8 @@ const Events = ({ applicationId, setEventId }: Props) => {
   };
 
   const openInfoModal = (ele) => {
-    setInfoModalOpen(true);
     setSelectedEvent(ele);
+    setInfoModalOpen(true);
   };
 
   const handleAddEvent = async (element: Event) => {

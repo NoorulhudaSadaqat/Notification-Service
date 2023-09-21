@@ -1,5 +1,4 @@
 .heightControl {
-  min-height: 20vh;
   max-height: 50vh;
   overflow-y: auto;
 }

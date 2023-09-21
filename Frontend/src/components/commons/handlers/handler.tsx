@@ -6,20 +6,24 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditRoundedIcon from '@mui/icons-material/Edit';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 interface Props {
   isActive: boolean | undefined;
   onEdit: () => void;
   onDelete: () => void;
   onToggleActive: (e: boolean) => void;
+  onInfo: () => void;
 }
 
 const HandlerButtons = ({
   isActive,
   onEdit,
   onDelete,
+  onInfo,
   onToggleActive,
 }: Props) => {
+  const [infoToolTipOpen, setInfoToolTipOpen] = useState(false); // State for tooltip[info]
   const [editTooltipOpen, setEditTooltipOpen] = useState(false);
   const [deleteTooltipOpen, setDeleteTooltipOpen] = useState(false);
   const [toggleActiveOpen, setToggleActiveOpen] = useState(false);
@@ -75,6 +79,18 @@ const HandlerButtons = ({
             size='small'
             sx={{ color: 'red', cursor: 'pointer' }}
             onClick={() => onToggleActive(isActive)}
+          />
+        </Tooltip>
+        <Tooltip
+          title='Info'
+          arrow
+          open={infoToolTipOpen}
+          onClose={() => setInfoToolTipOpen(false)}
+        >
+          <InfoOutlinedIcon
+            sx={{ fontSize: '18px', cursor: 'pointer' }}
+            onClick={onInfo}
+            onMouseEnter={() => setInfoToolTipOpen(true)}
           />
         </Tooltip>
       </Box>

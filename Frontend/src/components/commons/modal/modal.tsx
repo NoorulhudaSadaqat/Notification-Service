@@ -120,13 +120,13 @@ export default function EditModal({
             <Box sx={{ marginBlock: '2rem' }}>
               <FormInputText
                 name='name'
-                label='Title'
+                label='Name*'
                 type='text'
                 defaultValue={name!}
               />
               <FormInputText
                 name='description'
-                label='Description'
+                label='Description*'
                 type='text'
                 defaultValue={description!}
               />

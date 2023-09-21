@@ -54,14 +54,18 @@ export const Applications = ({ setApplicationId }: Props) => {
     setSelectedApplication(ele);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (id?: string) => {
     try {
-      await deleteMutation.mutateAsync(idsToDelete);
+      if (id) {
+        await deleteMutation.mutateAsync([id]);
+      } else {
+        await deleteMutation.mutateAsync(idsToDelete);
+      }
       setSnackbarMessage(`Application(s) have been deleted successfully!`);
       setSnackbarOpen(true);
       setSeverity('success');
     } catch (error) {
-      setSnackbarMessage('Error:', error.response.data.error);
+      setSnackbarMessage(`Error!${error?.response.data.error}`);
       setSnackbarOpen(true);
       setSeverity('error');
     }
