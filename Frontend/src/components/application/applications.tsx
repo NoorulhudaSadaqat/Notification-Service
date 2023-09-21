@@ -1,4 +1,4 @@
-import InfoCard from "../commons/card/card";
+import InfoCard from '../commons/card/card';
 import {
   Alert,
   AlertColor,
@@ -8,23 +8,26 @@ import {
   Slide,
   Snackbar,
   Typography,
-} from "@mui/material";
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
-import DeleteIcon from "@mui/icons-material/Delete";
-import DisplayDriver from "../commons/driver/displaydriver";
-import styles from "./applications.module.css";
-import { useEffect, useState } from "react";
-import Loader from "../commons/loader/loader";
+import DeleteIcon from '@mui/icons-material/Delete';
+import DisplayDriver from '../commons/driver/displaydriver';
+import styles from './applications.module.css';
+import { useEffect, useState } from 'react';
+import Loader from '../commons/loader/loader';
 import {
   useAddApplication,
   useDeleteApplication,
   useGetApplications,
   useUpdateApplication,
-} from "../../services/applicationService";
-import InfoModal from "../commons/infoModal/infoModal";
-import { Application } from "../../types/application";
-import { filters } from "../../utils/dataUtils";
-import { useQueryClient } from "@tanstack/react-query";
+} from '../../services/applicationService';
+import InfoModal from '../commons/infoModal/infoModal';
+import { Application } from '../../types/application';
+import { filters } from '../../utils/dataUtils';
+import { useQueryClient } from '@tanstack/react-query';
+import { set } from 'react-hook-form';
 
 interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -32,16 +35,14 @@ interface Props {
 export const Applications = ({ setApplicationId }: Props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [severity, setSeverity] = useState<AlertColor>();
-  const [params, setParams] = useState<object>();
+  const [params, setParams] = useState<object>({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application>();
   const [infoModalOpen, setInfoModalOpen] = useState(false);
-  const [editedCardName, setEditedCardName] = useState("");
-  const [editedCardDescription, setEditedCardDescription] = useState("");
-  const [searchText, setSearchText] = useState("");
-  const [searchError, setSearchError] = useState("");
+  const [searchText, setSearchText] = useState('');
+  const [searchError, setSearchError] = useState('');
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [elementToEdit, setElementToEdit] = useState<object>();
   const addMutation = useAddApplication();
@@ -62,29 +63,32 @@ export const Applications = ({ setApplicationId }: Props) => {
         `${idsToDelete} application(s) have been deleted successfully!`
       );
       setSnackbarOpen(true);
-      setSeverity("success");
+      setSeverity('success');
     } catch (error) {
-      setSnackbarMessage("Error:", error.response.data.error);
+      setSnackbarMessage('Error:', error.response.data.error);
       setSnackbarOpen(true);
-      setSeverity("error");
+      setSeverity('error');
     }
   };
+  const setTheme = useTheme();
+  const isScreenLarge = useMediaQuery(setTheme.breakpoints.up('sm'));
+  const showThis = isScreenLarge
+    ? `Delete(${idsToDelete.length})`
+    : `(${idsToDelete.length})`;
   const text =
     idsToDelete.length === 0 ? (
-      <Typography sx={{ color: "black" }}>Applications</Typography>
+      <Typography sx={{ color: 'black' }}>Applications</Typography>
     ) : (
       <>
         <Button
-          sx={{ border: "1px red solid", color: "red" }}
-          variant="outlined"
-          startIcon={<DeleteIcon sx={{ color: "red" }} />}
+          sx={{ border: '1px red solid', color: 'red' }}
+          variant='outlined'
+          startIcon={<DeleteIcon sx={{ color: 'red' }} />}
           onClick={() => {
             handleDelete();
           }}
         >
-          Delete {"("}
-          {idsToDelete.length}
-          {")"}
+          {showThis}
         </Button>
       </>
     );
@@ -94,17 +98,17 @@ export const Applications = ({ setApplicationId }: Props) => {
 
   const handleAddMutation = async (element: Application) => {
     try {
-      const applicationToPost = { ...element, code: "cs#101" };
+      const applicationToPost = { ...element, code: 'cs#101' };
       const result = await addMutation.mutateAsync(applicationToPost);
-      setSnackbarMessage("Application has been added successfully!");
+      setSnackbarMessage('Application has been added successfully!');
       setSnackbarOpen(true);
-      setSeverity("success");
+      setSeverity('success');
       setIsAddModalOpen(false);
     } catch (error) {
       console.log(error.response.data.error);
       setSnackbarMessage(`Error:, ${error.response.data.error}`);
       setSnackbarOpen(true);
-      setSeverity("error");
+      setSeverity('error');
     }
   };
 
@@ -113,38 +117,30 @@ export const Applications = ({ setApplicationId }: Props) => {
       console.log(element);
       const result = await updateMutation.mutateAsync(element);
       console.log(result);
-      setSnackbarMessage("Application has been updated successfully!");
+      setSnackbarMessage('Application has been updated successfully!');
       setSnackbarOpen(true);
-      setSeverity("success");
+      setSeverity('success');
       setIsAddModalOpen(false);
     } catch (error) {
       console.log(error);
       setSnackbarMessage(`Error!`);
       setSnackbarOpen(true);
-      setSeverity("error");
+      setSeverity('error');
     }
   };
 
-  const handleDelete = async (element: object) => {
-    try {
-      console.log(element);
-      const result = await deleteMutation.mutateAsync(idsToDelete);
-      console.log(result);
-      setSnackbarMessage("Application has been deleted successfully!");
-      setSnackbarOpen(true);
-      setSeverity("success");
-      setIsAddModalOpen(false);
-    } catch (error) {
-      console.log(error);
-      setSnackbarMessage(`Error!`);
-      setSnackbarOpen(true);
-      setSeverity("error");
-    }
+  const handleEdit = (e: Application) => {
+    setElementToEdit(e);
+    setIsModalOpen(true);
   };
-
+  const handleCloseEditModal = () => {
+    setIsModalOpen(false);
+    setElementToEdit({ name: '', description: '' });
+  };
   useEffect(() => {
-    queryClient.invalidateQueries(["applications"]);
-  }, [params]);
+    queryClient.invalidateQueries(['applications', {}]);
+    console.log(params);
+  }, [params, queryClient]);
 
   const renderComponent = () => {
     if (isLoading) {
@@ -157,10 +153,10 @@ export const Applications = ({ setApplicationId }: Props) => {
 
     if (applications?.length === 0) {
       return (
-        <Box sx={{ marginTop: "10px" }}>
+        <Box sx={{ marginTop: '10px' }}>
           <Alert
-            severity="warning"
-            sx={{ display: "flex", alignItems: "center" }}
+            severity='warning'
+            sx={{ display: 'flex', alignItems: 'center' }}
           >
             No applications found! To add applications press the Add Icon
           </Alert>
@@ -172,7 +168,6 @@ export const Applications = ({ setApplicationId }: Props) => {
       <div className={styles.scrollControl}>
         <div className={styles.cardContainer}>
           <InfoCard
-            setElement={setElementToEdit}
             setSelectedCards={setIdsToDelete}
             selectedCards={idsToDelete}
             handleUpdate={handleUpdate}
@@ -180,9 +175,7 @@ export const Applications = ({ setApplicationId }: Props) => {
             openInfoModal={openInfoModal}
             setApplicationId={setApplicationId}
             data={applications}
-            setEditedCardName={setEditedCardName}
-            setEditedCardDescription={setEditedCardDescription}
-            setIsModalOpen={setIsModalOpen}
+            handleEdit={handleEdit}
           />
         </div>
       </div>
@@ -194,7 +187,7 @@ export const Applications = ({ setApplicationId }: Props) => {
       <Box>
         {infoModalOpen && (
           <InfoModal
-            type={"Application"}
+            type={'Application'}
             infoModalOpen={infoModalOpen}
             setInfoModalOpen={setInfoModalOpen}
             data={selectedApplication}
@@ -209,7 +202,7 @@ export const Applications = ({ setApplicationId }: Props) => {
         >
           <Alert
             elevation={6}
-            variant="filled"
+            variant='filled'
             onClose={() => setSnackbarOpen(false)}
             severity={severity}
           >
@@ -228,16 +221,17 @@ export const Applications = ({ setApplicationId }: Props) => {
           params={params!}
           setParams={setParams}
           filters={filters}
-          addModalTitle={"Add New Applications"}
+          addModalTitle={'Add New Applications'}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           searchText={searchText}
           setSearchText={setSearchText}
           renderComponent={renderComponent}
-          modalTitle={"Edit Application"}
+          modalTitle={'Edit Application'}
           toolBarTitle={text}
           setSearchError={setSearchError}
           searchError={searchError}
+          handleCloseEditModal={handleCloseEditModal}
         />
       </Box>
     </>

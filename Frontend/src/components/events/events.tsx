@@ -1,5 +1,14 @@
 import React, { useDeferredValue, useEffect, useState } from 'react';
-import { Alert, Box, Button, Slide, Snackbar, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Slide,
+  Snackbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import GridComponent from '../commons/grid/grid';
 import DisplayDriver from '../commons/driver/displaydriver';
 import styles from './Events.module.css';
@@ -29,7 +38,7 @@ interface Props {
 const Events = ({ applicationId, setEventId }: Props) => {
   const pageSize = 4;
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [params, setParams] = useState({});
+  const [params, setParams] = useState({ pageSize: pageSize, page: 1 });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>('');
@@ -99,7 +108,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
     }
   };
 
-  const handleUpdateEvent = async (element: Event) => {
+  const handleUpdateEvent = async (element: object) => {
     try {
       console.log(element);
       const result = await updateMutation.mutateAsync(element);
@@ -130,12 +139,25 @@ const Events = ({ applicationId, setEventId }: Props) => {
       setSeverity('error');
     }
   };
+  const handleEdit = (e: Event) => {
+    setElementToEdit(e);
+    setIsModalOpen(true);
+  };
+  const handleCloseEditModal = () => {
+    setIsModalOpen(false);
+    setElementToEdit({ name: '', description: '' });
+  };
 
   const handlePagination = (page: number): void => {
-    console.log('Page: ', page);
     setCurrentPage(page);
     setParams({ ...params, pageSize: pageSize, page: currentPage });
+    console.log(currentPage, params);
   };
+  const setTheme = useTheme();
+  const isScreenLarge = useMediaQuery(setTheme.breakpoints.up('sm'));
+  const showThis = isScreenLarge
+    ? `Delete(${idsToDelete.length})`
+    : `(${idsToDelete.length})`;
   const text =
     idsToDelete.length === 0 ? (
       <Typography sx={{ color: 'black' }}>Events</Typography>
@@ -149,9 +171,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
             handleDelete();
           }}
         >
-          Delete {'('}
-          {idsToDelete.length}
-          {')'}
+          {showThis}
         </Button>
       </>
     );
@@ -192,6 +212,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
           handlePageChange={handlePagination}
           currentPage={currentPage}
           totalPages={totalPages}
+          handleEdit={handleEdit}
         />
       </Box>
     );
@@ -233,6 +254,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
           handleSearch={handleSearch}
           handleAdd={handleAddEvent}
           setParams={setParams}
+          handleCloseEditModal={handleCloseEditModal}
           params={params!}
           setSearchError={setSearchError}
           searchError={searchError}

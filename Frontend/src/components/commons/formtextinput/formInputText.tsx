@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 
@@ -6,7 +6,7 @@ interface FormInputProps {
   name: string;
   label: string;
   type?: string;
-  defaultValue?: string | null;
+  defaultValue?: string;
   textBox?: boolean;
   rowNumber?: number;
   onTextChange?: (text: any) => void; // Update the type of onTextChange
@@ -23,11 +23,16 @@ const FormInputText = ({
 }: FormInputProps) => {
   const { control, formState } = useFormContext(); // Access the form's control and state
   const { errors } = formState;
+  const [defaultValueState, setDefaultValueState] =
+    React.useState<string>(defaultValue);
 
+  useEffect(() => {
+    setDefaultValueState(defaultValue!);
+  }, [defaultValue]);
   return (
     <Controller
       name={name}
-      defaultValue={defaultValue}
+      defaultValue={defaultValueState || ''}
       control={control}
       render={({ field: { onChange, value } }) => (
         <TextField
@@ -35,16 +40,16 @@ const FormInputText = ({
           helperText={errors[name] ? errors[name].message : null}
           size='small'
           type={type}
-          multiline={textBox} // Conditionally set multiline based on textBox prop
-          rows={textBox ? rowNumber : undefined} // Optionally specify rows when textBox is true
+          multiline={textBox}
+          rows={textBox ? rowNumber : undefined}
           error={!!errors[name]}
           onChange={(e) => {
-            onChange(e); // Call the original onChange
+            onChange(e);
             if (onTextChange) {
-              onTextChange(e.target.value); // Notify parent component
+              onTextChange(e.target.value);
             }
           }}
-          value={value}
+          value={defaultValueState || value}
           fullWidth
           label={label}
           variant='outlined'

@@ -6,26 +6,11 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { z, string } from 'zod';
 import FormInputText from '../formtextinput/formInputText';
-import styles from './modal.module.css';
 import { Application } from '../../../types/application';
-import { useAddApplication } from '../../../services/applicationService';
 
 import { Notification } from '../../../types/notification';
 import { Event } from '../../../types/event';
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  borderRadius: 2,
-  boxShadow: 24,
-  p: 4,
-  gap: 1,
-  minWidth: '30vw',
-  minHeight: '30vh',
-};
+import { useMediaQuery, useTheme } from '@mui/material';
 
 const validationSchema = z.object({
   name: string().min(3, 'Length should be more than 3'),
@@ -41,7 +26,7 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   submitCall: (element: Application | Event | Notification) => void;
-  element?: object;
+  element?: { name: string; description: string };
 }
 
 export default function EditModal({
@@ -51,9 +36,34 @@ export default function EditModal({
   open,
   handleClose,
 }: Props) {
+  const theme = useTheme();
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
+  const style = {
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: isScreenLarge ? '30vw' : '90vw',
+    bgcolor: 'background.paper',
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 4,
+    gap: 1,
+    minWidth: '30vw',
+    minHeight: '30vh',
+  };
+
   const methods = useForm<Application | Event | Notification>({});
   const { handleSubmit, setError } = methods;
-
+  const [name, setName] = React.useState<string>('');
+  const [description, setDescription] = React.useState<string>('');
+  React.useEffect(() => {
+    if (element) {
+      setName(element.name);
+      setDescription(element.description);
+      console.log('Element', element);
+    }
+  }, [element]);
   const onSubmit = async (data: Application | Event | Notification) => {
     try {
       await validationSchema.parseAsync(data);
@@ -69,7 +79,6 @@ export default function EditModal({
       }
     }
   };
-
   return (
     <div>
       <Modal
@@ -101,13 +110,13 @@ export default function EditModal({
                 name='name'
                 label='Title'
                 type='text'
-                defaultValue={element ? element?.name : ''}
+                defaultValue={name!}
               />
               <FormInputText
                 name='description'
                 label='Description'
                 type='text'
-                defaultValue={element ? element?.description : ''}
+                defaultValue={description!}
               />
             </Box>
             <Box id='controller-buttons'>

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import styles from './grid.module.css';
 import {
-  Checkbox, // Import Checkbox
-  IconButton,
+  Checkbox,
   Link,
   Table,
   TableBody,
@@ -10,11 +8,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import HandlerButtons from '../handlers/handler';
 import { Event } from '../../../types/event';
 import PaginationControls from '../paginationControl/paginationControl';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Notification } from '../../../types/notification';
 
 interface Props {
@@ -24,13 +23,14 @@ interface Props {
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   openInfoModal: (e: Event) => void;
-  handleUpdate: (e: Event | Notification) => void;
-  setElement: React.Dispatch<React.SetStateAction<object>>;
+  handleUpdate: (e: object) => void;
+  setElement?: React.Dispatch<React.SetStateAction<object>>;
   selectedIds: string[];
-  currentPage: number; // Add currentPage prop
+  currentPage: number;
   setIdsToDelete: React.Dispatch<React.SetStateAction<string[]>>;
   handlePageChange: (page: number) => void;
   totalPages: number;
+  handleEdit: (ele: Event | Notification) => void;
 }
 
 const GridComponent: React.FC<Props> = ({
@@ -41,11 +41,13 @@ const GridComponent: React.FC<Props> = ({
   selectedIds,
   handleUpdate,
   handlePageChange,
-  setElement,
+  handleEdit,
   setIdsToDelete,
-  setIsModalOpen,
+
   openInfoModal,
 }) => {
+  const theme = useTheme();
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const id = event.target.value;
 
@@ -70,7 +72,7 @@ const GridComponent: React.FC<Props> = ({
                   color='primary'
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setIdsToDelete(data?.map((ele) => ele._id) || []);
+                      setIdsToDelete(data?.map((ele) => ele._id!) || []);
                     } else {
                       setIdsToDelete([]);
                     }
@@ -79,7 +81,9 @@ const GridComponent: React.FC<Props> = ({
               </TableCell>
 
               <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+              {isScreenLarge && (
+                <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+              )}
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
@@ -87,12 +91,11 @@ const GridComponent: React.FC<Props> = ({
             {data?.map((ele) => (
               <TableRow key={ele._id}>
                 <TableCell>
-                  {/* Checkbox for each row */}
                   <Checkbox
                     color='primary'
                     value={ele._id}
                     onChange={handleCheckboxChange}
-                    checked={selectedIds.includes(ele._id)}
+                    checked={selectedIds.includes(ele._id!)}
                   />
                 </TableCell>
                 <TableCell>
@@ -103,32 +106,31 @@ const GridComponent: React.FC<Props> = ({
                     {ele.name}
                   </Link>
                 </TableCell>
-                <TableCell>
-                  {ele.description.length > 50 ? (
-                    <>
-                      {ele.description.substring(0, 50)}
-                      <span
-                        style={{
-                          color: 'blue',
-                          textDecoration: 'underline',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => openInfoModal(ele)}
-                      >
-                        ...
-                      </span>
-                    </>
-                  ) : (
-                    ele.description
-                  )}
-                </TableCell>
+                {isScreenLarge && (
+                  <TableCell>
+                    {ele.description.length > 50 ? (
+                      <>
+                        {ele.description.substring(0, 50)}
+                        <span
+                          style={{
+                            color: 'blue',
+                            textDecoration: 'underline',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => openInfoModal(ele)}
+                        >
+                          ...
+                        </span>
+                      </>
+                    ) : (
+                      ele.description
+                    )}
+                  </TableCell>
+                )}
                 <TableCell>
                   <HandlerButtons
                     isActive={ele.isActive}
-                    onEdit={() => {
-                      setElement(ele);
-                      setIsModalOpen(true);
-                    }}
+                    onEdit={() => handleEdit(ele)}
                     onDelete={() =>
                       handleUpdate({ _id: ele._id, isDeleted: true })
                     }

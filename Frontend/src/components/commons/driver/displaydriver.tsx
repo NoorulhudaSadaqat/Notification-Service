@@ -30,6 +30,7 @@ interface Props {
   selectedCards: string[];
   element: object;
   setElement: React.Dispatch<React.SetStateAction<object>>;
+  handleCloseEditModal: () => void;
 }
 const DisplayDriver = ({
   selectedCards,
@@ -39,12 +40,11 @@ const DisplayDriver = ({
   setParams,
   searchError,
   isModalOpen,
-  setIsModalOpen,
   setIsAddModalOpen,
+  handleCloseEditModal,
   isAddModalOpen,
   setSearchText,
   handleSearch,
-  setElement,
   element,
   renderComponent,
   modalTitle,
@@ -73,10 +73,7 @@ const DisplayDriver = ({
         modalTitle={modalTitle}
         open={isModalOpen}
         element={element}
-        handleClose={() => {
-          setIsModalOpen(false);
-          setElement({});
-        }}
+        handleClose={handleCloseEditModal}
       />
     </>
   );
