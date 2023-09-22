@@ -22,7 +22,7 @@ interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
   handleEdit: (ele: Application) => void;
   handleUpdate: (ele: Application | Event | Notification) => void;
-  handleDelete: () => void;
+  handleDelete: (e: string) => void;
   setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
   selectedCards: string[];
   setIdsToDelete: React.Dispatch<React.SetStateAction<string[]>>;
@@ -39,7 +39,6 @@ export default function InfoCard({
   setSelectedCards,
   setIdsToDelete,
 }: Props) {
-  const [selectedCard, setSelectedCard] = useState<string>();
   const toggleCardSelection = (cardId: string) => {
     if (selectedCards.includes(cardId)) {
       setSelectedCards(selectedCards.filter((id) => id !== cardId));
@@ -55,21 +54,29 @@ export default function InfoCard({
     <>
       {data?.map((e) => (
         <Card
-          onClick={() => {
-            setApplicationId(e._id);
-            setCurrentCard(e._id);
-          }}
           key={e._id}
           sx={{
             curor: 'pointer',
-            backgroundColor: currentCard === e._id ? '#A0D0FF' : '',
-            minWidth: 275,
+            backgroundColor: currentCard === e._id ? '#00000008' : '',
+
+            border: currentCard === e._id ? '0.5px solid black' : '',
+            minWidth: isScreenLarge ? 275 : 200,
             justifyContent: 'space-between',
             margin: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',
-            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.197)',
+            boxShadow:
+              currentCard === e._id
+                ? '1px 1px 5px rgba(0, 0, 0, 1)'
+                : '5px 5px 10px rgba(0, 0, 0, 0.100)',
+            //add more properties that can be changed on hover
+            '&:hover': {
+              transform: 'scale(1.01)',
+              boxShadow:
+                '5px 5px 10px rgba(0, 0, 0, 0.200), 1px 1px 5px rgba(0, 0, 0, 0.4)',
+            },
+            transition: 'all 0.2s ease-in-out',
           }}
         >
           <CardContent sx={{ minHeight: 200 }}>
@@ -80,68 +87,71 @@ export default function InfoCard({
                 justifyContent: 'space-between',
               }}
             >
-              <Checkbox
-                checked={selectedCards.includes(e._id)}
-                onChange={() => toggleCardSelection(e._id)}
-              />
-
+              <Tooltip title='Bulk Delete' arrow>
+                <Checkbox
+                  checked={selectedCards.includes(e._id)}
+                  onChange={() => toggleCardSelection(e._id)}
+                />
+              </Tooltip>
               <Typography sx={{ textAlign: 'left', fontSize: '0.75rem' }}>
                 {e.code}
               </Typography>
-
-              <IconButton
-                aria-label='info'
-                sx={{ fontSize: '18px' }}
-                onClick={() => openInfoModal(e)}
-              >
-                <InfoOutlinedIcon sx={{ fontSize: '18px' }} />
-              </IconButton>
             </Box>
             <div className={styles.colorBand}></div>
-            <Typography
-              sx={{ fontWeight: 'bold', textAlign: 'left' }}
-              variant='h4'
-              component='div'
-              gutterBottom
-            >
-              {e.name}
-            </Typography>
-
-            <Typography
+            <Box
               sx={{
-                textAlign: 'left',
-                whiteSpace: 'pre-line',
-                wordWrap: 'break-word',
+                cursor: 'pointer',
               }}
-              variant='body2'
-              color='text.secondary'
+              onClick={() => {
+                setApplicationId(e._id);
+                setCurrentCard(e._id);
+              }}
             >
-              {e.description.length > 100 ? (
-                <>
-                  {e.description.substring(0, 100)}
-                  <span
-                    style={{
-                      color: 'blue',
-                      textDecoration: 'underline',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => openInfoModal(e)}
-                  >
-                    ...
-                  </span>
-                </>
-              ) : (
-                e.description
-              )}
-            </Typography>
+              <Typography
+                sx={{ fontWeight: 'bold', textAlign: 'left' }}
+                variant='h4'
+                component='div'
+                gutterBottom
+              >
+                {e.name}
+              </Typography>
+
+              <Typography
+                sx={{
+                  textAlign: 'left',
+                  whiteSpace: 'pre-line',
+                  wordWrap: 'break-word',
+                }}
+                variant='body2'
+                color='text.secondary'
+              >
+                {e.description.length > 50 ? (
+                  <>
+                    {e.description.substring(0, 50)}
+                    <span
+                      style={{
+                        color: 'blue',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => openInfoModal(e)}
+                    >
+                      ...
+                    </span>
+                  </>
+                ) : (
+                  e.description
+                )}
+              </Typography>
+            </Box>
           </CardContent>
           <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <HandlerButtons
+              onInfo={() => openInfoModal(e)}
               isActive={e.isActive}
               onEdit={() => handleEdit(e)}
               onDelete={async () => {
-                setIdsToDelete([e._id!]);
-                await handleDelete();
+                await handleDelete(e._id!);
               }}
               onToggleActive={() =>
                 handleUpdate({ _id: e._id, isActive: !e.isActive })

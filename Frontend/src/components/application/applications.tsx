@@ -10,6 +10,7 @@ import {
   Slide,
   Snackbar,
   Typography,
+  Tooltip,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DisplayDriver from '../commons/driver/displaydriver';
@@ -54,14 +55,18 @@ export const Applications = ({ setApplicationId }: Props) => {
     setSelectedApplication(ele);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (id?: string) => {
     try {
-      await deleteMutation.mutateAsync(idsToDelete);
+      if (id) {
+        await deleteMutation.mutateAsync([id]);
+      } else {
+        await deleteMutation.mutateAsync(idsToDelete);
+      }
       setSnackbarMessage(`Application(s) have been deleted successfully!`);
       setSnackbarOpen(true);
       setSeverity('success');
     } catch (error) {
-      setSnackbarMessage('Error:', error.response.data.error);
+      setSnackbarMessage(`Error!${error?.response.data.error}`);
       setSnackbarOpen(true);
       setSeverity('error');
     }
@@ -77,21 +82,26 @@ export const Applications = ({ setApplicationId }: Props) => {
       <Typography sx={{ color: 'black' }}>Applications</Typography>
     ) : (
       <>
-        <Button
-          sx={{ border: '1px red solid', color: 'red' }}
-          variant='outlined'
-          startIcon={<DeleteIcon sx={{ color: 'red' }} />}
-          onClick={() => {
-            handleDelete();
-          }}
-        >
-          {toShow}
-        </Button>
+        <Tooltip title='Delete' arrow>
+          <Button
+            sx={{ border: '1px red solid', color: 'red' }}
+            variant='outlined'
+            startIcon={<DeleteIcon sx={{ color: 'red' }} />}
+            onClick={() => {
+              handleDelete();
+            }}
+          >
+            {toShow}
+          </Button>
+        </Tooltip>
       </>
     );
-  const handleSearch = () => {
-    console.log(searchText);
-    setParams({ ...params, search: searchText });
+  const handleSearch = (searchText: string) => {
+    if (searchText.length > 2) {
+      setParams({ ...params, search: searchText });
+    } else {
+      delete params.search;
+    }
   };
 
   const handleAddMutation = async (element: Application) => {
