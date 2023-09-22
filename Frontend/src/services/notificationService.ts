@@ -139,7 +139,9 @@ export const useDeleteNotifications = (eventId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Notification, Error, string[], ContextType>({
     mutationFn: async (data: string[]) => {
-      const response = await apiClient(`/notification-types`, "delete", data);
+      const response = await apiClient(`/notification-types`, "delete", {
+        eventIds: data,
+      });
       return response.data;
     },
     onSettled: () => {

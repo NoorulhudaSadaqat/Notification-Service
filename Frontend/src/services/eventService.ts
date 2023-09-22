@@ -135,7 +135,9 @@ export const useDeleteEvents = (applicationId: string) => {
   const queryClient = useQueryClient();
   return useMutation<Event, Error, string[], ContextType>({
     mutationFn: async (data: string[]) => {
-      const response = await apiClient(`/events`, "delete", data);
+      const response = await apiClient(`/events`, "delete", {
+        eventIds: data,
+      });
       return response.data;
     },
     onSettled: () => {

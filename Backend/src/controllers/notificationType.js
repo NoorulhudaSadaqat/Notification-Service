@@ -98,6 +98,16 @@ const createNotificationType = async (req, res) => {
       .returning("*");
     return res.send(createdNotificationType);
   }
+  const existingNotification = await Event.findOne({
+    name: req.body.name.trim(),
+    eventId: req.body.eventId,
+  });
+  if (existingNotification) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error:
+        "This Notification already exists in this Event. Please create a notification with a different name",
+    });
+  }
   let notificationType = new NotificationType(reqBody);
   notificationType = await notificationType.save();
   return res.send(notificationType);
@@ -124,6 +134,16 @@ const updateNotificationType = async (req, res) => {
     }
 
     return res.send(notificationType[0]);
+  }
+  const existingNotification = await Event.findOne({
+    name: req.body.name.trim(),
+    eventId: req.body.eventId,
+  });
+  if (existingNotification) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error:
+        "This Notification already exists in this Event. Please create a notification with a different name",
+    });
   }
   const notificationType = await NotificationType.findByIdAndUpdate(
     notificationTypeId,

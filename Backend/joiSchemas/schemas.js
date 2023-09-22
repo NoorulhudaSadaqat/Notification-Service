@@ -13,12 +13,12 @@ const schemas = {
   }),
   application: Joi.object().keys({
     name: Joi.string().min(5).max(255).required(),
-    description: Joi.string().min(50).max(255).required(),
+    description: Joi.string().min(5).max(255).required(),
     code: Joi.string().max(10).required(),
   }),
   event: Joi.object().keys({
     name: Joi.string().min(5).max(255).required(),
-    description: Joi.string().min(50).max(255).required(),
+    description: Joi.string().min(5).max(255).required(),
     applicationId: Joi.string().required(),
   }),
   notificationType: Joi.object().keys({
@@ -56,23 +56,23 @@ const patchSchemas = {
     .min(1),
   application: Joi.object()
     .keys({
-      name: Joi.string().min(5).max(255).optional(),
-      description: Joi.string().min(50).max(255).optional(),
+      name: Joi.string().min(5).max(50).optional(),
+      description: Joi.string().min(5).max(255).optional(),
       code: Joi.string().max(255).optional(),
       isActive: Joi.boolean().optional(),
     })
     .min(1),
   event: Joi.object()
     .keys({
-      name: Joi.string().min(5).max(255).optional(),
-      description: Joi.string().min(50).max(255).optional(),
+      name: Joi.string().min(5).max(50).optional(),
+      description: Joi.string().min(5).max(255).optional(),
       applicationId: Joi.string().min(5).optional(),
       isActive: Joi.boolean().optional(),
     })
     .min(1),
   notificationType: Joi.object()
     .keys({
-      name: Joi.string().min(5).max(255).optional(),
+      name: Joi.string().min(5).max(50).optional(),
       description: Joi.string().min(5).max(255).optional(),
       eventId: Joi.string().min(5).optional(),
       templateSubject: Joi.string().min(5).max(255).optional(),

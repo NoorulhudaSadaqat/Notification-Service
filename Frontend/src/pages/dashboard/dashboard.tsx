@@ -14,13 +14,13 @@ const Dashboard = () => {
   const [applicationId, setApplicationId] = useState<string | undefined>("");
   const [eventId, setEventId] = useState<string | undefined>("");
   const [notificationId, setNotificationId] = useState<string | undefined>("");
+
   useEffect(() => {
     setEventId(undefined);
   }, [applicationId]);
-
   useEffect(() => {
     if (notificationId) {
-      navigate(`/edit/${notificationId}`);
+      navigate(`notfication/${eventId}/edit/${notificationId}`);
     }
   }, [navigate, notificationId]);
   return (
@@ -50,8 +50,6 @@ const Dashboard = () => {
               Please select an event to see notifications.
             </Alert>
           )}
-          {console.log("application Id : ", applicationId)}
-          {console.log("event Id : ", eventId)}
           {eventId && (
             <Notifications
               eventId={eventId}

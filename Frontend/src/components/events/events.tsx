@@ -1,4 +1,4 @@
-import React, { useDeferredValue, useEffect, useState } from 'react';
+import React, { useDeferredValue, useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -8,27 +8,27 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from '@mui/material';
-import GridComponent from '../commons/grid/grid';
-import DisplayDriver from '../commons/driver/displaydriver';
-import styles from './Events.module.css';
-import { Event } from '../../types/event';
-import Loader from '../commons/loader/loader';
-import MuiAlert, { AlertColor } from '@mui/material/Alert';
+} from "@mui/material";
+import GridComponent from "../commons/grid/grid";
+import DisplayDriver from "../commons/driver/displaydriver";
+import styles from "./Events.module.css";
+import { Event } from "../../types/event";
+import Loader from "../commons/loader/loader";
+import MuiAlert, { AlertColor } from "@mui/material/Alert";
 
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   useDeleteApplication,
   useGetEvents,
-} from '../../services/applicationService';
-import InfoModal from '../commons/infoModal/infoModal';
-import { filters } from '../../utils/dataUtils';
-import { useQueryClient } from '@tanstack/react-query';
+} from "../../services/applicationService";
+import InfoModal from "../commons/infoModal/infoModal";
+import { filters } from "../../utils/dataUtils";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useAddEvents,
   useDeleteEvents,
   useUpdateEvents,
-} from '../../services/eventService';
+} from "../../services/eventService";
 
 interface Props {
   applicationId: string | undefined;
@@ -41,15 +41,15 @@ const Events = ({ applicationId, setEventId }: Props) => {
   const [params, setParams] = useState({ page: 1, pageSize: pageSize });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [infoModalOpen, setInfoModalOpen] = useState(false);
-  const [searchError, setSearchError] = useState('');
+  const [searchError, setSearchError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [elementToEdit, setElementToEdit] = useState<object>();
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event>();
-  const [severity, setSeverity] = useState<AlertColor>('success');
+  const [severity, setSeverity] = useState<AlertColor>("success");
   const { isLoading, data } = useGetEvents(applicationId, params);
   const events = data?.events;
   const totalPages = Math.ceil(data?.totalCount / pageSize);
@@ -60,14 +60,14 @@ const Events = ({ applicationId, setEventId }: Props) => {
 
   useEffect(() => {
     queryClient.invalidateQueries([
-      'events',
+      "events",
       applicationId,
-      'applications',
+      "applications",
       {},
     ]);
   }, [params, currentPage, queryClient, applicationId]);
   useEffect(() => {
-    console.log('Ids to be deleted', idsToDelete);
+    console.log("Ids to be deleted", idsToDelete);
   }, [idsToDelete]);
   const handleSearch = () => {
     setParams({ ...params, search: searchText });
@@ -84,58 +84,73 @@ const Events = ({ applicationId, setEventId }: Props) => {
 
   const handleAddEvent = async (element: Event) => {
     try {
-      const eventToPost = { ...element, applicationId: applicationId! };
+      console.log("handle add");
+      delete element?.data._id;
+      const eventToPost = { ...element.data, applicationId: applicationId! };
+      console.log("handle add", eventToPost);
       const result = await addMutation.mutateAsync(eventToPost);
-      setSnackbarMessage('Event has been added successfully!');
+      console.log(result);
+      setSnackbarMessage("Event has been added successfully!");
       setSnackbarOpen(true);
-      setSeverity('success');
+      setSeverity("success");
       queryClient.invalidateQueries([
-        'events',
+        "events",
         applicationId,
-        'applications',
-        'data',
+        "applications",
+        "data",
         {},
       ]);
       setIsAddModalOpen(false);
+      element.handleConfirmCloseModal();
     } catch (error) {
       console.log(error.response.data.error);
       setSnackbarMessage(`Error: ${error.response.data.error}`);
       setSnackbarOpen(true);
-      setSeverity('error');
+      setSeverity("error");
     }
   };
 
   const handleUpdateEvent = async (element: object) => {
     try {
-      console.log(element);
-      const result = await updateMutation.mutateAsync(element);
+      console.log("element : ", element);
+      console.log(element.data);
+      const result = await updateMutation.mutateAsync(element.data);
       console.log(result);
-      setSnackbarMessage('Event has been updated successfully!');
+      setSnackbarMessage("Event has been updated successfully!");
       setSnackbarOpen(true);
-      setSeverity('success');
+      setSeverity("success");
       setIsAddModalOpen(false);
+      element.handleConfirmCloseModal();
     } catch (error) {
       console.log(error);
-      setSnackbarMessage(`Error!`);
+      setSnackbarMessage(`Error ${error.response.data.error}`);
       setSnackbarOpen(true);
-      setSeverity('error');
+      setSeverity("error");
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (id: string = "") => {
     try {
+      if (id) {
+        await deleteMutation.mutateAsync([id]);
+        const message = "Event has been deleted successfully!";
+        setSnackbarMessage(message);
+        setSnackbarOpen(true);
+        setSeverity("success");
+        return;
+      }
       await deleteMutation.mutateAsync(idsToDelete);
       const message =
         idsToDelete.length < 2
           ? `${idsToDelete.length} event(s) have been deleted successfully!`
-          : 'event has been deleted successfully!';
+          : "event has been deleted successfully!";
       setSnackbarMessage(message);
       setSnackbarOpen(true);
-      setSeverity('success');
+      setSeverity("success");
     } catch (error) {
       setSnackbarMessage(`Error: ${error.response.data.error}`);
       setSnackbarOpen(true);
-      setSeverity('error');
+      setSeverity("error");
     }
   };
   const handleEdit = (e: Event) => {
@@ -144,7 +159,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
   };
   const handleCloseEditModal = () => {
     setIsModalOpen(false);
-    setElementToEdit({ name: '', description: '' });
+    setElementToEdit({ name: "", description: "" });
   };
 
   const handlePagination = (page: number): void => {
@@ -153,19 +168,19 @@ const Events = ({ applicationId, setEventId }: Props) => {
     console.log(currentPage, params);
   };
   const setTheme = useTheme();
-  const isScreenLarge = useMediaQuery(setTheme.breakpoints.up('sm'));
+  const isScreenLarge = useMediaQuery(setTheme.breakpoints.up("sm"));
   const showThis = isScreenLarge
     ? `Delete(${idsToDelete.length})`
     : `(${idsToDelete.length})`;
   const text =
     idsToDelete.length === 0 ? (
-      <Typography sx={{ color: 'black' }}>Events</Typography>
+      <Typography sx={{ color: "black" }}>Events</Typography>
     ) : (
       <>
         <Button
-          sx={{ border: '1px red solid', color: 'red' }}
-          variant='outlined'
-          startIcon={<DeleteIcon sx={{ color: 'red' }} />}
+          sx={{ border: "1px red solid", color: "red" }}
+          variant="outlined"
+          startIcon={<DeleteIcon sx={{ color: "red" }} />}
           onClick={() => {
             handleDelete();
           }}
@@ -185,10 +200,10 @@ const Events = ({ applicationId, setEventId }: Props) => {
     }
     if (events?.length === 0) {
       return (
-        <Box sx={{ marginTop: '10px' }}>
+        <Box sx={{ marginTop: "10px" }}>
           <Alert
-            severity='warning'
-            sx={{ display: 'flex', alignItems: 'center' }}
+            severity="warning"
+            sx={{ display: "flex", alignItems: "center" }}
           >
             No events found! To add events press the Add Icon.
           </Alert>
@@ -223,7 +238,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
       <Box>
         {infoModalOpen && (
           <InfoModal
-            type={'Event'}
+            type={"Event"}
             infoModalOpen={infoModalOpen}
             setInfoModalOpen={setInfoModalOpen}
             data={selectedEvent}
@@ -238,7 +253,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
       >
         <MuiAlert
           elevation={6}
-          variant='filled'
+          variant="filled"
           onClose={() => setSnackbarOpen(false)}
           severity={severity}
         >
@@ -260,13 +275,13 @@ const Events = ({ applicationId, setEventId }: Props) => {
           setSearchError={setSearchError}
           searchError={searchError}
           filters={filters}
-          addModalTitle={'Add New Events'}
+          addModalTitle={"Add New Events"}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           setSearchText={setSearchText}
           data={events}
           renderComponent={renderComponent}
-          modalTitle={'Edit Events'}
+          modalTitle={"Edit Events"}
           toolBarTitle={text}
         />
       </div>

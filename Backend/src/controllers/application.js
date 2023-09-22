@@ -7,7 +7,7 @@ const Message = require("../models/message");
 
 const getAllApplication = async (req, res) => {
   const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 10;
+  const pageSize = req.query.pageSize || 100;
   const offset = (page - 1) * pageSize;
 
   const queryParams = {};
@@ -184,9 +184,8 @@ const createApplication = async (req, res) => {
     return res.send(createdApplication);
   }
   const existingApplication = await Application.findOne({
-    name: req.body.name,
+    name: req.body.name.trim(),
   });
-  "application :", existingApplication;
   if (existingApplication) {
     return res
       .status(StatusCodes.BAD_REQUEST)
@@ -216,6 +215,14 @@ const updateApplication = async (req, res) => {
     }
 
     return res.send(application[0]);
+  }
+  const existingApplication = await Application.findOne({
+    name: req.body.name.trim(),
+  });
+  if (existingApplication) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Application already registered." });
   }
   const application = await Application.findByIdAndUpdate(
     applicationId,

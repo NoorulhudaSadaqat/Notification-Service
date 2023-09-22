@@ -1,4 +1,4 @@
-import styles from './grid.module.css';
+import styles from "./grid.module.css";
 import {
   Checkbox,
   Link,
@@ -10,12 +10,12 @@ import {
   TableRow,
   useMediaQuery,
   useTheme,
-} from '@mui/material';
-import HandlerButtons from '../handlers/handler';
-import { Event } from '../../../types/event';
-import PaginationControls from '../paginationControl/paginationControl';
-import { Notification } from '../../../types/notification';
-import { useNavigate } from 'react-router-dom';
+} from "@mui/material";
+import HandlerButtons from "../handlers/handler";
+import { Event } from "../../../types/event";
+import PaginationControls from "../paginationControl/paginationControl";
+import { Notification } from "../../../types/notification";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   data: (Event | Notification)[] | undefined;
@@ -42,6 +42,7 @@ const GridComponent: React.FC<Props> = ({
   data,
   setId,
   handleDelete,
+  setIsModalOpen,
   selectedIds,
   handleUpdate,
   handlePageChange,
@@ -53,7 +54,7 @@ const GridComponent: React.FC<Props> = ({
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up("sm"));
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const id = event.target.value;
 
@@ -69,14 +70,14 @@ const GridComponent: React.FC<Props> = ({
   return (
     <>
       <div className={styles.heightControl}>
-        <TableContainer sx={{ minHeight: '20vh', marginBottom: '3vh' }}>
+        <TableContainer sx={{ minHeight: "20vh", marginBottom: "3vh" }}>
           <Table>
-            <TableHead sx={{ position: 'sticky', top: 0 }}>
+            <TableHead sx={{ position: "sticky", top: 0 }}>
               <TableRow>
-                <TableCell sx={{ fontWeight: 'bold' }}>
+                <TableCell sx={{ fontWeight: "bold" }}>
                   {/* Checkbox Header */}
                   <Checkbox
-                    color='primary'
+                    color="primary"
                     onChange={(e) => {
                       if (e.target.checked) {
                         setIdsToDelete(data?.map((ele) => ele._id) || []);
@@ -87,8 +88,8 @@ const GridComponent: React.FC<Props> = ({
                   />
                 </TableCell>
 
-                <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
-                <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Title</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Description</TableCell>
                 <TableCell></TableCell>
               </TableRow>
             </TableHead>
@@ -98,7 +99,7 @@ const GridComponent: React.FC<Props> = ({
                   <TableCell>
                     {/* Checkbox for each row */}
                     <Checkbox
-                      color='primary'
+                      color="primary"
                       value={ele._id}
                       onChange={handleCheckboxChange}
                       checked={selectedIds.includes(ele._id)}
@@ -106,7 +107,7 @@ const GridComponent: React.FC<Props> = ({
                   </TableCell>
                   <TableCell>
                     <Link
-                      sx={{ cursor: 'pointer', color: 'black' }}
+                      sx={{ cursor: "pointer", color: "black" }}
                       onClick={() => setId(ele._id)}
                     >
                       {ele.name}
@@ -118,9 +119,9 @@ const GridComponent: React.FC<Props> = ({
                         {ele.description.substring(0, 50)}
                         <span
                           style={{
-                            color: 'blue',
-                            textDecoration: 'underline',
-                            cursor: 'pointer',
+                            color: "blue",
+                            textDecoration: "underline",
+                            cursor: "pointer",
                           }}
                           onClick={() => openInfoModal(ele)}
                         >
@@ -136,16 +137,15 @@ const GridComponent: React.FC<Props> = ({
                       isActive={ele.isActive}
                       onEdit={() => {
                         if (ele.eventId) {
+                          console.log("ele ", ele);
                           navigate(
-                            `notfication/${ele.eventId}/edit/${ele._id}}`
+                            `notfication/${ele.eventId}/edit/${ele._id}`
                           );
                         }
                         setElement(ele);
                         setIsModalOpen(true);
                       }}
-                      onDelete={() =>
-                        handleUpdate({ _id: ele._id, isDeleted: true })
-                      }
+                      onDelete={() => handleDelete({ _id: ele._id })}
                       onToggleActive={() =>
                         handleUpdate({ _id: ele._id, isActive: !ele.isActive })
                       }
