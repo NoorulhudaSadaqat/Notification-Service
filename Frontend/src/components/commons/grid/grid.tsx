@@ -13,6 +13,7 @@ import {
   useMediaQuery,
   useTheme,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import HandlerButtons from '../handlers/handler';
@@ -104,23 +105,33 @@ const GridComponent: React.FC<Props> = ({
             </TableHead>
             <TableBody>
               {data?.map((ele) => (
-                <TableRow key={ele._id}>
+                <TableRow
+                  key={ele._id}
+                  onClick={() => {
+                    setId(ele._id);
+                    setCurrentRow(ele._id);
+                  }}
+                  sx={{
+                    backgroundColor: currentRow === ele._id ? '#e0e0e0' : '',
+                    border: currentRow === ele._id ? '0.5px solid black' : '',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.200)',
+                    },
+                    transition: 'all 0.3s ease-in-out',
+                  }}
+                >
                   <TableCell>
-                    <Checkbox
-                      color='primary'
-                      value={ele._id}
-                      onChange={handleCheckboxChange}
-                      checked={selectedIds.includes(ele._id)}
-                    />
+                    <Tooltip title='Bulk Delete' arrow>
+                      <Checkbox
+                        color='primary'
+                        value={ele._id}
+                        onChange={handleCheckboxChange}
+                        checked={selectedIds.includes(ele._id)}
+                      />
+                    </Tooltip>
                   </TableCell>
-                  <TableCell>
-                    <Link
-                      sx={{ cursor: 'pointer', color: 'black' }}
-                      onClick={() => setId(ele._id)}
-                    >
-                      {ele.name}
-                    </Link>
-                  </TableCell>
+                  <TableCell>{ele.name}</TableCell>
                   {isScreenLarge && (
                     <TableCell>
                       {ele.description.length > 50 ? (

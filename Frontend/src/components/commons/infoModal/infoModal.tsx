@@ -19,6 +19,19 @@ interface Props {
   type: string;
 }
 
+function formatDateTime(dateTimeString: string) {
+  const options = {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  };
+  const date = new Date(dateTimeString);
+  return date.toLocaleDateString('en-US', options);
+}
+
 const InfoModal = ({ infoModalOpen, setInfoModalOpen, data, type }: Props) => {
   const theme = useTheme();
   const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
@@ -27,7 +40,6 @@ const InfoModal = ({ infoModalOpen, setInfoModalOpen, data, type }: Props) => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-
     width: isScreenLarge ? '30vw' : '90vw',
     height: isScreenLarge ? '50vh' : '70vh',
     margin: isScreenLarge ? '' : '0 1rem',
@@ -105,14 +117,9 @@ const InfoModal = ({ infoModalOpen, setInfoModalOpen, data, type }: Props) => {
           >
             {data?.description}
           </Typography>
-
-          <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-            <strong>Created By: </strong>
-            {data?.createdBy}
-          </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <strong>Created Date: </strong>
-            {data?.createdDate}
+            {data ? formatDateTime(data.createdDate) : ''}
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <strong>Modified By: </strong>
@@ -120,7 +127,7 @@ const InfoModal = ({ infoModalOpen, setInfoModalOpen, data, type }: Props) => {
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <strong>Modified Date: </strong>
-            {data?.modifiedDate}
+            {data ? formatDateTime(data.modifiedDate) : ''}
           </Typography>
         </Box>
       </Modal>

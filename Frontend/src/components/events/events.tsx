@@ -5,6 +5,7 @@ import {
   Button,
   Slide,
   Snackbar,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -69,8 +70,13 @@ const Events = ({ applicationId, setEventId }: Props) => {
   useEffect(() => {
     console.log('Ids to be deleted', idsToDelete);
   }, [idsToDelete]);
-  const handleSearch = () => {
-    setParams({ ...params, search: searchText });
+
+  const handleSearch = (searchText: string) => {
+    if (searchText.length > 2) {
+      setParams({ ...params, search: searchText });
+    } else {
+      delete params.search;
+    }
   };
 
   const eventIdSetter = (id: string | undefined) => {
@@ -154,7 +160,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
   };
   const setTheme = useTheme();
   const isScreenLarge = useMediaQuery(setTheme.breakpoints.up('sm'));
-  const showThis = isScreenLarge
+  const toShow = isScreenLarge
     ? `Delete(${idsToDelete.length})`
     : `(${idsToDelete.length})`;
   const text =
@@ -162,16 +168,18 @@ const Events = ({ applicationId, setEventId }: Props) => {
       <Typography sx={{ color: 'black' }}>Events</Typography>
     ) : (
       <>
-        <Button
-          sx={{ border: '1px red solid', color: 'red' }}
-          variant='outlined'
-          startIcon={<DeleteIcon sx={{ color: 'red' }} />}
-          onClick={() => {
-            handleDelete();
-          }}
-        >
-          {showThis}
-        </Button>
+        <Tooltip title='Delete' arrow>
+          <Button
+            sx={{ border: '1px red solid', color: 'red' }}
+            variant='outlined'
+            startIcon={<DeleteIcon sx={{ color: 'red' }} />}
+            onClick={() => {
+              handleDelete();
+            }}
+          >
+            {toShow}
+          </Button>
+        </Tooltip>
       </>
     );
 

@@ -84,7 +84,7 @@ const SignUpPage = () => {
       <Box sx={{ minWidth: '100vw', minHeight: '80vh' }}>
         <CssBaseline />
         <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           open={showToast?.state}
           onClose={handleCloseToast}
           message={showToast?.message}

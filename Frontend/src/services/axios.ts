@@ -9,8 +9,7 @@ interface Config {
 }
 
 const apiClient = (url: string, method = 'get', data = {}) => {
-  // const baseURL = process.env.REACT_APP_API_HOST;
-  const baseURL = 'http://192.168.100.34:4000/api/v1/';
+  const baseURL = 'http://192.168.100.79:4000/api/v1/';
   const config: Config = {
     url: url,
     method: method,

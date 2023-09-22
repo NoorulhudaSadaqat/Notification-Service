@@ -28,6 +28,7 @@ import {
   ToggleOn,
   ToggleOff,
 } from '@mui/icons-material';
+import SortIcon from '@mui/icons-material/Sort';
 import EditModal from '../modal/modal';
 import { Application } from '../../../types/application';
 import { useNavigate } from 'react-router-dom';
@@ -50,7 +51,7 @@ interface Props {
   text: JSX.Element;
   setParams: React.Dispatch<React.SetStateAction<object>>;
   handleAdd: (element: Application | Event | Notification) => void;
-  handleSearch: () => void;
+  handleSearch: (e: string) => void;
   eventId: string;
 }
 
@@ -64,9 +65,8 @@ const ToolBar = ({
   handleSearch,
   setParams,
   handleAdd,
-  onSearch,
-  setSearchText,
   eventId,
+  setSearchText,
 }: Props) => {
   const selectedFilters = '';
   const [anchorEl, setAnchorEl] = useState(null);
@@ -79,14 +79,10 @@ const ToolBar = ({
   const theme = useTheme();
   const navigate = useNavigate();
   const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-    if (e.target.value.length < 3) {
-      delete params.search;
-    }
-    if (e.target.value.length > 3) {
-      handleSearch();
-    }
+    handleSearch(e.target.value);
   };
 
   const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -197,7 +193,7 @@ const ToolBar = ({
                   setFilterButtonPressed(!filterButtonPressed);
                 }}
               >
-                {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
+                <SortIcon />
               </IconButton>
             </Tooltip>
 
@@ -269,14 +265,22 @@ const ToolBar = ({
                 <SearchIcon />
                 Search
               </MenuItem>
+              <MenuItem onClick={handleActiveTrue}>
+                {activeTrue ? (
+                  <ToggleOn sx={{ color: '#007fff' }} />
+                ) : (
+                  <ToggleOff />
+                )}
+                Active
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   setFilterButtonPressed(!filterButtonPressed);
                   handleSortClose();
                 }}
               >
-                {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
-                Filter
+                <SortIcon />
+                Sort
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -289,7 +293,7 @@ const ToolBar = ({
                 ) : (
                   <ArrowDownwardIcon />
                 )}
-                Sort
+                Order By
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -332,6 +336,7 @@ const ToolBar = ({
                 <Typography
                   sx={{
                     color: 'black',
+                    marginInline: '0.5rem',
                   }}
                 >
                   Active
@@ -340,26 +345,28 @@ const ToolBar = ({
             </ToggleButton>
             <ToggleButton value='createdAt' aria-label='createdAt'>
               <>
+                <CreateRounded />
                 <Typography
                   sx={{
+                    marginInline: '0.5rem',
                     color: 'black',
                   }}
                 >
                   Created At
                 </Typography>
-                <CreateRounded />
               </>
             </ToggleButton>
             <ToggleButton value='modifiedAt' aria-label='modifiedAt'>
               <>
+                <EditNote />
                 <Typography
                   sx={{
+                    marginInline: '0.5rem',
                     color: 'black',
                   }}
                 >
                   Modified At
                 </Typography>
-                <EditNote />
               </>
             </ToggleButton>
           </ToggleButtonGroup>

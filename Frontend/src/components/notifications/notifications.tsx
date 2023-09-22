@@ -5,6 +5,7 @@ import {
   Button,
   Slide,
   Snackbar,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -128,23 +129,28 @@ const Notifications = ({
     setCurrentPage(page);
     setParams({ ...params, pageSize: pageSize, page: currentPage });
   };
+  const theme = useTheme();
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
+  const showThis = isScreenLarge
+    ? `Delete(${idsToDelete.length})`
+    : `(${idsToDelete.length})`;
   const text =
     idsToDelete.length === 0 ? (
       <Typography sx={{ color: 'black' }}>Notifications</Typography>
     ) : (
       <>
-        <Button
-          sx={{ border: '1px red solid', color: 'red' }}
-          variant='outlined'
-          startIcon={<DeleteIcon sx={{ color: 'red' }} />}
-          onClick={() => {
-            handleDelete();
-          }}
-        >
-          Delete {'('}
-          {idsToDelete.length}
-          {')'}
-        </Button>
+        <Tooltip title='Delete' arrow>
+          <Button
+            sx={{ border: '1px red solid', color: 'red' }}
+            variant='outlined'
+            startIcon={<DeleteIcon sx={{ color: 'red' }} />}
+            onClick={() => {
+              handleDelete();
+            }}
+          >
+            {showThis}
+          </Button>
+        </Tooltip>
       </>
     );
 
@@ -152,10 +158,13 @@ const Notifications = ({
     setNotificationId(id);
   };
 
-  const handleSearch = () => {
-    setParams({ ...params, search: searchText });
+  const handleSearch = (searchText: string) => {
+    if (searchText.length > 2) {
+      setParams({ ...params, search: searchText });
+    } else {
+      delete params.search;
+    }
   };
-
   const openInfoModal = (ele) => {
     setInfoModalOpen(true);
     setSelectedNotification(ele);
