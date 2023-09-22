@@ -1,4 +1,4 @@
-import InfoCard from '../commons/card/card';
+import InfoCard from "../commons/card/card";
 import {
   Alert,
   AlertColor,
@@ -11,23 +11,22 @@ import {
   Snackbar,
   Typography,
   Tooltip,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DisplayDriver from '../commons/driver/displaydriver';
-import styles from './applications.module.css';
-import { useEffect, useState } from 'react';
-import Loader from '../commons/loader/loader';
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DisplayDriver from "../commons/driver/displaydriver";
+import styles from "./applications.module.css";
+import { useEffect, useState } from "react";
+import Loader from "../commons/loader/loader";
 import {
   useAddApplication,
   useDeleteApplication,
   useGetApplications,
   useUpdateApplication,
-} from '../../services/applicationService';
-import InfoModal from '../commons/infoModal/infoModal';
-import { Application } from '../../types/application';
-import { filters } from '../../utils/dataUtils';
-import { useQueryClient } from '@tanstack/react-query';
-
+} from "../../services/applicationService";
+import InfoModal from "../commons/infoModal/infoModal";
+import { Application } from "../../types/application";
+import { filters } from "../../utils/dataUtils";
+import { useQueryClient } from "@tanstack/react-query";
 interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
@@ -36,18 +35,19 @@ export const Applications = ({ setApplicationId }: Props) => {
   const [severity, setSeverity] = useState<AlertColor>();
   const [params, setParams] = useState<object>({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application>();
   const [infoModalOpen, setInfoModalOpen] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  const [searchError, setSearchError] = useState('');
+  const [searchText, setSearchText] = useState("");
+  const [searchError, setSearchError] = useState("");
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
   const [elementToEdit, setElementToEdit] = useState<object>();
   const addMutation = useAddApplication();
   const queryClient = useQueryClient();
   const updateMutation = useUpdateApplication();
   const deleteMutation = useDeleteApplication();
+
   const { isLoading, data } = useGetApplications(params);
   const applications = data?.applications;
   const openInfoModal = (ele: Application) => {
@@ -64,29 +64,28 @@ export const Applications = ({ setApplicationId }: Props) => {
       }
       setSnackbarMessage(`Application(s) have been deleted successfully!`);
       setSnackbarOpen(true);
-      setSeverity('success');
+      setSeverity("success");
     } catch (error) {
       setSnackbarMessage(`Error!${error?.response.data.error}`);
       setSnackbarOpen(true);
-      setSeverity('error');
+      setSeverity("error");
     }
   };
-  console.log('ids to delete', idsToDelete);
   const theme = useTheme();
-  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm')); // Adjust the breakpoint as needed
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up("sm")); // Adjust the breakpoint as needed
   const toShow = isScreenLarge
     ? `Delete(${idsToDelete.length})`
     : `(${idsToDelete.length})`;
   const text =
     idsToDelete.length === 0 ? (
-      <Typography sx={{ color: 'black' }}>Applications</Typography>
+      <Typography sx={{ color: "black" }}>Applications</Typography>
     ) : (
       <>
-        <Tooltip title='Delete' arrow>
+        <Tooltip title="Delete" arrow>
           <Button
-            sx={{ border: '1px red solid', color: 'red' }}
-            variant='outlined'
-            startIcon={<DeleteIcon sx={{ color: 'red' }} />}
+            sx={{ border: "1px red solid", color: "red" }}
+            variant="outlined"
+            startIcon={<DeleteIcon sx={{ color: "red" }} />}
             onClick={() => {
               handleDelete();
             }}
@@ -104,36 +103,38 @@ export const Applications = ({ setApplicationId }: Props) => {
     }
   };
 
-  const handleAddMutation = async (element: Application) => {
+  const handleAddMutation = async (element: object) => {
     try {
-      const applicationToPost = { ...element, code: 'cs#101' };
+      const applicationToPost = { ...element.data };
       const result = await addMutation.mutateAsync(applicationToPost);
-      setSnackbarMessage('Application has been added successfully!');
+      setSnackbarMessage("Application has been added successfully!");
       setSnackbarOpen(true);
-      setSeverity('success');
+      setSeverity("success");
       setIsAddModalOpen(false);
+      element.handleConfirmCloseModal();
     } catch (error) {
       console.log(error.response.data.error);
       setSnackbarMessage(`Error:, ${error.response.data.error}`);
       setSnackbarOpen(true);
-      setSeverity('error');
+      setSeverity("error");
     }
   };
 
   const handleUpdate = async (element: object) => {
     try {
-      console.log('updated element', element);
-      const result = await updateMutation.mutateAsync(element);
+      console.log("updated element", element.data);
+      const result = await updateMutation.mutateAsync({ ...element?.data });
       console.log(result);
-      setSnackbarMessage('Application has been updated successfully!');
+      setSnackbarMessage("Application has been updated successfully!");
       setSnackbarOpen(true);
-      setSeverity('success');
+      setSeverity("success");
       setIsAddModalOpen(false);
+      element.handleConfirmCloseModal();
     } catch (error) {
       console.log(error);
-      setSnackbarMessage(`Error!`);
+      setSnackbarMessage(`Error! ${error.response.data.error}`);
       setSnackbarOpen(true);
-      setSeverity('error');
+      setSeverity("error");
     }
   };
 
@@ -143,10 +144,10 @@ export const Applications = ({ setApplicationId }: Props) => {
   };
   const handleCloseEditModal = () => {
     setIsModalOpen(false);
-    setElementToEdit({ name: '', description: '' });
+    setElementToEdit({ name: "", description: "" });
   };
   useEffect(() => {
-    queryClient.invalidateQueries(['applications', {}]);
+    queryClient.invalidateQueries(["applications", {}]);
   }, [params, queryClient]);
 
   const renderComponent = () => {
@@ -160,10 +161,10 @@ export const Applications = ({ setApplicationId }: Props) => {
 
     if (applications?.length === 0) {
       return (
-        <Box sx={{ marginTop: '10px' }}>
+        <Box sx={{ marginTop: "10px" }}>
           <Alert
-            severity='warning'
-            sx={{ display: 'flex', alignItems: 'center' }}
+            severity="warning"
+            sx={{ display: "flex", alignItems: "center" }}
           >
             No applications found! To add applications press the Add Icon
           </Alert>
@@ -195,7 +196,7 @@ export const Applications = ({ setApplicationId }: Props) => {
       <Box>
         {infoModalOpen && (
           <InfoModal
-            type={'Application'}
+            type={"Application"}
             infoModalOpen={infoModalOpen}
             setInfoModalOpen={setInfoModalOpen}
             data={selectedApplication}
@@ -210,7 +211,7 @@ export const Applications = ({ setApplicationId }: Props) => {
         >
           <Alert
             elevation={6}
-            variant='filled'
+            variant="filled"
             onClose={() => setSnackbarOpen(false)}
             severity={severity}
           >
@@ -231,12 +232,12 @@ export const Applications = ({ setApplicationId }: Props) => {
           params={params!}
           setParams={setParams}
           filters={filters}
-          addModalTitle={'Add New Applications'}
+          addModalTitle={"Add New Applications"}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           setSearchText={setSearchText}
           renderComponent={renderComponent}
-          modalTitle={'Edit Application'}
+          modalTitle={"Edit Application"}
           toolBarTitle={text}
           setSearchError={setSearchError}
           searchError={searchError}

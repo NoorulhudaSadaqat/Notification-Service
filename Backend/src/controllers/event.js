@@ -168,7 +168,7 @@ const createEvent = async (req, res) => {
     return res.send(createdEvent);
   }
   const existingEvent = await Event.findOne({
-    name: req.body.name,
+    name: req.body.name.trim(),
     applicationId: req.body.applicationId,
   });
   if (existingEvent) {
@@ -201,6 +201,16 @@ const updateEvent = async (req, res) => {
     }
 
     return res.send(event[0]);
+  }
+  const existingEvent = await Event.findOne({
+    name: req.body.name.trim(),
+    applicationId: req.body.applicationId,
+  });
+  if (existingEvent) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      error:
+        "This Event already exists in this Application. Please create event with a different name",
+    });
   }
   const event = await Event.findByIdAndUpdate(eventId, reqBody, { new: true });
   if (!event)

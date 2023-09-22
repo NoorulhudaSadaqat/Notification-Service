@@ -6,14 +6,14 @@ const config = require("config");
 const Message = require("../models/message");
 
 const getAllTag = async (req, res) => {
-  const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 10;
-  const offset = (page - 1) * pageSize;
-  const queryParams = {};
-  for (const key in req.query) {
-    if (!(req.query[key] == page || req.query[key] == pageSize))
-      queryParams[key.toString()] = req.query[key];
-  }
+  // const page = req.query.page || 1;
+  // const pageSize = req.query.pageSize || 10;
+  // const offset = (page - 1) * pageSize;
+  // const queryParams = {};
+  // for (const key in req.query) {
+  //   if (!(req.query[key] == page || req.query[key] == pageSize))
+  //     queryParams[key.toString()] = req.query[key];
+  // }
   if (config.get("server.db") === "postgres") {
     const tags = await knex("tag")
       .where(queryParams)
@@ -21,14 +21,13 @@ const getAllTag = async (req, res) => {
       .offset(offset);
     return res.send(tags);
   }
-  const tags = await Tag.find({ isDeleted: false, ...queryParams })
-    .skip(offset)
-    .limit(pageSize);
-  const totalCount = await Tag.countDocuments({
-    isDeleted: false,
-    ...queryParams,
-  });
-  return res.send({ tags, totalCount });
+  const tags = await Tag.find({ isDeleted: false });
+
+  // const totalCount = await Tag.countDocuments({
+  //   isDeleted: false,
+  //   ...queryParams,
+  // });
+  return res.send(tags);
 };
 
 const createTag = async (req, res) => {

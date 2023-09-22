@@ -26,7 +26,7 @@ interface Props {
   isAddModalOpen: boolean;
   setIsAddModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleSearch: () => void;
-  handleAdd: (element: Application | Event | Notification) => void;
+  handleAdd: (element: unknown) => void;
   selectedCards: string[];
   element: object;
   setElement: React.Dispatch<React.SetStateAction<object>>;

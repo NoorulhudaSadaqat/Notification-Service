@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Checkbox,
   Link,
@@ -14,15 +14,15 @@ import {
   useTheme,
   IconButton,
   Tooltip,
-} from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import HandlerButtons from '../handlers/handler';
-import { Event } from '../../../types/event';
-import PaginationControls from '../paginationControl/paginationControl';
-import { Notification } from '../../../types/notification';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import styles from './grid.module.css';
+} from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import HandlerButtons from "../handlers/handler";
+import { Event } from "../../../types/event";
+import PaginationControls from "../paginationControl/paginationControl";
+import { Notification } from "../../../types/notification";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import styles from "./grid.module.css";
 interface Props {
   data: (Event | Notification)[] | undefined;
   setId: (id: string | undefined) => void;
@@ -47,6 +47,8 @@ const GridComponent: React.FC<Props> = ({
   totalPages,
   data,
   setId,
+  handleDelete,
+  setIsModalOpen,
   selectedIds,
   handleUpdate,
   handlePageChange,
@@ -56,7 +58,7 @@ const GridComponent: React.FC<Props> = ({
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up("sm"));
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const id = event.target.value;
 
@@ -78,14 +80,14 @@ const GridComponent: React.FC<Props> = ({
   return (
     <>
       <div className={styles.heightControl}>
-        <TableContainer sx={{ marginBottom: '3vh' }}>
+        <TableContainer sx={{ marginBottom: "3vh" }}>
           <Table>
-            <TableHead sx={{ position: 'sticky', top: 0 }}>
+            <TableHead sx={{ position: "sticky", top: 0 }}>
               <TableRow>
-                <TableCell sx={{ fontWeight: 'bold' }}>
+                <TableCell sx={{ fontWeight: "bold" }}>
                   {/* Checkbox Header */}
                   <Checkbox
-                    color='primary'
+                    color="primary"
                     onChange={(e) => {
                       if (e.target.checked) {
                         setIdsToDelete(data?.map((ele) => ele._id) || []);
@@ -96,9 +98,9 @@ const GridComponent: React.FC<Props> = ({
                   />
                 </TableCell>
 
-                <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Title</TableCell>
                 {isScreenLarge && (
-                  <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Description</TableCell>
                 )}
                 <TableCell></TableCell>
               </TableRow>
@@ -112,19 +114,19 @@ const GridComponent: React.FC<Props> = ({
                     setCurrentRow(ele._id);
                   }}
                   sx={{
-                    backgroundColor: currentRow === ele._id ? '#e0e0e0' : '',
-                    border: currentRow === ele._id ? '0.5px solid black' : '',
-                    cursor: 'pointer',
-                    '&:hover': {
-                      boxShadow: '2px 2px 8px rgba(0, 0, 0, 0.200)',
+                    backgroundColor: currentRow === ele._id ? "#e0e0e0" : "",
+                    border: currentRow === ele._id ? "0.5px solid black" : "",
+                    cursor: "pointer",
+                    "&:hover": {
+                      boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.200)",
                     },
-                    transition: 'all 0.3s ease-in-out',
+                    transition: "all 0.3s ease-in-out",
                   }}
                 >
                   <TableCell>
-                    <Tooltip title='Bulk Delete' arrow>
+                    <Tooltip title="Bulk Delete" arrow>
                       <Checkbox
-                        color='primary'
+                        color="primary"
                         value={ele._id}
                         onChange={handleCheckboxChange}
                         checked={selectedIds.includes(ele._id)}
@@ -139,9 +141,9 @@ const GridComponent: React.FC<Props> = ({
                           {ele.description.substring(0, 50)}
                           <span
                             style={{
-                              color: 'blue',
-                              textDecoration: 'underline',
-                              cursor: 'pointer',
+                              color: "blue",
+                              textDecoration: "underline",
+                              cursor: "pointer",
                             }}
                             onClick={() => openInfoModal(ele)}
                           >
@@ -183,14 +185,14 @@ const GridComponent: React.FC<Props> = ({
                           onClick={(event) => {
                             setAnchorEl(event.currentTarget); // Set anchorEl to the current target when the icon button is clicked
                           }}
-                          aria-label='more options'
-                          aria-controls='small-screen-menu'
-                          aria-haspopup='true'
+                          aria-label="more options"
+                          aria-controls="small-screen-menu"
+                          aria-haspopup="true"
                         >
                           <MoreVertIcon />
                         </IconButton>
                         <Menu
-                          id='small-screen-menu'
+                          id="small-screen-menu"
                           anchorEl={anchorEl}
                           open={Boolean(anchorEl)}
                           onClose={handleMenuClose}
