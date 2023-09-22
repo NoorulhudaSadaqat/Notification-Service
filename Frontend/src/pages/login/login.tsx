@@ -2,7 +2,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Box from '@mui/material/Box';
-import { Container, Button } from '@mui/material';
+import { Container, Button, useTheme, useMediaQuery } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useForm, FormProvider } from 'react-hook-form';
 import FormInputText from '../../components/commons/formtextinput/formInputText';
@@ -30,6 +30,8 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const LogInPage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showToast, setShowToast] = useState({
     state: false,
     message: '',
@@ -81,7 +83,7 @@ const LogInPage = () => {
       >
         <CssBaseline />
         <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           open={showToast?.state}
           onClose={handleCloseToast}
           message={showToast?.message}
@@ -97,7 +99,8 @@ const LogInPage = () => {
         </Snackbar>
         <Container
           component='main'
-          maxWidth='xs'
+          maxWidth='sm'
+          sx={{ width: isMobile ? '80%' : '100%' }}
           className={styles.loginContainer} // Add a className for responsive styling
         >
           <FormProvider {...methods}>
@@ -138,8 +141,8 @@ const LogInPage = () => {
               </p>
             </Box>
           </FormProvider>
+          <Footer />
         </Container>
-        <Footer />
       </Box>
     </>
   );

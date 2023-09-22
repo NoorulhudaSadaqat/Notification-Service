@@ -14,10 +14,14 @@ const Dashboard = () => {
   const [applicationId, setApplicationId] = useState<string | undefined>("");
   const [eventId, setEventId] = useState<string | undefined>("");
   const [notificationId, setNotificationId] = useState<string | undefined>("");
-
+  const [showNotificationError, setShowNotificationError] = useState(false);
   useEffect(() => {
     setEventId(undefined);
   }, [applicationId]);
+
+  useEffect(() => {
+    setShowNotificationError(false);
+  }, [applicationId, eventId]);
   useEffect(() => {
     if (notificationId) {
       navigate(`notfication/${eventId}/edit/${notificationId}`);
@@ -29,11 +33,13 @@ const Dashboard = () => {
       <TopBar />
       <div className={styles.gutterMargins}>
         <Box
-          bgcolor="white"
-          display="flex"
-          minHeight="100vh"
-          flexDirection="column"
-          marginBottom="10rem"
+          sx={{
+            bgcolor: "white",
+            display: "flex",
+            minHeight: "100vh",
+            flexDirection: "column",
+            marginBottom: "10rem",
+          }}
         >
           <Applications setApplicationId={setApplicationId} />
           {!applicationId && (
@@ -44,8 +50,8 @@ const Dashboard = () => {
           {applicationId && (
             <Events applicationId={applicationId} setEventId={setEventId} />
           )}
-          <Box sx={{ minHeight: "20vh" }}></Box>
-          {applicationId && !eventId && (
+
+          {showNotificationError && (
             <Alert severity="warning">
               Please select an event to see notifications.
             </Alert>
@@ -54,6 +60,7 @@ const Dashboard = () => {
             <Notifications
               eventId={eventId}
               setNotificationId={setNotificationId}
+              applicationId={applicationId!}
             />
           )}
         </Box>

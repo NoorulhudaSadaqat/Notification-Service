@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, IconButton, Modal, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Modal,
+  Typography,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
 import { Application } from '../../../types/application';
 import { Event } from '../../../types/event';
 import { Notification } from '../../../types/notification';
@@ -12,20 +19,35 @@ interface Props {
   type: string;
 }
 
-const style = {
-  position: 'absolute' as const,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  minHeight: '50vh',
-  bgcolor: 'white',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: 8,
-};
+function formatDateTime(dateTimeString: string) {
+  const options = {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  };
+  const date = new Date(dateTimeString);
+  return date.toLocaleDateString('en-US', options);
+}
 
 const InfoModal = ({ infoModalOpen, setInfoModalOpen, data, type }: Props) => {
+  const theme = useTheme();
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
+  const style = {
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: isScreenLarge ? '30vw' : '90vw',
+    height: isScreenLarge ? '50vh' : '70vh',
+    margin: isScreenLarge ? '' : '0 1rem',
+    bgcolor: 'white',
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 8,
+  };
   return (
     <div>
       <Modal
@@ -95,14 +117,9 @@ const InfoModal = ({ infoModalOpen, setInfoModalOpen, data, type }: Props) => {
           >
             {data?.description}
           </Typography>
-
-          <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-            <strong>Created By: </strong>
-            {data?.createdBy}
-          </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <strong>Created Date: </strong>
-            {data?.createdDate}
+            {data ? formatDateTime(data.createdDate) : ''}
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <strong>Modified By: </strong>
@@ -110,7 +127,7 @@ const InfoModal = ({ infoModalOpen, setInfoModalOpen, data, type }: Props) => {
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <strong>Modified Date: </strong>
-            {data?.modifiedDate}
+            {data ? formatDateTime(data.modifiedDate) : ''}
           </Typography>
         </Box>
       </Modal>

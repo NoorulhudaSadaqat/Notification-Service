@@ -12,9 +12,10 @@ import {
   ToggleButton,
   useTheme,
   useMediaQuery,
+  Tooltip, // Import Tooltip component
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -27,6 +28,7 @@ import {
   ToggleOn,
   ToggleOff,
 } from "@mui/icons-material";
+import SortIcon from "@mui/icons-material/Sort";
 import EditModal from "../modal/modal";
 import { Application } from "../../../types/application";
 import { useNavigate } from "react-router-dom";
@@ -49,7 +51,7 @@ interface Props {
   text: JSX.Element;
   setParams: React.Dispatch<React.SetStateAction<object>>;
   handleAdd: (element: unknown) => void;
-  handleSearch: () => void;
+  handleSearch: (e: string) => void;
   eventId: string;
 }
 
@@ -63,9 +65,8 @@ const ToolBar = ({
   handleSearch,
   setParams,
   handleAdd,
-  onSearch,
-  setSearchText,
   eventId,
+  setSearchText,
 }: Props) => {
   const selectedFilters = "";
   const [anchorEl, setAnchorEl] = useState(null);
@@ -80,12 +81,7 @@ const ToolBar = ({
   const isScreenLarge = useMediaQuery(theme.breakpoints.up("sm"));
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-    if (e.target.value.length < 3) {
-      delete params.search;
-    }
-    if (e.target.value.length > 3) {
-      handleSearch();
-    }
+    handleSearch(e.target.value);
   };
 
   const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -136,6 +132,7 @@ const ToolBar = ({
       delete params.sortOrder;
     }
   }, [filterButtonPressed]);
+
   return (
     <AppBar
       position="static"
@@ -154,6 +151,11 @@ const ToolBar = ({
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {showSearchInput ? (
               <>
+                <Tooltip title="Search">
+                  <IconButton onClick={handleSearchClick} aria-label="search">
+                    <SearchIcon />
+                  </IconButton>
+                </Tooltip>
                 <InputBase
                   placeholder="Search…"
                   sx={inputStyles}
@@ -161,57 +163,72 @@ const ToolBar = ({
                   value={searchText}
                   onChange={handleInputChange}
                 />
+              </>
+            ) : (
+              <Tooltip title="Search">
                 <IconButton onClick={handleSearchClick} aria-label="search">
                   <SearchIcon />
                 </IconButton>
-              </>
-            ) : (
-              <IconButton onClick={handleSearchClick} aria-label="search">
-                <SearchIcon />
-              </IconButton>
+              </Tooltip>
             )}
-            <IconButton
-              aria-label="sort"
-              onClick={handleActiveTrue}
-              aria-controls="sort-menu"
-              aria-haspopup="true"
-            >
-              {activeTrue ? (
-                <ToggleOn sx={{ color: "#007fff" }} />
-              ) : (
-                <ToggleOff />
-              )}
-            </IconButton>
+            <Tooltip title={activeTrue ? "Active" : "Inactive"}>
+              <IconButton
+                aria-label="sort"
+                onClick={handleActiveTrue}
+                aria-controls="sort-menu"
+                aria-haspopup="true"
+              >
+                {activeTrue ? (
+                  <ToggleOn sx={{ color: "#007fff" }} />
+                ) : (
+                  <ToggleOff />
+                )}
+              </IconButton>
+            </Tooltip>
 
-            <IconButton
-              onClick={() => {
-                setFilterButtonPressed(!filterButtonPressed);
-              }}
+            <Tooltip title={filterButtonPressed ? "Filter On" : "Filter Off"}>
+              <IconButton
+                onClick={() => {
+                  setFilterButtonPressed(!filterButtonPressed);
+                }}
+              >
+                <SortIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip
+              title={
+                sortingOrder === "ascending"
+                  ? "Sort Ascending"
+                  : "Sort Descending"
+              }
             >
-              {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                handleSortOptionClick(filterBy);
-              }}
-            >
-              {sortingOrder === "ascending" ? (
-                <ArrowUpwardIcon />
-              ) : (
-                <ArrowDownwardIcon />
-              )}
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                if (text.props.children == "Notifications") {
-                  navigate(`notfication/${eventId}/edit/${-1}`);
-                } else {
-                  setIsAddModalOpen(true);
-                }
-              }}
-            >
-              <AddIcon />
-            </IconButton>
+              <IconButton
+                onClick={() => {
+                  handleSortOptionClick(filterBy);
+                }}
+              >
+                {sortingOrder === "ascending" ? (
+                  <ArrowUpwardIcon />
+                ) : (
+                  <ArrowDownwardIcon />
+                )}
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Add">
+              <IconButton
+                onClick={() => {
+                  if (text.props.children == "Notifications") {
+                    navigate(`notfication/${eventId}/edit/${-1}`);
+                  } else {
+                    setIsAddModalOpen(true);
+                  }
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
         ) : (
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -235,7 +252,7 @@ const ToolBar = ({
               aria-controls="small-screen-menu"
               aria-haspopup="true"
             >
-              <SortIcon />
+              <MenuIcon />
             </IconButton>
             <Menu
               id="small-screen-menu"
@@ -247,14 +264,22 @@ const ToolBar = ({
                 <SearchIcon />
                 Search
               </MenuItem>
+              <MenuItem onClick={handleActiveTrue}>
+                {activeTrue ? (
+                  <ToggleOn sx={{ color: "#007fff" }} />
+                ) : (
+                  <ToggleOff />
+                )}
+                Active
+              </MenuItem>
               <MenuItem
                 onClick={() => {
                   setFilterButtonPressed(!filterButtonPressed);
                   handleSortClose();
                 }}
               >
-                {!filterButtonPressed ? <FilterAlt /> : <FilterAltOutlined />}
-                Filter
+                <SortIcon />
+                Sort
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -267,7 +292,7 @@ const ToolBar = ({
                 ) : (
                   <ArrowDownwardIcon />
                 )}
-                Sort
+                Order By
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -310,6 +335,7 @@ const ToolBar = ({
                 <Typography
                   sx={{
                     color: "black",
+                    marginInline: "0.5rem",
                   }}
                 >
                   Active
@@ -318,26 +344,28 @@ const ToolBar = ({
             </ToggleButton>
             <ToggleButton value="createdAt" aria-label="createdAt">
               <>
+                <CreateRounded />
                 <Typography
                   sx={{
+                    marginInline: "0.5rem",
                     color: "black",
                   }}
                 >
                   Created At
                 </Typography>
-                <CreateRounded />
               </>
             </ToggleButton>
             <ToggleButton value="modifiedAt" aria-label="modifiedAt">
               <>
+                <EditNote />
                 <Typography
                   sx={{
+                    marginInline: "0.5rem",
                     color: "black",
                   }}
                 >
                   Modified At
                 </Typography>
-                <EditNote />
               </>
             </ToggleButton>
           </ToggleButtonGroup>

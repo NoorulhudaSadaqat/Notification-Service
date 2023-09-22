@@ -14,10 +14,14 @@ import { useMediaQuery, useTheme } from "@mui/material";
 import UnsavedChangesDialog from "../dialogueBox/dialogue";
 
 const validationSchema = z.object({
-  name: string().min(5, "Name is too short").max(50, "Name is too long"),
+  name: string()
+    .min(5, 'Name is too short')
+    .max(50, 'Name is too long')
+    .nonempty('Name is required'),
   description: string()
     .min(5, "Description is too short")
-    .max(255, "Description is too long"),
+    .max(255, "Description is too long')
+    .nonempty('Description is required"),
   code: string()
     .min(3, "Code is too short")
     .max(10, "Code is too long")
@@ -161,7 +165,7 @@ export default function EditModal({
             <Box sx={{ marginBlock: "2rem" }}>
               <FormInputText
                 name="name"
-                label="Title"
+                label="Name*"
                 type="text"
                 defaultValue={element?.name}
                 onTextChange={() => {
@@ -170,7 +174,7 @@ export default function EditModal({
               />
               <FormInputText
                 name="description"
-                label="Description"
+                label="Description*"
                 type="text"
                 defaultValue={element?.description}
                 onTextChange={() => {
