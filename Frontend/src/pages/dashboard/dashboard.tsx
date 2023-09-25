@@ -1,23 +1,37 @@
 import { Alert, Box, CssBaseline } from "@mui/material";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import TopBar from "../../components/commons/topbar/topbar";
 import styles from "./dashboard.module.css";
 import { Applications } from "../../components/application/applications";
 import Events from "../../components/events/events";
 import Notifications from "../../components/notifications/notifications";
-import { useAddApplication } from "../../services/applicationService";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/commons/footer/footer";
+import { useAppContext } from "../../context/appContext";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [applicationId, setApplicationId] = useState<string | undefined>("");
-  const [eventId, setEventId] = useState<string | undefined>("");
+  const {
+    contextApplicationId,
+    contextEventId,
+    setContextApplicationId,
+    setContextEventId,
+  } = useAppContext();
+  const [applicationId, setApplicationId] = useState<string | undefined>(
+    contextApplicationId
+  );
+  const [eventId, setEventId] = useState<string | undefined>(contextEventId);
   const [notificationId, setNotificationId] = useState<string | undefined>("");
   const [showNotificationError, setShowNotificationError] = useState(false);
+
   useEffect(() => {
     setEventId(undefined);
+    setContextApplicationId(applicationId);
   }, [applicationId]);
+
+  useEffect(() => {
+    setContextEventId(eventId);
+  }, [eventId]);
 
   useEffect(() => {
     setShowNotificationError(false);
@@ -41,14 +55,21 @@ const Dashboard = () => {
             marginBottom: "10rem",
           }}
         >
-          <Applications setApplicationId={setApplicationId} />
+          <Applications
+            setApplicationId={setApplicationId}
+            applicationId={applicationId}
+          />
           {!applicationId && (
             <Alert severity="warning">
               Please select an application to see events.
             </Alert>
           )}
           {applicationId && (
-            <Events applicationId={applicationId} setEventId={setEventId} />
+            <Events
+              applicationId={applicationId}
+              setEventId={setEventId}
+              eventId={eventId}
+            />
           )}
 
           {showNotificationError && (

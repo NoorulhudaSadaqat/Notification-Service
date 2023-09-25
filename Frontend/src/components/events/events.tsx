@@ -16,7 +16,7 @@ import styles from "./Events.module.css";
 import { Event } from "../../types/event";
 import Loader from "../commons/loader/loader";
 import MuiAlert, { AlertColor } from "@mui/material/Alert";
-
+import { useAppContext } from "../../context/appContext";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   useDeleteApplication,
@@ -33,19 +33,24 @@ import {
 
 interface Props {
   applicationId: string | undefined;
+  eventId: string | undefined;
   setEventId: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-const Events = ({ applicationId, setEventId }: Props) => {
+const Events = ({ applicationId, setEventId, eventId }: Props) => {
   const pageSize = 4;
+  const { eventPageNumber, setEventPageNumber } = useAppContext();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [params, setParams] = useState({ page: 1, pageSize: pageSize });
+  const [currentPage, setCurrentPage] = useState(eventPageNumber);
+  const [params, setParams] = useState({
+    page: currentPage,
+    pageSize: pageSize,
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [searchError, setSearchError] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [elementToEdit, setElementToEdit] = useState<object>();
   const [idsToDelete, setIdsToDelete] = useState<string[]>([]);
@@ -60,16 +65,20 @@ const Events = ({ applicationId, setEventId }: Props) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    queryClient.invalidateQueries([
-      "events",
-      applicationId,
-      "applications",
-      {},
-    ]);
-  }, [params, currentPage, queryClient, applicationId]);
-  useEffect(() => {
-    console.log("Ids to be deleted", idsToDelete);
-  }, [idsToDelete]);
+    setEventPageNumber(currentPage);
+    console.log("set Params");
+    setParams({ ...params, page: currentPage });
+  }, [currentPage]);
+
+  // useEffect(() => {
+  //   console.log("invalidate");
+  //   queryClient.invalidateQueries([
+  //     "events",
+  //     applicationId,
+  //     "applications",
+  //     {},
+  //   ]);
+  // }, [params, currentPage, queryClient, applicationId]);
 
   const handleSearch = (searchText: string) => {
     if (searchText.length > 2) {
@@ -135,7 +144,27 @@ const Events = ({ applicationId, setEventId }: Props) => {
     }
   };
 
-  const handleDelete = async (id: string = "") => {
+  const handleToggle = async (element) => {
+    try {
+      const data = {
+        _id: element._id,
+        isActive: !element.isActive,
+        name: element.name,
+        description: element.description,
+        code: element.code,
+      };
+      const result = await updateMutation.mutateAsync(data);
+      setSnackbarMessage("Application has been updated successfully!");
+      setSnackbarOpen(true);
+      setSeverity("success");
+    } catch (error) {
+      setSnackbarMessage(`Error! ${error.response.data.error}`);
+      setSnackbarOpen(true);
+      setSeverity("error");
+    }
+  };
+
+  const handleDelete = async (id: string | undefined) => {
     try {
       if (id) {
         await deleteMutation.mutateAsync([id]);
@@ -170,7 +199,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
 
   const handlePagination = (page: number): void => {
     setCurrentPage(page);
-    setParams({ ...params, pageSize: pageSize, page: currentPage });
+    setParams({ ...params, pageSize: pageSize, page });
     console.log(currentPage, params);
   };
   const setTheme = useTheme();
@@ -226,7 +255,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
           selectedIds={idsToDelete}
           setIdsToDelete={setIdsToDelete}
           setElement={setElementToEdit}
-          handleUpdate={handleUpdateEvent}
+          handleToggle={handleToggle}
           openInfoModal={openInfoModal}
           data={events}
           setId={eventIdSetter}
@@ -236,6 +265,7 @@ const Events = ({ applicationId, setEventId }: Props) => {
           totalPages={totalPages}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
+          eventId={eventId}
         />
       </Box>
     );

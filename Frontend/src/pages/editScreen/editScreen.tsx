@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Alert } from "@mui/material";
+import { Box, Button, Typography, Alert, Snackbar, Slide } from "@mui/material";
 import styles from "./editScreen.module.css";
 import { FormProvider, useForm } from "react-hook-form";
 import FormInputText from "../../components/commons/formtextinput/formInputText";
@@ -43,7 +43,7 @@ const EditScreen = () => {
   const addMutation = useAddNotification(eventId);
   const navigate = useNavigate();
   const updateMutation = useUpdateNotification(eventId);
-  const { data: tags } = useGetTags();
+  const { isLoading, data: tags } = useGetTags();
   const updatedTags = tags
     ? tags.map((tag) => {
         return {
@@ -52,7 +52,7 @@ const EditScreen = () => {
         };
       })
     : "";
-  const { isLoading, error, isError, data } =
+  const { error, isError, data } =
     id == -1
       ? { isLoading: false, error: null, isError: false, data: null }
       : // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -65,7 +65,25 @@ const EditScreen = () => {
   }
   const [unsavedChanges, setUnsavedChanges] = React.useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
-
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [severity, setSeverity] = useState<AlertColor>();
+  const [defaultFormData, setDefaultFormData] = useState<INotificationEdit>({
+    name: "",
+    description: "",
+    templateSubject: "",
+    templateBody: "",
+  });
+  React.useEffect(() => {
+    if (notification) {
+      setDefaultFormData({
+        name: notification.name,
+        description: notification.description,
+        templateSubject: notification.templateSubject,
+        templateBody: notification.templateBody,
+      });
+    }
+  }, [notification]);
   React.useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (unsavedChanges) {
@@ -76,9 +94,6 @@ const EditScreen = () => {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      if (unsavedChanges) {
-        setIsDialogOpen(true);
-      }
     };
   }, [unsavedChanges]);
 
@@ -89,10 +104,7 @@ const EditScreen = () => {
       navigate("/");
     }
   };
-  useEffect(() => {
-    console.log("tags", tags);
-    console.log("updated tags", updatedTags);
-  }, [tags]);
+
   useEffect(() => {
     if (data) {
       setTemplateBodyText(data[0].templateBody);
@@ -102,12 +114,21 @@ const EditScreen = () => {
 
   const methods = useForm<INotificationEdit>();
   const { handleSubmit, setError } = methods;
-  const handleTemplateBodyChange = (text) => {
-    setUnsavedChanges(true);
+  const handleTemplateBodyChange = (text, fieldName) => {
+    if (text != defaultFormData.templateBody) {
+      setUnsavedChanges(true);
+    } else {
+      setUnsavedChanges(false);
+    }
     setTemplateBodyText(text);
   };
-  const handleTemplateSubjectChange = (text) => {
-    setUnsavedChanges(true);
+  const handleTemplateSubjectChange = (text, fieldName) => {
+    if (text != defaultFormData.templateSubject) {
+      setUnsavedChanges(true);
+    } else {
+      setUnsavedChanges(false);
+    }
+    console.log(text);
     setTemplateSubject(text);
   };
   const handleConfirmLeave = () => {
@@ -119,10 +140,16 @@ const EditScreen = () => {
       if (id == -1) {
         const updatedData = { eventId, ...data };
         await addMutation.mutateAsync(updatedData);
+        setSnackbarMessage("Notification has been added successfully!");
+        setSnackbarOpen(true);
+        setSeverity("success");
         navigate("/");
       } else {
         const updatedData = { eventId, _id: id, ...data };
         await updateMutation.mutateAsync(updatedData);
+        setSnackbarMessage("Notification has been updated successfully!");
+        setSnackbarOpen(true);
+        setSeverity("success");
         navigate("/");
       }
     } catch (error) {
@@ -134,6 +161,18 @@ const EditScreen = () => {
           }
         });
       }
+      console.log(error.response.data.error);
+      setSnackbarMessage(`Error: ${error.response.data.error}`);
+      setSnackbarOpen(true);
+      setSeverity("error");
+    }
+  };
+  const onTextChange = (e, fieldName) => {
+    const newValue = e.target.value;
+    if (newValue != defaultFormData[fieldName]) {
+      setUnsavedChanges(true);
+    } else {
+      setUnsavedChanges(false);
     }
   };
   if (isLoading) {
@@ -157,6 +196,21 @@ const EditScreen = () => {
   return (
     <>
       <Box sx={{ overflow: "hidden" }}>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          TransitionComponent={Slide}
+        >
+          <Alert
+            elevation={6}
+            variant="filled"
+            onClose={() => setSnackbarOpen(false)}
+            severity={severity}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
         <TopBar />
         {isDialogOpen && (
           <UnsavedChangesDialog
@@ -219,18 +273,14 @@ const EditScreen = () => {
                       label="Name"
                       defaultValue={notification?.name}
                       type="text"
-                      onChangeText={() => {
-                        setUnsavedChanges(true);
-                      }}
+                      onChangeText={onTextChange}
                     />
                     <FormInputText
                       defaultValue={notification?.description}
                       name="description"
                       label="Description"
                       type="text"
-                      onChangeText={() => {
-                        setUnsavedChanges(true);
-                      }}
+                      onChangeText={onTextChange}
                     />
                     <FormInputText
                       defaultValue={notification?.templateSubject}

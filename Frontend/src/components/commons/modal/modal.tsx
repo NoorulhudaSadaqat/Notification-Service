@@ -15,13 +15,13 @@ import UnsavedChangesDialog from "../dialogueBox/dialogue";
 
 const validationSchema = z.object({
   name: string()
-    .min(5, 'Name is too short')
-    .max(50, 'Name is too long')
-    .nonempty('Name is required'),
+    .min(5, "Name is too short")
+    .max(50, "Name is too long")
+    .nonempty("Name is required"),
   description: string()
     .min(5, "Description is too short")
-    .max(255, "Description is too long')
-    .nonempty('Description is required"),
+    .max(255, "Description is too long")
+    .nonempty("Description is required"),
   code: string()
     .min(3, "Code is too short")
     .max(10, "Code is too long")
@@ -71,11 +71,27 @@ export default function EditModal({
   const { handleSubmit, setError, reset } = methods;
   const [unsavedChanges, setUnsavedChanges] = React.useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
+  const [defaultFormData, setDefaultFormData] = React.useState<
+    Application | Event
+  >({
+    name: "",
+    description: "",
+    code: "",
+  });
+  React.useEffect(() => {
+    if (element) {
+      setDefaultFormData({
+        name: element.name,
+        description: element.description,
+        code: element.code || "",
+      });
+    }
+  }, [element]);
 
   React.useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (unsavedChanges) {
-        console.log("unsavedchanges : ", unsavedchanges);
+        console.log("open dialog");
         e.preventDefault();
         setIsDialogOpen(true);
       }
@@ -83,15 +99,12 @@ export default function EditModal({
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      if (unsavedChanges) {
-        setIsDialogOpen(true);
-      }
     };
   }, [unsavedChanges]);
 
   const handleConfirmCloseModal = () => {
     handleClose();
-    // setUnsavedChanges(false);
+    setUnsavedChanges(false);
     reset();
   };
 
@@ -108,11 +121,9 @@ export default function EditModal({
       if (element?.applicationId) {
         data = { ...data, applicationId: element?.applicationId };
       }
-      console.log("on submit");
       data = { _id: element?._id, ...data };
       await submitCall({ data, handleConfirmCloseModal });
     } catch (error) {
-      console.log("error ", error);
       if (error instanceof z.ZodError) {
         error.errors.forEach((validationError) => {
           if (validationError.path[0]) {
@@ -123,10 +134,19 @@ export default function EditModal({
       }
     }
   };
+
+  const onTextChange = (value, fieldName) => {
+    if (value != defaultFormData[fieldName]) {
+      setUnsavedChanges(true);
+    } else {
+      setUnsavedChanges(false);
+    }
+  };
+
   const handleConfirmLeave = () => {
     setIsDialogOpen(false);
     handleClose();
-    // setUnsavedChanges(false);
+    setUnsavedChanges(false);
     reset();
   };
   return (
@@ -168,18 +188,14 @@ export default function EditModal({
                 label="Name*"
                 type="text"
                 defaultValue={element?.name}
-                onTextChange={() => {
-                  setUnsavedChanges(true);
-                }}
+                onTextChange={onTextChange}
               />
               <FormInputText
                 name="description"
                 label="Description*"
                 type="text"
                 defaultValue={element?.description}
-                onTextChange={() => {
-                  setUnsavedChanges(true);
-                }}
+                onTextChange={onTextChange}
               />
               {modalTitle.includes("Application") && (
                 <FormInputText
@@ -187,9 +203,7 @@ export default function EditModal({
                   label="Code"
                   type="text"
                   defaultValue={element?.code}
-                  onTextChange={() => {
-                    setUnsavedChanges(true);
-                  }}
+                  onTextChange={onTextChange}
                 />
               )}
             </Box>

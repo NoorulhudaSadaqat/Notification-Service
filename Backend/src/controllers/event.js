@@ -170,6 +170,7 @@ const createEvent = async (req, res) => {
   const existingEvent = await Event.findOne({
     name: req.body.name.trim(),
     applicationId: req.body.applicationId,
+    isDeleted: false,
   });
   if (existingEvent) {
     return res.status(StatusCodes.BAD_REQUEST).json({
@@ -202,9 +203,12 @@ const updateEvent = async (req, res) => {
 
     return res.send(event[0]);
   }
+  const eventForId = await Event.findById(eventId);
   const existingEvent = await Event.findOne({
     name: req.body.name.trim(),
     applicationId: req.body.applicationId,
+    _id: { $ne: eventForId._id },
+    isDeleted: false,
   });
   if (existingEvent) {
     return res.status(StatusCodes.BAD_REQUEST).json({

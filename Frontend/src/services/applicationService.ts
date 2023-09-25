@@ -40,7 +40,7 @@ export const useGetEvents = (
   data: object | undefined
 ) =>
   useQuery<EventResult, Error>({
-    queryKey: ["events", applicationId, "applications"],
+    queryKey: ["events", applicationId, "applications", data],
     queryFn: async (context: QueryFunctionContext) => {
       const { queryKey } = context;
       const applicationId = queryKey[1];

@@ -30,7 +30,7 @@ interface Props {
   setEditedCardDescription: React.Dispatch<React.SetStateAction<string>>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   openInfoModal: (e: Event) => void;
-  handleUpdate: (e: object) => void;
+  handleToggle: (e: object) => void;
   setElement?: React.Dispatch<React.SetStateAction<object>>;
   selectedIds: string[];
   currentPage: number;
@@ -39,7 +39,7 @@ interface Props {
   totalPages: number;
   handleEdit: (ele: Event | Notification) => void;
   eventId: string;
-  handleDelete: () => void;
+  handleDelete: (id: string) => void;
 }
 
 const GridComponent: React.FC<Props> = ({
@@ -50,11 +50,12 @@ const GridComponent: React.FC<Props> = ({
   handleDelete,
   setIsModalOpen,
   selectedIds,
-  handleUpdate,
+  handleToggle,
   handlePageChange,
   setElement,
   setIdsToDelete,
   openInfoModal,
+  eventId,
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ const GridComponent: React.FC<Props> = ({
       );
     }
   };
-  const [currentRow, setCurrentRow] = useState<string>();
+  const [currentRow, setCurrentRow] = useState<string>(eventId);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenuClose = () => {
@@ -163,21 +164,14 @@ const GridComponent: React.FC<Props> = ({
                         onEdit={() => {
                           if (ele.eventId) {
                             navigate(
-                              `notfication/${ele.eventId}/edit/${ele._id}}`
+                              `notfication/${ele.eventId}/edit/${ele._id}`
                             );
                           }
                           setElement(ele);
                           setIsModalOpen(true);
                         }}
-                        onDelete={() =>
-                          handleUpdate({ _id: ele._id, isDeleted: true })
-                        }
-                        onToggleActive={() =>
-                          handleUpdate({
-                            _id: ele._id,
-                            isActive: !ele.isActive,
-                          })
-                        }
+                        onDelete={() => handleDelete(ele?._id)}
+                        onToggleActive={() => handleToggle(ele)}
                       />
                     ) : (
                       <>
@@ -202,23 +196,16 @@ const GridComponent: React.FC<Props> = ({
                               onInfo={() => openInfoModal(ele)}
                               isActive={ele.isActive}
                               onEdit={() => {
-                                if (ele.eventId) {
+                                if (ele?.eventId) {
                                   navigate(
-                                    `notfication/${ele.eventId}/edit/${ele._id}}`
+                                    `notfication/${ele.eventId}/edit/${ele._id}`
                                   );
                                 }
                                 setElement(ele);
                                 setIsModalOpen(true);
                               }}
-                              onDelete={() =>
-                                handleUpdate({ _id: ele._id, isDeleted: true })
-                              }
-                              onToggleActive={() =>
-                                handleUpdate({
-                                  _id: ele._id,
-                                  isActive: !ele.isActive,
-                                })
-                              }
+                              onDelete={() => handleDelete(ele?._id)}
+                              onToggleActive={() => handleToggle(ele)}
                             />
                           </MenuItem>
                         </Menu>

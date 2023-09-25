@@ -14,7 +14,7 @@ const schemas = {
   application: Joi.object().keys({
     name: Joi.string().min(5).max(255).required(),
     description: Joi.string().min(5).max(255).required(),
-    code: Joi.string().max(10).required(),
+    code: Joi.string().max(10).optional(),
   }),
   event: Joi.object().keys({
     name: Joi.string().min(5).max(255).required(),

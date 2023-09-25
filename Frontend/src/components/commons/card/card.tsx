@@ -8,28 +8,28 @@ import {
   Tooltip,
   useTheme,
   useMediaQuery,
-} from '@mui/material';
-import styles from './card.module.css';
-import HandlerButtons from '../handlers/handler';
-import IconButton from '@mui/material/IconButton';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Application } from '../../../types/application';
-import { useState } from 'react';
+} from "@mui/material";
+import styles from "./card.module.css";
+import HandlerButtons from "../handlers/handler";
+import IconButton from "@mui/material/IconButton";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { Application } from "../../../types/application";
+import { useState } from "react";
 
 interface Props {
   data: Application[] | undefined;
   openInfoModal: (element: Application) => void;
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
   handleEdit: (ele: Application) => void;
-  handleUpdate: (ele: Application | Event | Notification) => void;
+  handleToggle: (element: Application) => void;
   handleDelete: (e: string) => void;
   setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
   selectedCards: string[];
   setIdsToDelete: React.Dispatch<React.SetStateAction<string[]>>;
+  applicationId: string | undefined;
 }
 
 export default function InfoCard({
-  handleUpdate,
   data,
   openInfoModal,
   handleDelete,
@@ -38,6 +38,8 @@ export default function InfoCard({
   selectedCards,
   setSelectedCards,
   setIdsToDelete,
+  handleToggle,
+  applicationId,
 }: Props) {
   const toggleCardSelection = (cardId: string) => {
     if (selectedCards.includes(cardId)) {
@@ -48,59 +50,59 @@ export default function InfoCard({
     console.log(selectedCards);
   };
   const theme = useTheme();
-  const isScreenLarge = useMediaQuery(theme.breakpoints.up('sm'));
-  const [currentCard, setCurrentCard] = useState();
+  const isScreenLarge = useMediaQuery(theme.breakpoints.up("sm"));
+  const [currentCard, setCurrentCard] = useState(applicationId);
   return (
     <>
       {data?.map((e) => (
         <Card
           key={e._id}
           sx={{
-            curor: 'pointer',
-            backgroundColor: currentCard === e._id ? '#00000008' : '',
+            curor: "pointer",
+            backgroundColor: currentCard === e._id ? "#00000008" : "",
 
-            border: currentCard === e._id ? '0.5px solid black' : '',
+            border: currentCard === e._id ? "0.5px solid black" : "",
             minWidth: isScreenLarge ? 275 : 200,
-            justifyContent: 'space-between',
-            margin: '1.25rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
+            justifyContent: "space-between",
+            margin: "1.25rem",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
             boxShadow:
               currentCard === e._id
-                ? '1px 1px 5px rgba(0, 0, 0, 1)'
-                : '5px 5px 10px rgba(0, 0, 0, 0.100)',
+                ? "1px 1px 5px rgba(0, 0, 0, 1)"
+                : "5px 5px 10px rgba(0, 0, 0, 0.100)",
             //add more properties that can be changed on hover
-            '&:hover': {
-              transform: 'scale(1.01)',
+            "&:hover": {
+              transform: "scale(1.01)",
               boxShadow:
-                '5px 5px 10px rgba(0, 0, 0, 0.200), 1px 1px 5px rgba(0, 0, 0, 0.4)',
+                "5px 5px 10px rgba(0, 0, 0, 0.200), 1px 1px 5px rgba(0, 0, 0, 0.4)",
             },
-            transition: 'all 0.2s ease-in-out',
+            transition: "all 0.2s ease-in-out",
           }}
         >
           <CardContent sx={{ minHeight: 200 }}>
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
-              <Tooltip title='Bulk Delete' arrow>
+              <Tooltip title="Bulk Delete" arrow>
                 <Checkbox
                   checked={selectedCards.includes(e._id)}
                   onChange={() => toggleCardSelection(e._id)}
                 />
               </Tooltip>
-              <Typography sx={{ textAlign: 'left', fontSize: '0.75rem' }}>
+              <Typography sx={{ textAlign: "left", fontSize: "0.75rem" }}>
                 {e.code}
               </Typography>
             </Box>
             <div className={styles.colorBand}></div>
             <Box
               sx={{
-                cursor: 'pointer',
+                cursor: "pointer",
               }}
               onClick={() => {
                 setApplicationId(e._id);
@@ -108,9 +110,9 @@ export default function InfoCard({
               }}
             >
               <Typography
-                sx={{ fontWeight: 'bold', textAlign: 'left' }}
-                variant='h4'
-                component='div'
+                sx={{ fontWeight: "bold", textAlign: "left" }}
+                variant="h4"
+                component="div"
                 gutterBottom
               >
                 {e.name}
@@ -118,21 +120,21 @@ export default function InfoCard({
 
               <Typography
                 sx={{
-                  textAlign: 'left',
-                  whiteSpace: 'pre-line',
-                  wordWrap: 'break-word',
+                  textAlign: "left",
+                  whiteSpace: "pre-line",
+                  wordWrap: "break-word",
                 }}
-                variant='body2'
-                color='text.secondary'
+                variant="body2"
+                color="text.secondary"
               >
                 {e.description.length > 50 ? (
                   <>
                     {e.description.substring(0, 50)}
                     <span
                       style={{
-                        color: 'blue',
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
+                        color: "blue",
+                        textDecoration: "underline",
+                        cursor: "pointer",
                       }}
                       onClick={() => openInfoModal(e)}
                     >
@@ -145,7 +147,7 @@ export default function InfoCard({
               </Typography>
             </Box>
           </CardContent>
-          <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
             <HandlerButtons
               onInfo={() => openInfoModal(e)}
               isActive={e.isActive}
@@ -153,9 +155,7 @@ export default function InfoCard({
               onDelete={async () => {
                 await handleDelete(e._id!);
               }}
-              onToggleActive={() =>
-                handleUpdate({ _id: e._id, isActive: !e.isActive })
-              }
+              onToggleActive={() => handleToggle(e)}
             />
           </CardActions>
         </Card>

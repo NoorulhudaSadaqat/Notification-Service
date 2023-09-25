@@ -27,10 +27,13 @@ import InfoModal from "../commons/infoModal/infoModal";
 import { Application } from "../../types/application";
 import { filters } from "../../utils/dataUtils";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAppContext } from "../../context/appContext";
+
 interface Props {
   setApplicationId: React.Dispatch<React.SetStateAction<string | undefined>>;
+  applicationId: string | undefined;
 }
-export const Applications = ({ setApplicationId }: Props) => {
+export const Applications = ({ setApplicationId, applicationId }: Props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [severity, setSeverity] = useState<AlertColor>();
   const [params, setParams] = useState<object>({});
@@ -47,6 +50,8 @@ export const Applications = ({ setApplicationId }: Props) => {
   const queryClient = useQueryClient();
   const updateMutation = useUpdateApplication();
   const deleteMutation = useDeleteApplication();
+
+  const { appPageNumber, setAppPageNumber } = useAppContext();
 
   const { isLoading, data } = useGetApplications(params);
   const applications = data?.applications;
@@ -138,6 +143,26 @@ export const Applications = ({ setApplicationId }: Props) => {
     }
   };
 
+  const handleToggle = async (element) => {
+    try {
+      const data = {
+        _id: element._id,
+        isActive: !element.isActive,
+        name: element.name,
+        description: element.description,
+        code: element.code,
+      };
+      const result = await updateMutation.mutateAsync(data);
+      setSnackbarMessage("Application has been updated successfully!");
+      setSnackbarOpen(true);
+      setSeverity("success");
+    } catch (error) {
+      setSnackbarMessage(`Error! ${error.response.data.error}`);
+      setSnackbarOpen(true);
+      setSeverity("error");
+    }
+  };
+
   const handleEdit = (e: Application) => {
     setElementToEdit(e);
     setIsModalOpen(true);
@@ -179,12 +204,13 @@ export const Applications = ({ setApplicationId }: Props) => {
             setIdsToDelete={setIdsToDelete}
             setSelectedCards={setIdsToDelete}
             selectedCards={idsToDelete}
-            handleUpdate={handleUpdate}
+            handleToggle={handleToggle}
             handleDelete={handleDelete}
             openInfoModal={openInfoModal}
             setApplicationId={setApplicationId}
             data={applications}
             handleEdit={handleEdit}
+            applicationId={applicationId}
           />
         </div>
       </div>

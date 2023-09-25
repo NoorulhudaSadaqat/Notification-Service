@@ -1,0 +1,16 @@
+/* MentionsInput.css */
+.custom-mention-input {
+  /* Add your styles for the MentionsInput component here */
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 16px;/
+}
+
+.custom-mention {
+  /* Add your styles for the mentions here */
+  background-color: #f5f5f5;
+  padding: 4px;
+  border-radius: 4px;
+  /* Add more styles as needed */
+}

@@ -10,7 +10,6 @@ const ApplicationSchema = new mongoose.Schema({
   },
   code: {
     type: String,
-    required: [true, "Code is Required"],
   },
   isActive: {
     type: Boolean,

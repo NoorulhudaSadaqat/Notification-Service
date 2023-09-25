@@ -1,6 +1,6 @@
 const extractTags = (inputString) => {
   if (inputString) {
-    const regex = /{([^}]+)}/g;
+    const regex = /{{([^}]+)}}/g;
 
     const extractedTags = [];
     const matches = inputString.matchAll(regex);

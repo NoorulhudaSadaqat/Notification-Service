@@ -61,7 +61,12 @@ export const useAddEvents = (applicationId: string) => {
       return response.data;
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["events", applicationId, "applications"]);
+      queryClient.invalidateQueries([
+        "events",
+        applicationId,
+        "applications",
+        {},
+      ]);
     },
     // onSuccess: (savedEvents) => {
     //   const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
@@ -79,7 +84,7 @@ export const useAddEvents = (applicationId: string) => {
     onError: (error, variables, context) => {
       if (!context) return;
       queryClient.setQueryData<Event[]>(
-        ["events", applicationId, "applications"],
+        ["events", applicationId, "applications", {}],
         context?.previousEvents
       );
     },
@@ -96,7 +101,12 @@ export const useUpdateEvents = (applicationId: string) => {
       return response.data;
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["events", applicationId, "applications"]);
+      queryClient.invalidateQueries([
+        "events",
+        applicationId,
+        "applications",
+        {},
+      ]);
     },
     // onSuccess: (savedEvents) => {
     //   const previousEvents = queryClient.getQueryData<Event[]>(["events"]);
@@ -141,7 +151,12 @@ export const useDeleteEvents = (applicationId: string) => {
       return response.data;
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["events", applicationId, "applications"]);
+      queryClient.invalidateQueries([
+        "events",
+        applicationId,
+        "applications",
+        {},
+      ]);
     },
     // onSuccess: (savedEvents) => {
     //   const previousEvents = queryClient.getQueryData<Event[]>(["events"]);

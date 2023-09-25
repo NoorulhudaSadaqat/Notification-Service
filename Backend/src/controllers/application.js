@@ -4,6 +4,9 @@ const { StatusCodes } = require("http-status-codes");
 const knex = require("../knex");
 const config = require("config");
 const Message = require("../models/message");
+const mongoose = require("mongoose");
+const BSON = require("bson");
+const { ObjectId } = require("mongoose").Types;
 
 const getAllApplication = async (req, res) => {
   const page = req.query.page || 1;
@@ -185,6 +188,7 @@ const createApplication = async (req, res) => {
   }
   const existingApplication = await Application.findOne({
     name: req.body.name.trim(),
+    isDeleted: false,
   });
   if (existingApplication) {
     return res
@@ -216,8 +220,12 @@ const updateApplication = async (req, res) => {
 
     return res.send(application[0]);
   }
+  // const convertedId = new BSON.ObjectId(applicationId);
+  const app = await Application.findById(applicationId);
   const existingApplication = await Application.findOne({
-    name: req.body.name.trim(),
+    name: req?.body?.name?.trim(),
+    _id: { $ne: app._id },
+    isDeleted: false,
   });
   if (existingApplication) {
     return res

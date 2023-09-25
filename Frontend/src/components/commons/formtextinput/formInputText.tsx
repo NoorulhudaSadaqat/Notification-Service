@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import { Mention, MentionsInput } from "react-mentions";
+import MenuItem from "@mui/material/MenuItem";
 
 import {
   defaultMentionStyle,
@@ -9,7 +10,7 @@ import {
   mentionInputClassName,
   useStyles,
 } from "./mentionStyle";
-
+import "./MentionInput.css";
 interface FormInputProps {
   name: string;
   label: string;
@@ -22,7 +23,6 @@ interface FormInputProps {
 }
 
 export type SskyMentionInputProps = {
-  // ... kept only the interesting props for brevity
   className?: string;
   disabled?: boolean;
   error?: boolean;
@@ -61,42 +61,38 @@ const FormInputText = ({
 }: FormInputProps) => {
   const { control, formState } = useFormContext(); // Access the form's control and state
   const { errors } = formState;
-  const [defaultValueState, setDefaultValueState] =
-    React.useState<string>(defaultValue);
+  const [defaultValueState, setDefaultValueState] = React.useState<
+    string | undefined
+  >(defaultValue);
   const dataTestId = "test-id-ssky-mention-input";
-  const classes = useStyles({ error: "error ", disable: false });
-  console.log("tags : ", tags);
   useEffect(() => {
     setDefaultValueState(defaultValue!);
   }, [defaultValue]);
-  if (tags && tags.length > 1) {
+  if (tags) {
     return (
       <Controller
         name={name}
         defaultValue={defaultValueState || ""}
-        className={classes.root}
         control={control}
         render={({ field: { onChange, value } }) => (
           <MentionsInput
             value={value}
             onChange={(e) => {
-              onChange(e.target.value);
+              onChange(e);
               const newValue = e.target.value;
-              if (defaultValue !== newValue && onTextChange) {
-                onTextChange(newValue);
-              }
+              onTextChange && onTextChange(newValue, name);
             }}
+            className={"custom-mention-input"}
             allowSpaceInQuery={true}
             allowSuggestionsAboveCursor={true}
             autoFocus={true}
-            className={mentionInputClassName}
             data-testid={dataTestId}
-            singleLine={true}
+            multiline="true"
           >
             <Mention
               trigger="{{"
               markup="{{__id__}}"
-              displayTransform={(id, display) => `{{${display}}`}
+              displayTransform={(id, display) => `{{${display}}}`}
               appendSpaceOnAdd={true}
               isLoading={false}
               renderSuggestion={defaultRenderSuggestionItem(dataTestId)}
@@ -127,11 +123,7 @@ const FormInputText = ({
             onChange={(e) => {
               onChange(e);
               const newValue = e.target.value;
-              if (defaultValue != value) {
-                if (onTextChange) {
-                  onTextChange(newValue);
-                }
-              }
+              onTextChange && onTextChange(newValue, name);
             }}
             value={value}
             fullWidth

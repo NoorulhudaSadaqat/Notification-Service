@@ -5,6 +5,7 @@ const knex = require("../knex");
 const config = require("config");
 const Message = require("../models/message");
 const { extractTags } = require("../utils/extractTags");
+const Tag = require("../models/tag");
 
 const getAllNotificationType = async (req, res) => {
   const page = req.query.page || 1;
@@ -98,9 +99,10 @@ const createNotificationType = async (req, res) => {
       .returning("*");
     return res.send(createdNotificationType);
   }
-  const existingNotification = await Event.findOne({
+  const existingNotification = await NotificationType.findOne({
     name: req.body.name.trim(),
     eventId: req.body.eventId,
+    isDeleted: false,
   });
   if (existingNotification) {
     return res.status(StatusCodes.BAD_REQUEST).json({
@@ -110,6 +112,20 @@ const createNotificationType = async (req, res) => {
   }
   let notificationType = new NotificationType(reqBody);
   notificationType = await notificationType.save();
+  let result = tags.map(async (tag) => {
+    let existingTag = await Tag.findOne({ label: tag });
+    if (!existingTag) {
+      let newTag = new Tag({
+        label: tag,
+        isActive: true,
+        createdBy: req.user.firstName + " " + req.user.lastName,
+        createdDate: new Date(),
+        modifiedBy: req.user.firstName + " " + req.user.lastName,
+        modifiedDate: new Date(),
+      });
+      newTag = await newTag.save();
+    }
+  });
   return res.send(notificationType);
 };
 
@@ -135,9 +151,12 @@ const updateNotificationType = async (req, res) => {
 
     return res.send(notificationType[0]);
   }
-  const existingNotification = await Event.findOne({
+  const notification = await NotificationType.findById(notificationTypeId);
+  const existingNotification = await NotificationType.findOne({
     name: req.body.name.trim(),
     eventId: req.body.eventId,
+    _id: { $ne: notification._id },
+    isDeleted: false,
   });
   if (existingNotification) {
     return res.status(StatusCodes.BAD_REQUEST).json({
@@ -155,6 +174,20 @@ const updateNotificationType = async (req, res) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ error: "The notificationType with the given ID was not found." });
 
+  let result = tags.map(async (tag) => {
+    let existingTag = await Tag.findOne({ label: tag });
+    if (!existingTag) {
+      let newTag = new Tag({
+        label: tag,
+        isActive: true,
+        createdBy: req.user.firstName + " " + req.user.lastName,
+        createdDate: new Date(),
+        modifiedBy: req.user.firstName + " " + req.user.lastName,
+        modifiedDate: new Date(),
+      });
+      newTag = await newTag.save();
+    }
+  });
   return res.send(notificationType);
 };
 
